@@ -8,6 +8,7 @@ import es.fdi.reservas.reserva.business.boundary.EdificioService;
 import es.fdi.reservas.reserva.business.boundary.EspacioService;
 import es.fdi.reservas.reserva.business.boundary.GrupoReservaService;
 import es.fdi.reservas.reserva.business.boundary.ReservaService;
+import es.fdi.reservas.reserva.business.entity.Edificio;
 import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.reserva.business.entity.GrupoReserva;
@@ -55,7 +56,7 @@ public class GestorService {
 		
 	}
 	
-	public Edificio getEdificioByFacultadId(long facultadid, Pageable pageable)
+	public Page<Edificio> getEdificioByFacultadId(long facultadid, Pageable pageable)
 	{
 		return edificio_service.findEdificio(facultadid, pageable);
 		

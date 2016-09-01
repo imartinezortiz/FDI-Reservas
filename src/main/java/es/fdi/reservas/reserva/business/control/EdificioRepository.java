@@ -23,7 +23,8 @@ public interface EdificioRepository extends JpaRepository<Edificio, Long>{
 	@Query("update #{#entityName} e set e.deleted=true where e.id= :idEdificio")
 	void softDelete(@Param("idEdificio") String idEdificio);
 
-	public List<Edificio> findByFacultadId(Long idFacultad);
+	@Query("select e from #{#entityName} e where (e.deleted=true) AND (e.facultad.id = :idFacultad)")
+	public List<Edificio> findByFacultadId(@Param("idFacultad") Long idFacultad);
 
 	
 }
