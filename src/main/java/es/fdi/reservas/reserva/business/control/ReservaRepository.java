@@ -8,12 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.reserva.business.entity.Reserva;
 
 
 @Repository
 public interface ReservaRepository extends JpaRepository<Reserva, Long>{
-
+	
 	public List<Reserva> findByUserId(long idUsuario);  
 
 	public List<Reserva> findByEspacioId(long idEspacio);
@@ -22,7 +24,21 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 
 	public Page<Reserva> findByEspacioId(long idEspacio, Pageable pageable); 
 
-  // http://stackoverflow.com/questions/18082276/spring-data-querying-datetime-with-only-date
+	public Page<Reserva> findByEstadoReserva(EstadoReserva estado, Pageable pageable);
+ 
+	@Query("FROM Reserva r WHERE (r.edificio.facultad.id = :idFacultad)")
+	public Page<Reserva> findByFacultadId(@Param("idFacultad")Long idFacultad, Pageable pageable);
+	
+	@Query("FROM Reserva r WHERE (r.edificio.facultad.id = :idFacultad) AND (r.user.id = :idUser)")
+	public Page<Reserva> findByUserIdAndFacultadId(@Param("idUser")Long idUser, @Param("idFacultad")Long idFacultad, Pageable pageable);
+	
+	@Query("FROM Reserva r WHERE (r.espacio.id = :idEspacio) AND (r.user.id = :idUser)")
+	public Page<Reserva> findByEspacioIdAndFacultadId(@Param("idUser")Long idUser, @Param("idEspacio")Long idEspacio, Pageable pageable);
+	
+	@Query("From Reserva r WHERE (r.estadoReserva=:estado) and (r.espacio.edificio.facultad.id=:idFacultad)")
+	public Page<Reserva> findByEstadoReservaAndFacultadId(@Param("estado")EstadoReserva estado, @Param("idFacultad")Long idFacultad, Pageable pageable);
+	
+	// http://stackoverflow.com/questions/18082276/spring-data-querying-datetime-with-only-date
 	public List<Reserva> findByEspacioIdAndComienzoBetween(Long idEspacio, DateTime start, DateTime end); 
 
 	public List<Reserva> findByEspacioIdAndFinBetween(Long idEspacio, DateTime start, DateTime end);

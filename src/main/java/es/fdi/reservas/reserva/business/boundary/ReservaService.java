@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import es.fdi.reservas.reserva.business.control.EdificioRepository;
 import es.fdi.reservas.reserva.business.control.EspacioRepository;
@@ -118,13 +119,16 @@ public class ReservaService {
 		}
 		
 		Reserva nuevaReserva = new Reserva(reserva.getAsunto(),reserva.getComienzo(),reserva.getFin(),
-										   reserva.getUser(), reserva.getEspacio(), reserva.getGrupoReserva(),
-										   reserva.getStartRecurrencia(), reserva.getEndRecurrencia(),
-										   reserva.getReservaColor(), reserva.getRecurrenteId());
+										   reserva.getUser(), reserva.getEspacio(),reserva.getStartRecurrencia(),
+										   reserva.getEndRecurrencia(),reserva.getReservaColor(),
+										   reserva.getRecurrenteId());
 		
 		nuevaReserva = compruebaAutorizacion(nuevaReserva);
 		
 		nuevaReserva.setReglasRecurrencia(reserva.getReglasRecurrencia());
+		if(reserva.getGrupoReserva() != null){
+			nuevaReserva.setGrupoReserva(reserva.getGrupoReserva());
+		}
 		nuevaReserva = reserva_repository.save(nuevaReserva);
 		
 		return nuevaReserva;
@@ -175,16 +179,6 @@ public class ReservaService {
 		Reserva reserva = new Reserva();
 		reserva.setComienzo(reservaActualizada.getStart());
 		reserva.setFin(reservaActualizada.getEnd());
-		reserva.setReglasRecurrencia(reservaActualizada.getReglasRecurrencia());
-		
-		String recurrenteID = reservaActualizada.getRecurrenteId();
-		if(recurrenteID != null){
-			String[] w = recurrenteID.split("_");
-			Long idR = Long.valueOf(w[0]);
-			reservaActualizada.setId(idR);
-		}
-		
-		
 		
 		Long idEspacio = reservaActualizada.getIdEspacio();
 		DateTime start = reservaActualizada.getStart();
@@ -457,16 +451,8 @@ public class ReservaService {
 			
 			i++;
 		}
-		if(r.rangoRecurrencias().size() > 1){
-			reserva_repository.save(r);
-		}
-		else{
-			// si queda un solo evento lo transformo a un evento simple
-			r.setReglasRecurrencia(new ArrayList<String>());
-			r.setStartRecurrencia(null);
-			r.setEndRecurrencia(null);
-			reserva_repository.save(r);
-		}
+		
+		reserva_repository.save(r);
 		
 	}
 
@@ -474,5 +460,24 @@ public class ReservaService {
 		return reserva_repository.findByGrupoReservaIdAndUserId(idGrupo, idUsuario);
 	}
 
+	////////////////JAVIER////////////////////////////
+	public Page<Reserva> findByFacultadId(long facultadid, Pageable pageable)
+	{
+		return reserva_repository.findByFacultadId(facultadid, pageable);
+	}
 	
+	public Page<Reserva> findByUserIdAndFacultadId(long userid, long facultadid, Pageable pageable)
+	{
+		return reserva_repository.findByUserIdAndFacultadId(userid, facultadid, pageable);
+	}
+	
+	public Page<Reserva> findByEspacioIdAndFacultadId(long espacioid, long facultadid, Pageable pageable)
+	{
+		return reserva_repository.findByEspacioIdAndFacultadId(espacioid, facultadid, pageable);
+	}
+	
+	public Page<Reserva> findByEstadoIdAndFacultadId(EstadoReserva estado, long facultadid, Pageable pageable)
+	{
+		return reserva_repository.findByEstadoReservaAndFacultadId(estado, facultadid, pageable);
+	}
 }
