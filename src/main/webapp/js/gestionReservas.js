@@ -72,12 +72,8 @@ $(document).ready(function(){
 	 			}
 	 		});
 	 	});
-	 
- 
- 
 
-
-
+/*
  $("#texto-busqueda").autocomplete({
 		source:function(request, response){
 			var tag = request.term;
@@ -87,11 +83,13 @@ $(document).ready(function(){
 				console.log($("#selec-busqueda").val())
 				response=autocompletarUser(tag, response);
 			}
-			else
+			else if($("#selec-busqueda").val()=="espacio")
 			{	
 				$("#selec-busqueda").val()
 				response=autocompletarEspacio(tag, response);
 			}
+			else
+				
 				/*		$.ajax({
 					url: '/reservas/usuarios/tag/' + tag,
 					type: 'GET',
@@ -133,7 +131,7 @@ $(document).ready(function(){
 				    error : function(xhr, status) {
 				        alert('Disculpe, existió un problema');
 				    }
-				});*/
+				});
 		},
 		minLength: 2
 	}).autocomplete("instance")._renderItem = function(ul,item){	
@@ -211,15 +209,11 @@ $(document).ready(function(){
 		    }
 		});
 		return item;
-	}
+	}*/
 		
 		$("#boton-busqueda").click(function(){
 			var id_busqueda = $("#id-busqueda").val();
-			var direccion;
-			if ($('#selec_busqueda').val()=="user")
-				direccion="user";
-			else
-				direccion="espacio";
-			window.location = '/reservas/gestor/gestion-reservas/'+direccion+'/'+id_busqueda+'/page/1';
+			var direccion = $('#selec_busqueda').val();
+			window.location = '/reservas/gestor/gestion-reservas/'+direccion+'/'+id_busqueda;
 		});
 });
