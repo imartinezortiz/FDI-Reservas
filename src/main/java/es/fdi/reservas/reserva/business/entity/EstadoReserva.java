@@ -29,12 +29,14 @@ public enum EstadoReserva {
 	}
 	
 	public static EstadoReserva fromEstadoReserva(String estado){
-		if(estado.equals("Confirmada"))
+		if(estado.equalsIgnoreCase("Confirmada"))
 			return EstadoReserva.CONFIRMADA;
-		else if(estado.equals("Pendiente"))
+		else if(estado.equalsIgnoreCase("Pendiente"))
 			return EstadoReserva.PENDIENTE;
-		else
+		else if(estado.equalsIgnoreCase("Denegada"))
 		    return EstadoReserva.DENEGADA;
+		else
+			return EstadoReserva.OTRO;
 	}
 	
 	public static List<EstadoReserva> getAll()
