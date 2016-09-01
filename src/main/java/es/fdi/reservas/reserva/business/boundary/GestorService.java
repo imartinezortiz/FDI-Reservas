@@ -13,6 +13,7 @@ import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.reserva.business.entity.GrupoReserva;
 import es.fdi.reservas.reserva.business.entity.Reserva;
 import es.fdi.reservas.users.business.boundary.UserService;
+import es.fdi.reservas.users.business.entity.User;
 
 @Service
 public class GestorService {
@@ -23,7 +24,7 @@ public class GestorService {
 	private GrupoReservaService grupo_service;
 	private UserService user_service;
 	
-	public Reserva getReserva(long reservaid, Pageable pageable)
+	public Reserva getReserva(long reservaid)
 	{
 		return reserva_service.getReserva(reservaid);
 	}
@@ -75,8 +76,13 @@ public class GestorService {
 		return grupo_service.findGrupoReserva(grupoid);
 	}
 	
-	public Page<GrupoReserva> getGrupoReservaByUserid(long userid)
+	public Page<GrupoReserva> getGrupoReservaByUserId(long userid)
 	{
 		return grupo_service.findGrupoReservaByuserId(userid);
+	}
+	
+	public User getUsuarioActual()
+	{
+		return user_service.getCurrentUser();
 	}
 }
