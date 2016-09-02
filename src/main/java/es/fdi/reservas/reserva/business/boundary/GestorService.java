@@ -1,5 +1,7 @@
 package es.fdi.reservas.reserva.business.boundary;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -58,7 +60,7 @@ public class GestorService {
 	
 	public Page<Edificio> getEdificioByFacultadId(long facultadid, Pageable pageable)
 	{
-		return edificio_service.findEdificio(facultadid, pageable);
+		return edificio_service.findEdificioByFacultadId(facultadid, pageable);
 		
 	}
 	
@@ -69,7 +71,7 @@ public class GestorService {
 	
 	public Page<Espacio> getEspaciosByFacultad(long facultadid, Pageable pageable)
 	{
-		return espacio_service.findByFacultadId(facultadid, pageable);
+		return espacio_service.findEspacioByFacultadId(facultadid, pageable);
 	}
 	
 	public GrupoReserva getGrupoReserva(long grupoid)
@@ -77,9 +79,9 @@ public class GestorService {
 		return grupo_service.findGrupoReserva(grupoid);
 	}
 	
-	public Page<GrupoReserva> getGrupoReservaByUserId(long userid)
+	public List<GrupoReserva> getGrupoReservaByUserId(long userid)
 	{
-		return grupo_service.findGrupoReservaByuserId(userid);
+		return grupo_service.findGrupoReservaByUserId(userid);
 	}
 	
 	public User getUsuarioActual()

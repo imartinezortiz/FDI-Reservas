@@ -2,6 +2,8 @@ package es.fdi.reservas.reserva.business.control;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -44,4 +46,12 @@ public interface EspacioRepository extends JpaRepository<Espacio, Long>{
 	
 	@Query("from #{#entityName} e where lower(e.nombreEspacio) like lower(concat('%',:nombreEspacio, '%'))")
 	List<Espacio> getEspaciosByTagName(@Param("nombreEspacio") String nombreEspacio);
+	
+	
+	//////////////////JAVIER////////////////////////////
+	@Query("select f from Espacio e where e.id = :idEspacio")
+	public Espacio findEspacio(@Param("idEspacio") long idEspacio);
+	
+	@Query("select f from Espacio e where e.edificio.facultad.id = :idFacultad")
+	public Page<Espacio> findEspacioByFacultadId(@Param("idFacultad") long idFacultad, Pageable pageable);
 }

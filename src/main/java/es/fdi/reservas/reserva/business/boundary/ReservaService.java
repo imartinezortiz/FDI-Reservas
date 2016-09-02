@@ -23,7 +23,7 @@ import es.fdi.reservas.reserva.business.entity.Reserva;
 import es.fdi.reservas.reserva.business.entity.TipoEspacio;
 import es.fdi.reservas.reserva.web.ReservaFullCalendarDTO;
 import es.fdi.reservas.reserva.web.ReservaDTO;
-import org.springframework.data.domain.Page;
+
 
 
 import es.fdi.reservas.reserva.web.*;
@@ -476,7 +476,7 @@ public class ReservaService {
 		return reserva_repository.findByEspacioIdAndFacultadId(espacioid, facultadid, pageable);
 	}
 	
-	public Page<Reserva> findByEstadoIdAndFacultadId(EstadoReserva estado, long facultadid, Pageable pageable)
+	public Page<Reserva> findByEstadoReservaAndFacultadId(EstadoReserva estado, long facultadid, Pageable pageable)
 	{
 		return reserva_repository.findByEstadoReservaAndFacultadId(estado, facultadid, pageable);
 	}

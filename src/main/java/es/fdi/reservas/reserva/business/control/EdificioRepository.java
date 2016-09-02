@@ -1,6 +1,9 @@
 package es.fdi.reservas.reserva.business.control;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,5 +29,9 @@ public interface EdificioRepository extends JpaRepository<Edificio, Long>{
 	@Query("select e from #{#entityName} e where (e.deleted=true) AND (e.facultad.id = :idFacultad)")
 	public List<Edificio> findByFacultadId(@Param("idFacultad") Long idFacultad);
 
+	@Query("select e from #{#entityName} e where (e.id = :id)")
+	public Edificio findEdificio(@Param("id") long id);
 	
+	@Query("select e from #{#entityName} e where (e.deleted=true) AND (e.facultad.id = :idFacultad)")
+	public Page<Edificio> findEdificioByFacultadId(@Param("idFacultad") Long idFacultad, Pageable pageable);
 }
