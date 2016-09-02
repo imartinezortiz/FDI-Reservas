@@ -27,8 +27,8 @@ public interface EspacioRepository extends JpaRepository<Espacio, Long>{
 	@Query("select f from #{#entityName} f where f.deleted=false and f.id = :id_edif")
 	public List<Espacio> findByEdificioIdAndTipoEspacio(Long idEdificio, TipoEspacio idTipoEspacio);
 	
-	@Query("select f from Espacio e where e.edificio.facultad.id = :idFacultad")
-	public List<Espacio> findByFacultadId(@Param("idFacultad") long idFacultad);
+	//@Query("select f from Espacio e where e.edificio.facultad.id = :idFacultad")
+	//public List<Espacio> findByFacultadId(@Param("idFacultad") long idFacultad);
 	//public List<Espacio> findByNombre_espacio(String nombre);
 	
 	@Query("SELECT DISTINCT e.tipoEspacio FROM Espacio e WHERE e.edificio.id = :idEdificio")
@@ -49,9 +49,9 @@ public interface EspacioRepository extends JpaRepository<Espacio, Long>{
 	
 	
 	//////////////////JAVIER////////////////////////////
-	@Query("select f from Espacio e where e.id = :idEspacio")
+	@Query("select f from Espacio f where f.id = :idEspacio")
 	public Espacio findEspacio(@Param("idEspacio") long idEspacio);
 	
-	@Query("select f from Espacio e where e.edificio.facultad.id = :idFacultad")
+	@Query("select f from Espacio f where f.edificio.facultad.id = :idFacultad")
 	public Page<Espacio> findEspacioByFacultadId(@Param("idFacultad") long idFacultad, Pageable pageable);
 }

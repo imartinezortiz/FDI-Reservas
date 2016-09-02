@@ -13,9 +13,9 @@ public class EdificioService {
 	EdificioRepository edificio_repository;
 	
 	@Autowired
-	public EdificioService(EdificioRepository edificio_repository)
+	public EdificioService(EdificioRepository e_r)
 	{
-		this.edificio_repository=edificio_repository;
+		this.edificio_repository=e_r;
 	}
 	
 	public Edificio findEdificio(long edificioid)

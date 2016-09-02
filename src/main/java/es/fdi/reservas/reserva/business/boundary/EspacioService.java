@@ -14,9 +14,9 @@ public class EspacioService {
 	EspacioRepository espacio_repository;
 	
 	@Autowired
-	public EspacioService(EspacioRepository espacio_repository)
+	public EspacioService(EspacioRepository e_r)
 	{
-		this.espacio_repository=espacio_repository;
+		this.espacio_repository=e_r;
 	}
 	
 	public Espacio findEspacio(long espacioid)
