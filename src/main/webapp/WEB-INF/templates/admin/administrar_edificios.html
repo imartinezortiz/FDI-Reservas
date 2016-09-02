@@ -8,23 +8,36 @@
 </head>
 <body>
 <div class="container-fluid" th:fragment="contenido">
-	<div class="row">
-	    <div class="col-md-12">
-	        <h1 class="page-header text-center">
-	            Administrar
-	        </h1>
-	    </div>
-	</div>
-<!-- /.row -->
+	
 	<div class="row">
     	<div class="col-md-12">
-            <h1 class="page-header text-center">
-                <small>Administrar edificios</small>
-            </h1>
+             <h2 class="page-header text-center">
+               <small>Lista de </small>Edificios
+            </h2>
         </div>
     </div>
            <!-- /.row -->
-
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-2">
+				<label class="form-group" style="margin-top:5px;">Filtrar por: </label>
+			</div>
+			<div class="col-md-2">
+				<select id="selec-busqueda" class="form-control">
+					<option value="nombre">Nombre</option>
+					<option value="direccion">Dirección</option>
+					<option value="facultad">Facultad</option>
+				</select>
+			</div>
+			<div class="col-md-8">
+			 <div class="input-group">        
+	            <input type="text" id="texto-busqueda" class="form-control" placeholder="Introduce nombre de edificio"></input>
+	             <span class="input-group-addon"><a id="busquedaEdificio"><i class="fa fa-search"></i></a></span>
+	          </div>
+	    	</div>
+		</div>
+	</div>
+<hr/>
     <div class="row">
 		<div class="col-md-8 col-md-offset-2">
     	
@@ -37,49 +50,53 @@
               <table class="table table-bordered table-hover">
                   <thead>
                       <tr>
-                      		<th></th>
+                      		<th>Imagen</th>
                           	<th>Nombre</th>
+                          	<th>Dirección</th>
                           	<th>Facultad</th>
+                          	<th>Acciones</th>
                       </tr>
                   </thead>
                   <tbody>
-                      <tr th:each="r : ${currentResults}"
-                      	th:attr="id=${r.id},data-id=${r.id},name=${r.nombre_edificio},idFacultad=${r.facultad.id}">
-                      	  <td><img alt="${r.nombre_edificio}" th:src="@{/img/+${r.nombre_edificio}+.png}" width="50" height="50"></img></td>
-                          <td th:text="${r.nombre_edificio}"></td>
-                          <td th:text="${r.facultad.nombreFacultad}"></td>
-                          
-                      </tr> 
-                      <!-- <tr>
-                      	<td><input id="btn-crear" type="text" class="btn btn-default" value="Añadir edificio"/></td>
-                      	<td></td>
-                      </tr>    --> 
+                  	<tr></tr>
+                      <tr th:each="r : ${currentResults}" th:classappend="${!r.deleted} ? 'success' : 'danger'" th:attr="id=${r.id}">
+                      	 
+						  <td class="text-center"><img class="img-circle" th:title="${r.imagen.description}" th:alt="${r.imagen.description}" th:src="@{${r.imagen.attachmentUrl}}" height="25" width="25"></img></td>
+                          <td th:text="${#strings.abbreviate(r.nombreEdificio,21)}" th:title="${r.nombreEdificio}"></td>
+                          <td th:text="${#strings.abbreviate(r.direccion,21)}" th:title="${r.direccion}"></td>
+                          <td th:text="${#strings.abbreviate(r.facultad.nombreFacultad,21)}" th:title="${r.facultad.nombreFacultad}"></td>
+                          <td><a th:attr="id=${r.id},data-id=${r.id},name=${r.nombreEdificio},dir=${r.direccion},fac=${r.facultad.nombreFacultad},act=${r.deleted},img=${r.imagen.attachmentUrl},data-accion='Ver'" role="button" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
+							<a th:href="@{'/admin/administrar/edificios/editar/' + ${r.id}}" role="button" data-toggle="tooltip" data-placement="top" title="Editar"><i class="zmdi zmdi-edit zmdi-hc-lg"> </i></a>
+							<a th:attr="data-id=${r.id},name=${r.nombreEdificio},fac=${r.facultad.nombreFacultad},dir=${r.direccion},act=${r.deleted},data-accion='Eliminar'" role="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="zmdi zmdi-delete zmdi-hc-lg"> </i></a>	
+							</td>
+                      </tr>
                       
+
+                                            
                   </tbody>
               </table>
-              <a th:href="@{'/nuevoEdificio'}"><input type="button" class="btn btn-default" value="Añadir edificio"/></a> 
                 
           	</div> 
         <!-- /.table-responsive-->
-    	<a th:href="@{'/administrar/edificio/restaurar'}"><input type="button" class="btn btn-default" value="Restaurar edificios"/></a>
+    	<a th:href="@{'/admin/administrar/edificios/page/' + ${currentIndex} + '/restaurar'}"><input type="button" class="btn btn-default" value="Restaurar edificios"/></a>
 		</div>
 	</div>
 	
 	<!-- Pagination -->
- 	<div class="row">
+ 	<div class="row" th:unless="${#lists.isEmpty(currentResults)}">
     <div class="col-md-12 text-center">
-        <div class='pagination pagination-centered'>
+        <nav>
             <ul class="pagination">
                 <li th:class="${currentIndex == 1}? 'disabled' : ''">
-                    <span th:if='${currentIndex == 1}'>← First</span>
+                    <span th:if='${currentIndex == 1}'>Primera</span>
                     <a th:if='${currentIndex != 1}'
-                       th:href="@{1}">← First</a>
+                       th:href="@{1}">Primera</a>
                 </li>
                 <li th:class="${currentIndex != 1}? '' : 'disabled'">
-                    <span th:if='${currentIndex == 1}'>«</span>
+                    <span th:if='${currentIndex == 1}'><i class='fa fa-angle-left'></i></span>
                     <a th:if='${currentIndex != 1}'
                        th:href="@{${(currentIndex - 1)}}"
-                       title='Go to previous page'>«</a>
+                       title='Go to previous page'><i class='fa fa-angle-left'></i></a>
                 </li>
 
                 <li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
@@ -93,18 +110,18 @@
                     </a>
                 </li>
 
-                <li th:class="${currentIndex != currentResults.totalPages}? '' : 'disabled'">
-                    <span th:if='${currentIndex == currentResults.totalPages}'>»</span>
-                    <a th:if='${currentIndex != currentResults.totalPages}'
-                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'>»</a>
+                <li th:class="${currentIndex != totalPages}? '' : 'disabled'">
+                    <span th:if='${currentIndex == totalPages}'><i class='fa fa-angle-right'></i></span>
+                    <a th:if='${currentIndex != totalPages}'
+                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'><i class='fa fa-angle-right'></i></a>
                 </li>
-                <li th:class="${currentIndex == currentResults.totalPages}? 'disabled' : ''">
-                    <span th:if='${currentIndex == currentResults.totalPages}'>Last →</span>
-                    <a th:if='${currentIndex != currentResults.totalPages}'
-                       th:href="@{${currentResults.totalPages}}">Last →</a>
+                <li th:class="${currentIndex == totalPages}? 'disabled' : ''">
+                    <span th:if='${currentIndex == totalPages}'>Última</span>
+                    <a th:if='${currentIndex != totalPages}'
+                       th:href="@{${totalPages}}">Última</a>
                 </li>
             </ul>
-        </div>
+        </nav>
     </div>
 </div>
  <!-- /.Pagination -->
@@ -119,111 +136,83 @@
           <div class="modal-body">
           		<form class="form-horizontal" role="form" action="#" th:action="@{/editar}" th:object="${Edificio}" method="put">             
 				
-				 <!-- Nombre de edificio --> 
-                 <div class="form-group">
-                     <label for="ejemplo_2" class="col-md-2 control-label">Nombre:</label>
-                      <div class="col-md-10">
-                         <input id="idNombre" name="nombreEdif" type="text" class="form-control" placeholder="Introduce un nombre de edificio"/>
-                      </div>
-                 </div>
-                 
-                 <!-- Correo --> 
-                 <div class="form-group">
-                     <label for="ejemplo_3" class="col-md-3 control-label">Facultad:</label>
-                     <div class="col-md-9">
-                     
-                     	<select id="idFacul" name="facul" title="Facultad">
-				          
-				          <option th:each="f : ${facultades}" th:value="${f.id}" th:text="${f.nombreFacultad}"/> 
-				        </select>
-		               
-		               
-                     </div>
-                 </div>
-                 
-                 
+				 <!-- Nombre de edificio -->
+				<div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Nombre: </label>
+		                      <div class="col-md-10">
+		                         <p id="idNombre" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+                                  
+                 <!-- Direccion --> 
                  <div class="row">
-                     <div class="col-xs-3 col-md-3">
-                      <button id="btn-eliminar" type="button" class="btn-rec red">ELIMINAR</button>
-                     </div>
-                     <div class="col-xs-3 col-md-3 text-right">
-                      <button id="btn-guardar" type="button" class="btn-rec blue">GUARDAR </button>
-                     </div>
-                     
-                 </div>                
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Dirección: </label>
+		                      <div class="col-md-10">
+		                         <p id="idDir" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+		         
+		         <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Facultad: </label>
+		                      <div class="col-md-10">
+		                         <p id="idFacul" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+		         
+		         		         
+		         <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Eliminado: </label>
+		                      <div class="col-md-10">
+		                         <p id="idActivado" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+		         
+		         <div class="row">
+                	<div class="col-md-12">
+		                 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Imágen: </label>
+		                      <div class="col-md-10">
+		                      <img class="img-circle" id="idAttachment" alt="" th:src="@{'../..' + ${idAttachment}}" height="42" width="42"></img>
+		                         <p  class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+                    
              </form>
                  
           </div>
+          <div class="modal-footer">
+	        <a id="btn-editar" th:href="@{''}" class="btn-rec blue">EDITAR</a>
+	      </div>
         </div>
       </div>
     </div>
-    
-    
-	<script th:inline="javascript">
- var baseURL = /*[[@{/}]]*/ '/';
-
- $(document).ready(function(){
-	 	var edificio = {};
-	 	var token = $("meta[name='_csrf']").attr("content");
-	 	var header = $("meta[name='_csrf_header']").attr("content");
-	 	var reqHeaders = [];
-	 	reqHeaders[header] = token;
-	 	
-	 	$('tr').click(function(){
-	 		$('#modalEditarEdificio').modal('show');
-	 		
-	 		edificio.id =  $(this).attr("data-id");
-	 		edificio.nombre_edificio = $(this).attr("name");
-	 		edificio.idFacultad = $(this).attr("idFacultad");
-
-	 		//$('#modalEditarEdificio #idEdificio').text(edificio.id);
-	 		$('#modalEditarEdificio #idNombre').attr("value",edificio.nombre_edificio);
-	 		$('#modalEditarEdificio #idFacul').attr("value",edificio.idFacultad);
-	 		
-	 	});
-	 	
-	 	$("#btn-guardar").click(function(){
-	 		edificio.nombre_edificio = $("#modalEditarEdificio #idNombre").val();
-	 		edificio.idFacultad = $('#modalEditarEdificio #idFacul').val();
-	 		
-	 		$.ajax({
-	 			url: baseURL + "edificio/" + edificio.id,
-	 			type: 'PUT',
-	 			headers : reqHeaders,
-	 			data: JSON.stringify(edificio),
-	 			contentType: 'application/json',
-	 			success : function(datos) {   
-	 				alert("Edificio actualizado");
-	 				$('#modalEditarEdificio').modal('hide');
-	 				
-	 				$("#"+edificio.id +" td:nth-child(1)").text(edificio.nombre_edificio);
-	 				$("#"+edificio.id +" td:nth-child(2)").text(edificio.idFacultad);
-	 			},    
-	 			error : function(xhr, status) {
-	     			alert('Disculpe, existió un problema');
-	 			}
-	 		});
-	 	});
-	 
-	 	$("#btn-eliminar").click(function(){
-	 		$.ajax({
-	 			url: baseURL + "edificio/" + edificio.id,
-	 			type: 'DELETE',
-	 			headers : reqHeaders,
-	 			success : function(datos) {
-	 				alert("Edificio eliminado");
-	 				$('#modalEditarEdificio').modal('hide');
-	 				$("#"+edificio.id).remove();
-	 			},    
-	 			error : function(xhr, status) {
-	 				alert('Disculpe, existió un problema');
-	 			}
-	 		});
-	 	});
-	 
- });
+ 	  <script th:inline="javascript">
+ 	var baseURL = /*[[@{/}]]*/ '/';
  </script>
- 		
+ <script src="../../js/edificioAdministrar.js" th:src="@{/js/edificioAdministrar.js}"></script>	
  </div>
 </body>
 </html>

@@ -11,22 +11,29 @@
 	<!-- Page Heading -->
 	<div class="row">
 	    <div class="col-md-12">
-	        <h1 class="page-header text-center">
-	            <small>Mi Perfil</small>
-	        </h1>
+	        <h2 class="page-header text-center">
+	        <div class="pull-left">
+	        	<a th:href="@{/perfil/editar}" style="color:#333;"><i class="zmdi zmdi-edit" title="Editar Perfil"></i></a>
+	        </div>
+	            Mi Perfil
+	        </h2>
 	    </div>
 	</div>
 	<!-- /.row -->
 	
 	<div class="row">
 	    <div class="col-md-6 col-md-offset-3 text-center">
-	        <img class="img-circle" src="http://placehold.it/150x150" />
+	        <img class="img-circle" th:src="@{${User.imagen.attachmentUrl}}" width="150" height="150"/>
 	        <h3 th:text="${#strings.toUpperCase(User.username)}"></h3>
 	        <em class="text-muted" th:text="${User.email}"></em>
 	        <hr/>
 	        <i class="fa fa-building fa-2x"> </i>
 		    <h4 th:text="${User.facultad.nombreFacultad}"></h4>
 			<p class="small text-muted" th:text="${User.facultad.webFacultad}"></p>    
+	    </div>
+	    
+	    <div class="col-md-6 col-md-offset-3 text-center">
+	    	<a th:href="@{'/admin/administrar/usuarios/editar/' + ${User.id}}"><input type="button" class="btn btn-default" value="Editar datos"/></a>
 	    </div>
 	</div>
 	<!-- /.row -->

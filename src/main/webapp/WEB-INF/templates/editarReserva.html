@@ -11,9 +11,7 @@
 <!-- Page Heading -->
 <div class="row">  
 	<div class="col-md-12">
-        <h1 class="page-header text-center">
-            <small>Editar</small>
-        </h1>
+        <h2 class="page-header text-center">Editar Reserva</h2>
     </div>                  
 </div>
 <!-- /.row -->
@@ -55,19 +53,6 @@
 			             </div>                     
                  </div>
                  
-                 <!-- Grupo de Reservas --> 
-                 <div class="form-group">
-                     <label>Grupo:</label>                    
-                     <select id="selec_grupo" class="form-control" >            
-                   	   	<option value="0">Ninguno</option>
-                   	   	<option th:each="g : ${GruposReservas}"
-                   	   			th:text="${g.nombreGrupo}"
-                   	   			th:value="${g.id}"
-                   	   			th:selected="${Reserva.grupoReserva != null} ? ${Reserva.grupoReserva.id}==${g.id}">
-                   	   	</option>
-                   	 </select>
-                    <p class="small help-block">Agrega esta reserva a un grupo de reservas.</p>
-                 </div>
                </div> 
                  
                 <div class="col-md-6">
@@ -80,7 +65,7 @@
                 	<!-- Color  -->
                    <div class="form-group">
                        <label>Color:</label>
-                        <div >
+                        <div>
                          	<div id="cp2" class="input-group colorpicker-component">
 							    <input name="reservaColor" type="text" th:value="${Reserva.reservaColor}" class="form-control" th:readonly="readonly"/>
 							    <span class="input-group-addon"><i></i></span>
@@ -88,21 +73,25 @@
                         </div>
                    </div>
                
-                    <!-- Asistentes  -->
-                   <div class="form-group">
-                       <label>Asistentes:</label>
-                        <div class="ui-widget">                      
-						    <input id="autoUsuarios" type="text"  class="form-control" placeholder="Agrega invitados"/>				    							                       	                    	
-                        </div>
-                   </div>
-                   
-                   <div id="asistencia"></div>
+                    
+	                 <!-- Grupo de Reservas --> 
+	                 <div class="form-group">
+	                     <label>Grupo:</label>                    
+	                     <select id="selec_grupo" class="form-control" >            
+	                   	   	<option value="0">Ninguno</option>
+	                   	   	<option th:each="g : ${GruposReservas}"
+	                   	   			th:text="${g.nombreCorto}"
+	                   	   			th:value="${g.id}"
+	                   	   			th:selected="${Reserva.grupoReserva != null} ? ${Reserva.grupoReserva.id}==${g.id}">
+	                   	   	</option>
+	                   	 </select>
+	                    <p class="small help-block text-right">Agrega esta reserva a un grupo de reservas.</p>
+	                 </div> 
                   </div> 
-                  
                    
                    <div class="row">              	
 					    <div class="col-md-12 text-center">
-					         <button id="enlaceGuardar" type="button" class="btn-rec blue">GUARDAR</button>
+					         <button id="enlaceGuardar" type="button" class="btn-normal">GUARDAR</button>
 					    </div>                   
 				   </div>
 				   <!-- /.row -->
@@ -111,7 +100,32 @@
 </div>
 <!-- /.row -->
 	
-
+<!-- Modal Editar Reserva Recurrente -->
+ <div class="modal fade" id="modalRecurrente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Editar Reserva Periódica</h4>
+          </div>
+          <div class="modal-body">
+          	<div class="row">
+            	<div class="col-md-12">
+          	  	 <button id="solo_esta" class="gray">Sólo ésta</button>
+          	  	 Los cambios afectarán sólo a esta reserva.
+          		</div>
+          	</div>
+          	<br/>
+          	<div class="row">
+          		<div class="col-md-12">
+          	  	 <button id="toda_la_serie" class="gray">Toda la serie</button>
+          	  	 Los cambios afectarán a todas las reservas de la serie.
+          		</div>
+          	</div>
+          </div>
+       </div>
+     </div>
+</div>
 
 <script th:inline="javascript">
 	var baseURL = /*[[@{/}]]*/ '/';

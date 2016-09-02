@@ -2,10 +2,6 @@ package es.fdi.reservas.users.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import es.fdi.reservas.reserva.business.entity.Facultad;
 import es.fdi.reservas.users.business.entity.User;
 import es.fdi.reservas.users.business.entity.UserRole;
 
@@ -17,6 +13,8 @@ public class UserDTO {
 	
 	private String password;
 	
+	private String oldPassword, newPassword;
+	
 	private String email;
 	
 	private boolean enabled;
@@ -24,28 +22,32 @@ public class UserDTO {
 	
 	private Collection<UserRole> roles;
 	
+	private Long facultad;
 	
-	private Set<Facultad> facultades;
+	private String imagen;
+	
+	//private Set<Facultad> facultades;
 	
 	public UserDTO(){}
 	
-	
-	
-	public UserDTO(Long id, String username, String email) {
+	public UserDTO(Long id, String username, String email, Long facultad, String imagen) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.email = email;
+		this.facultad = facultad;
+		this.imagen = imagen;
 	}
 
 
 
-	public UserDTO(String username, String email, boolean enabled) {
+	public UserDTO(String username, String email, boolean enabled, Long facultad, String imagen) {
 		this.username = username;
 		this.email = email;
 		this.enabled = enabled;
 		this.roles = new ArrayList<UserRole>();
-		this.facultades = new HashSet<Facultad>();
+		this.facultad = facultad;
+		this.imagen = imagen;
 	}
 	
 	public String getPassword() {
@@ -76,6 +78,18 @@ public class UserDTO {
 		return id;
 	}
 	
+	public Long getFacultad() {
+		return facultad;
+	}
+
+	public void setFacultad(Long facultad) {
+		this.facultad = facultad;
+	}
+
+	public Collection<UserRole> getRoles() {
+		return roles;
+	}
+
 	public void addRole(UserRole role) {
 		this.roles.add(role);
 	}
@@ -92,27 +106,52 @@ public class UserDTO {
 		this.enabled = en;
 	}
 
-	public Set<Facultad> getFacultades() {
-		return facultades;
+	public void setRoles(Collection<UserRole> roles) {
+		this.roles = roles;
 	}
 
-	public void setFacultades(Set<Facultad> facultades) {
-		this.facultades = facultades;
+	public String getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(String imagen) {
+		this.imagen = imagen;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
-	public void addFacultad(Facultad f){
-		this.facultades.add(f);
-	}
 	
-	public void removeFacultad(Facultad f){
-		this.facultades.remove(f);
+	public String getOldPassword() {
+		return oldPassword;
 	}
-	
+
+
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
+
+
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+
+
+
 	public static UserDTO fromUserDTO(User user){
-		return new UserDTO(user.getUsername(), user.getEmail(), user.isEnabled());
+		return new UserDTO(user.getUsername(), user.getEmail(), user.isEnabled(), user.getFacultad().getId(), user.getImagen().getAttachmentUrl());
 	}
 	
 	public static UserDTO fromUserDTOAutocompletar(User user){
-		return new UserDTO(user.getId(), user.getUsername(), user.getEmail());
+		return new UserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getFacultad().getId(), user.getImagen().getAttachmentUrl());
 	}
 }

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+	<meta charset="utf-8"/>
+	<title>Listado de espacios</title>
+</head>
+<body>
+
+<div class="container-fluid" th:fragment="contenido">
+
+<!-- Page Heading -->
+<div class="row">  
+	<div class="col-md-12">
+        <h1 class="page-header text-center">
+            <small>Editar</small>
+        </h1>
+    </div>                  
+</div>
+<!-- /.row -->
+
+<div class="row">
+	<div class="col-md-12">
+	   <form role="form" action="#" method="put" enctype="multipart/form-data">
+	   		<div class="col-md-6">
+	   		
+	   		<!-- Asunto --> 
+                 <div class="form-group">
+                     <label>Nombre:</label>
+                      <div>
+                         <input id="idNombre" name="nombre" type="text" class="form-control" th:value="${espacio.nombreEspacio}"/>
+                      </div>
+                 </div>
+                 
+                 <!-- Fecha inicio --> 
+                 <div class="form-group">
+                     <label>Capacidad:</label>                  
+		                <input id="idCapa" name="capacidad" type="text" class="form-control" th:value="${espacio.capacidad}"/>                 
+                 </div>
+                 
+                 <div class="form-group">
+                     <label>Micrófono:</label>
+                     <select id = "idMicro" title="Activado" th:value="${espacio.microfono}">
+                    		<option value="true">Si</option>
+			          		<option value="false">No</option>
+                    	</select>                  
+		                                 
+                 </div>
+             </div>   
+             <div class="col-md-6"> 
+                 <div class="form-group">
+                     <label>Proyector:</label>
+                     <select id = "idProy" title="Activado" th:value="${espacio.proyector}">
+                    		<option value="true">Si</option>
+			          		<option value="false">No</option>
+                    	</select>                  
+		                                 
+                 </div>
+                 
+                 <div class="form-group">
+                     <label>Tipo Espacio:</label>
+                     <select id = "idTipo" >
+                     <option value="aula">Aula</option>
+                     <option th:if="${espacio.tipoEspacio.tipo} == 'Sala'" value="sala" selected="selected">Sala</option>
+                    		<option th:if="${espacio.tipoEspacio.tipo} != 'Sala'" value="sala">Sala</option>
+			          		
+		          			<option value="laboratorio">Laboratorio</option>
+<!--                     		<option th:if="${espacio.tipoEspacio.tipo} == 'Sala'" value="sala" selected="selected">Sala</option> -->
+<!--                     		<option th:if="${espacio.tipoEspacio.tipo} != 'Sala'" value="sala">Sala</option> -->
+<!--                     		<option th:if="${espacio.tipoEspacio.tipo} == 'Aula'" value="aula" selected="selected">Aula</option> -->
+<!-- 			          		<option th:if="${espacio.tipoEspacio.tipo} != 'Aula'" value="aula">Aula</option> -->
+<!-- 			          		<option th:if="${espacio.tipoEspacio.tipo} == 'Laboratorio'" value="laboratorio" selected="selected">Laboratorio</option> -->
+<!-- 		          			<option th:if="${espacio.tipoEspacio.tipo} != 'Laboratorio'" value="laboratorio">Laboratorio</option> -->
+			          	
+                   	</select>                  
+		                                 
+                 </div>
+                 
+                 <!-- Facultad -->                  
+                 <div class="form-group">
+                     <label>Edificio:</label>                  
+		                <input id="idEdificio" name="email" type="text" class="form-control" placeholder="Elige un edificio"/>                 
+                 	</div>				
+				 
+                 
+                 <!-- Imagen -->
+	 	         <div class="media">
+                         <span class="pull-left">
+                             <img class="img-circle" th:title="${espacio.imagen.description}" th:alt="${espacio.imagen.description}" th:src="@{${espacio.imagen.attachmentUrl}}" height="75" width="75"></img>
+                         </span>
+                         <div class="media-body">
+                            <div class="form-group">
+								<label>Selecciona una imágen: </label>
+								<input type="file" id="idAttachment" th:src="${espacio.imagen.attachmentUrl}"/>
+								
+							</div>
+                         </div>
+                </div>                        
+          	      </div>      
+                   <div class="row">              	
+					    <div class="col-md-12 text-center">
+					         <button id="enlaceGuardar" type="button" class="btn-rec blue">GUARDAR</button>
+					    </div>                   
+				   </div>
+				   <!-- /.row -->
+				  
+	   </form>
+   </div>                  
+</div>
+<!-- /.row -->
+	
+
+
+<script th:inline="javascript">
+	var baseURL = /*[[@{/}]]*/ '/';
+	var idEspacio = /*[[${espacio.id}]]*/ '1';
+	
+</script>
+<script src="../../js/editarEspacio.js" th:src="@{/js/editarEspacio.js}"></script>
+</div>
+
+            <!-- /.container-fluid -->
+
+</body>
+</html>	

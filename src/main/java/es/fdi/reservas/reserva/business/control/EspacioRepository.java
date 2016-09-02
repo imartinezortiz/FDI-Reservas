@@ -10,26 +10,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import es.fdi.reservas.reserva.business.entity.Edificio;
 import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.TipoEspacio;
-import es.fdi.reservas.users.business.entity.User;
 
 @Repository
 public interface EspacioRepository extends JpaRepository<Espacio, Long>{
 
-	@Query("select f from #{#entityName} f where f.deleted=false and f.id = :id_edif")
-	public List<Espacio> findByEdificioId(Long idEdificio);
+	@Query("select f from #{#entityName} f where f.deleted=false and f.edificio.id = :idEdificio")
+	public List<Espacio> findByEdificioId(@Param("idEdificio") Long idEdificio);
 	
 	//@Query("select f from #{#entityName} f where f.deleted=false and f.id = :id and f.edificio.id = :idEdificio")
 	public List<Espacio> findById(Long Id); 
 
-	@Query("select f from #{#entityName} f where f.deleted=false and f.id = :id_edif")
-	public List<Espacio> findByEdificioIdAndTipoEspacio(Long idEdificio, TipoEspacio idTipoEspacio);
-	
-	//@Query("select f from Espacio e where e.edificio.facultad.id = :idFacultad")
-	//public List<Espacio> findByFacultadId(@Param("idFacultad") long idFacultad);
-	//public List<Espacio> findByNombre_espacio(String nombre);
+	@Query("select f from #{#entityName} f where f.deleted=false and f.edificio.id = :idEdificio and f.tipoEspacio = :tipoEspacio")
+	public List<Espacio> findByEdificioIdAndTipoEspacio(@Param("idEdificio") Long idEdificio, @Param("tipoEspacio") TipoEspacio tipoEspacio);
 	
 	@Query("SELECT DISTINCT e.tipoEspacio FROM Espacio e WHERE e.edificio.id = :idEdificio")
 	public List<TipoEspacio> tiposDeEspacios(@Param("idEdificio") long idEdificio);
@@ -45,7 +39,21 @@ public interface EspacioRepository extends JpaRepository<Espacio, Long>{
 	void softDelete(@Param("idEspacio") String idEspacio);
 	
 	@Query("from #{#entityName} e where lower(e.nombreEspacio) like lower(concat('%',:nombreEspacio, '%'))")
-	List<Espacio> getEspaciosByTagName(@Param("nombreEspacio") String nombreEspacio);
+	public Page<Espacio> getEspaciosByTagName(@Param("nombreEspacio") String nombreEspacio, Pageable pagerequest);
+	
+	@Query("from #{#entityName} e where e.deleted=true and lower(e.nombreEspacio) like lower(concat('%',:nombreEspacio, '%'))")
+	public Page<Espacio> getEspaciosEliminadosByTagName(@Param("nombreEspacio") String nombreEspacio, Pageable pagerequest);
+	
+	@Query("from #{#entityName} e where lower(e.nombreEspacio) like lower(concat('%',:nombreEspacio, '%'))")
+	public List<Espacio> getEspaciosByTagName(@Param("nombreEspacio") String nombreEspacio);
+
+	@Query("select e from #{#entityName} e where e.deleted=false and e.edificio.nombreEdificio like lower(concat('%',:nombre, '%'))")
+	public Page<Espacio> getEspaciosPorEdificio(@Param("nombre") String nombre, Pageable pagerequest);
+	
+	@Query("select e from #{#entityName} e where e.deleted=true and e.edificio.nombreEdificio like lower(concat('%',:nombre, '%'))")
+	public Page<Espacio> getEspaciosEliminadosPorEdificio(@Param("nombre") String nombre, Pageable pagerequest);
+	
+	
 	
 	
 	//////////////////JAVIER////////////////////////////

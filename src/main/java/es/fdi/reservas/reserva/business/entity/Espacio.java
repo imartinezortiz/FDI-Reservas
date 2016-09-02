@@ -2,7 +2,6 @@ package es.fdi.reservas.reserva.business.entity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,7 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+
+import es.fdi.reservas.fileupload.business.entity.Attachment;
 
 @Entity
 public class Espacio {
@@ -47,6 +49,10 @@ public class Espacio {
 	@NotNull
 	private boolean deleted;
 	
+	@OneToOne(optional=true)
+	@JoinColumn(name="ImagenId")
+	private Attachment imagen;
+	
 	public Espacio(){
 		
 	}
@@ -64,16 +70,13 @@ public class Espacio {
 	}*/
 	
 	public Espacio(String nombre_espacio, int capacidad, boolean microfono, boolean proyector,
-			TipoEspacio tipoEspacio, Edificio edificio, Autorizacion autorizacion, int horas) {
+			TipoEspacio tipoEspacio) {
 		super();
 		this.nombreEspacio = nombre_espacio;
 		this.capacidad = capacidad;
 		this.microfono = microfono;
 		this.proyector = proyector;
-		this.tipoAutorizacion=autorizacion;
-		this.horasAutorizacion=horas;
 		this.tipoEspacio = tipoEspacio;
-		this.edificio = edificio;
 		this.deleted = false;
 	}
 
@@ -106,6 +109,14 @@ public class Espacio {
 
 	public Espacio(Long idEspacio){
 		id = idEspacio;
+	}
+	
+	public Attachment getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(Attachment imagen) {
+		this.imagen = imagen;
 	}
 
 	public String getNombreEspacio() {

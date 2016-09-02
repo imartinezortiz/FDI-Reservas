@@ -5,6 +5,7 @@ $(document).ready(function(){
 	 	var reqHeaders = [];
 	 	reqHeaders[header] = token;
 	 	
+	 	// Inicializa el colorpicker
 		$(function(){
 			$('#cp2').colorpicker();		
 		});
@@ -31,9 +32,9 @@ $(document).ready(function(){
 		});
 		
 		
-		
+		// Guardar cambios
 		$("#enlaceGuardar").click(function(){
-
+				
 			reserva.id = idReserva;
 			reserva.title = $("#idAsunto").val();
 	    	reserva.start = es.ucm.fdi.dateUtils.toIso8601($("#datetimepicker1").val());
@@ -44,65 +45,35 @@ $(document).ready(function(){
 	    	reserva.recurrenteId = recurrenteId;
 	    	reserva.reglasRecurrencia = reglas;
 	    	
-	    	console.log(reserva);
-	    	editarReserva(reserva,reqHeaders);
+	    	if(esRecurrente(reserva)){
+	    		$("#modalRecurrente").modal("show");
+	    	}
+	    	else{
+	    		editarReserva(reserva,reqHeaders);
+	    	}
+
   	
 		});
 		
+		// Editar sólo una reserva de la serie
+		$('#solo_esta').click(function(){
+			var b = reserva.start;			
+			var bb = new moment(b).format("DD/MM/YYYY");
+			var exDate = "EXDATE:VALUE=" + bb;
+			
+			var recurrencia = [];
+			recurrencia.push(exDate);
+			reserva.reglasRecurrencia = recurrencia;
+			
+			editarReservaRecurrente(reserva, reqHeaders);	
+		});
 		
-		$("#autoUsuarios").autocomplete({
-			source:function(request, response){
-					var tag = request.term;
-					
-					$.ajax({
-						url: '/reservas/usuarios/tag/' + tag,
-						type: 'GET',
-						contentType: 'application/json',
-						success : function(datos) {
-							console.log(datos);
-							
-							response($.map(datos,function(item){
-								
-									var obj = new Object();
-									obj.label = item.id; 
-									obj.value = item.username;
-									obj.email = item.email;
-									return obj;
-				
-							}))
-							
-						},    
-					    error : function(xhr, status) {
-					        alert('Disculpe, existió un problema');
-					    }
-					});
-			},
-			select: function(event, ui){
-				var img = '<img class="img-circle" src="http://placehold.it/30x30" data-toggle="tooltip" data-placement="bottom" title="' + ui.item.value + '" />' ;
-				$("#asistencia").append(img);
-				$('[data-toggle="tooltip"]').tooltip();
-				
-			},
-			minLength: 3
-
-		}).autocomplete("instance")._renderItem = function(ul,item){
-			
-				var inner_html = '<div class="media"><div class="media-left">' + 
-				                  '<img class="img-circle" src="http://placehold.it/50x50"/>' + 
-				                  '</div>' + 
-				                  '<div class="media-body">' + 
-				                  '<h5 class="media-heading">'+ item.value +'</h5>' + 
-				                  '<p class="small text-muted">'+ item.email +'</p>' + 
-				                  '</div></div>';
-				                  
-				        
-				                  
-		            return $('<li></li>')
-		                    .data("item.autocomplete", item)
-		                    .append(inner_html)
-		                    .appendTo(ul);
-			
-		};
+		// Editar todas las reservas de la serie
+		$('#toda_la_serie').click(function(){
+			editarReserva(reserva,reqHeaders);
+		});
+		
+		
 		
 });	
 
@@ -117,11 +88,63 @@ function editarReserva(reserva, reqHeaders){
 			success : function(datos) {   
 				 window.location = "/reservas/mis-reservas";
 			},    
-			error : function(xhr, status) {
-			
- 			alert('Disculpe, existió un problema');
- 			
+			error : function(xhr, status) {			
+				alert('Error al editar la reserva.');			
 			}
 		});
 	
+}
+
+
+
+function editarReservaRecurrente(reserva, reqHeaders){	 		
+	$.ajax({
+		url: baseURL + 'editarReserRecurrente',
+		headers : reqHeaders,
+		type: 'POST',		 				 			
+		data: JSON.stringify(reserva),
+		contentType: 'application/json',
+		error : function(xhr, status) {			
+ 			alert('Error al agregar el EXDATE');			
+		}
+	}).then(function(){
+		reserva.reglasRecurrencia = [];
+		nuevaReserva(reserva, reqHeaders);
+	});
+	
+}
+
+function esRecurrente(reserva){
+	return reserva.reglasRecurrencia.length > 0;
+}
+
+function nuevaReserva(reserva, reqHeaders){
+	$.ajax({
+			url: baseURL + 'nuevaReservaAJAX',
+			headers : reqHeaders,
+			type: 'POST',		 				 			
+			data: JSON.stringify(reserva),
+			contentType: 'application/json',
+			success : function(datos) {  
+				 window.location = "/reservas/mis-reservas";
+			},
+			error: function(xhr, status){
+				var x = JSON.parse(xhr.responseText);
+				alert(x.msg);
+				borrarEXDATE(reserva, reqHeaders);
+			}
+		});
+}
+
+function borrarEXDATE(reserva, reqHeaders){
+	$.ajax({
+		url: baseURL + 'borrarExdate',
+		headers : reqHeaders,
+		type: 'POST',		 				 			
+		data: JSON.stringify(reserva),
+		contentType: 'application/json',
+		error: function(xhr, status){
+			alert("Error de borrado de exdate");
+		}
+	});
 }

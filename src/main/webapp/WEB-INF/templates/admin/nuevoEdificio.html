@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+
+	<title>UCM RESERVAS - Añadir edificio</title>
+    
+</head>
+<body>
+
+<div class="container-fluid" th:fragment="contenido">
+        
+        <!-- Page Heading -->
+			<div class="row">
+			    <div class="col-md-12">
+			        <h2 class="page-header text-center">
+			           Crear Edificio
+			        </h2>
+			    </div>
+			</div>
+			<!-- /.row -->
+        
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                         <form role="form" action="#" th:action="@{/admin/nuevoEdificio}" th:object="${Edificio}" method="post">
+                         <!-- Nombre edificio -->
+                         	<div class="form-group">
+                                <label>Nombre edificio</label>
+                                <div class="input-group">
+                                  <span class="input-group-addon"><i class="zmdi zmdi-city"></i></span>
+                                  <input name="nombreEdificio" type="text" class="form-control" placeholder="Nombre de edificio"/>
+                                </div>
+                            </div>
+                            <!-- Direccion del edificio -->
+                            <div class="form-group">
+                                <label>Direccion</label>
+                                <div class="input-group">
+                                  <span class="input-group-addon"><i class="zmdi zmdi-map"></i></span>
+                                  <input name="direccion" type="text" class="form-control" placeholder="Direccion del edificio"/>
+                                </div>
+                            </div>
+                            <!-- Facultad -->
+                            <div class="form-group">
+                                <label>Facultad</label>
+                                <div class="input-group">
+                                  <span class="input-group-addon"><i class="zmdi zmdi-library"></i></span>
+                                  <select name="idFacultad" title="Facultad">
+				          
+							          <option th:each="f : ${facultades}" th:value="${f.id}" th:text="${f.nombreFacultad}"/>
+							          			
+							        </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+								<label>Selecciona la imagen:</label>
+								<div class="input-group"> 
+									<span class="input-group-addon"><i class="zmdi zmdi-camera-alt"></i></span>
+									<input type="file" class="form-control" id="idAttachment" />
+								</div>
+							</div>
+                                                        
+                            <div class="text-center">
+                                 <button type="submit" class="btn btn-normal">Crear</button>
+                            </div>
+
+                         </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+       
+
+
+        
+        <!-- /.container-fluid -->
+
+        
+           <footer>
+            <div class="row">
+                 <div class="div-footer text-center">
+                    <i class="fa fa-copyright"></i> UCM Reservas - 2016
+                 </div>
+            </div>
+          </footer>
+
+</body>
+</html>

@@ -8,23 +8,36 @@
 </head>
 <body>
 <div class="container-fluid" th:fragment="contenido">
-	<div class="row">
-	    <div class="col-md-12">
-	        <h1 class="page-header text-center">
-	            Administrar
-	        </h1>
-	    </div>
-	</div>
-<!-- /.row -->
+
 	<div class="row">
     	<div class="col-md-12">
-            <h1 class="page-header text-center">
-                <small>Administrar espacios</small>
-            </h1>
+            <h2 class="page-header text-center">
+               <small>Lista de </small>Espacios
+            </h2>
         </div>
     </div>
            <!-- /.row -->
 
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-2">
+				<label class="form-group" style="margin-top:5px;">Filtrar por: </label>
+			</div>
+			<div class="col-md-2">
+				<select id="selec-busqueda" class="form-control">
+					<option value="nombre">Nombre</option>
+					<option value="edificio">Edificio</option>
+				</select>
+			</div>
+			<div class="col-md-8">
+			 <div class="input-group">        
+	            <input type="text" id="texto-busqueda" class="form-control" placeholder="Introduce nombre de espacio"></input>
+	             <span class="input-group-addon"><a id="busquedaEspacio"><i class="fa fa-search"></i></a></span>
+	          </div>
+	    	</div>
+		</div>
+	</div>
+<hr/>
     <div class="row">
 		<div class="col-md-8 col-md-offset-2">
     	
@@ -37,52 +50,51 @@
               <table class="table table-bordered table-hover">
                   <thead>
                       <tr>
-                          <th>Nombre</th>
-                          <th>Capacidad</th>
-                          <th>Micrófono</th>
-                          <th>Proyector</th>
+                      	  <th>Imágen</th>
+                      	  <th>Edificio</th>
+                          <th>Nombre</th>                      
                           <th>Tipo de espacio</th>
-                          <th>Edificio</th>
+                          <th>Acciones</th>
                       </tr>
                   </thead>
                   <tbody>
-                      <tr th:each="r : ${currentResults}"
-                      	th:attr="data-id=${r.id},name=${r.nombre_espacio},capacidad=${r.capacidad},micro=${r.microfono},proye=${r.proyector},tipo=${r.tipoEspacio.tipo}, edificio = ${r.edificio.nombre_edificio}">
-                      	
-                        <td th:text="${r.nombre_espacio}"></td>
-                        <td th:text="${r.capacidad}"></td>
-                        <td th:if="${!r.microfono}">No</td>
-                        <td th:if="${r.microfono}">Si</td>
-                        <td th:if="${!r.proyector}">No</td>
-                        <td th:if="${r.proyector}">Si</td>
+                      <tr th:each="r : ${currentResults}" th:classappend="${!r.deleted} ? 'success' : 'danger'" th:attr="id=${r.id}">
+                      	<td class="text-center"><img class="img-circle" th:alt="${r.imagen.description}" th:src="@{${r.imagen.attachmentUrl}}" height="25" width="25"></img></td>
+                      	<td  th:text="${r.edificio.nombreEdificio}"></td>
+                        <td th:text="${r.nombreEspacio}"></td>                   
                         <td th:text="${r.tipoEspacio.tipo}"></td> 
-                        <td th:text="${r.edificio.nombre_edificio}"></td> 
-                      </tr>     
+                        <td><a th:attr="data-id=${r.id},name=${r.nombreEspacio},capacidad=${r.capacidad},micro=${r.microfono},proye=${r.proyector},tipo=${r.tipoEspacio.tipo},act=${r.deleted},edif=${r.edificio.nombreEdificio},act=${r.deleted},data-accion='Ver'" role="button" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
+						<a th:href="@{'/admin/administrar/espacio/editar/' + ${r.id}}" role="button" data-toggle="tooltip" data-placement="top" title="Editar"><i class="zmdi zmdi-edit zmdi-hc-lg"> </i></a>
+						<a th:attr="data-id=${r.id},name=${r.nombreEspacio},capacidad=${r.capacidad},micro=${r.microfono},proye=${r.proyector},tipo=${r.tipoEspacio.tipo},act=${r.deleted},edif=${r.edificio.nombreEdificio},act=${r.deleted},data-accion='Eliminar'" role="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="zmdi zmdi-delete zmdi-hc-lg"> </i></a>	
+						</td>
+                      </tr>  
+                      
+                     
                   </tbody>
               </table>
-              <a th:href="@{'/nuevoEspacio'}"><input type="button" class="btn btn-default" value="Añadir espacio"/></a> 
+<!--               <a th:href="@{'/nuevoEspacio'}"><input type="button" class="btn btn-default" value="Añadir espacio"/></a>  -->
           	</div> 
         <!-- /.table-responsive-->
-    	<a th:href="@{'/administrar/espacio/restaurar'}"><input type="button" class="btn btn-default" value="Restaurar espacios"/></a>
+    	<a th:href="@{'/admin/administrar/espacio/' + ${currentIndex} + '/restaurar'}"><input type="button" class="btn btn-default" value="Restaurar espacios"/></a>
 		</div>
 		
 	</div>
 	
 	<!-- Pagination -->
- 	<div class="row">
+ 	<div class="row" th:unless="${#lists.isEmpty(currentResults.content)}">
     <div class="col-md-12 text-center">
-        <div class='pagination pagination-centered'>
+        <nav>
             <ul class="pagination">
                 <li th:class="${currentIndex == 1}? 'disabled' : ''">
-                    <span th:if='${currentIndex == 1}'>← First</span>
+                    <span th:if='${currentIndex == 1}'>Primera</span>
                     <a th:if='${currentIndex != 1}'
-                       th:href="@{1}">← First</a>
+                       th:href="@{1}">Primera</a>
                 </li>
                 <li th:class="${currentIndex != 1}? '' : 'disabled'">
-                    <span th:if='${currentIndex == 1}'>«</span>
+                    <span th:if='${currentIndex == 1}'><i class='fa fa-angle-left'></i></span>
                     <a th:if='${currentIndex != 1}'
                        th:href="@{${(currentIndex - 1)}}"
-                       title='Go to previous page'>«</a>
+                       title='Go to previous page'><i class='fa fa-angle-left'></i></a>
                 </li>
 
                 <li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
@@ -97,17 +109,17 @@
                 </li>
 
                 <li th:class="${currentIndex != currentResults.totalPages}? '' : 'disabled'">
-                    <span th:if='${currentIndex == currentResults.totalPages}'>»</span>
+                    <span th:if='${currentIndex == currentResults.totalPages}'><i class='fa fa-angle-right'></i></span>
                     <a th:if='${currentIndex != currentResults.totalPages}'
-                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'>»</a>
+                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'><i class='fa fa-angle-right'></i></a>
                 </li>
                 <li th:class="${currentIndex == currentResults.totalPages}? 'disabled' : ''">
-                    <span th:if='${currentIndex == currentResults.totalPages}'>Last →</span>
+                    <span th:if='${currentIndex == currentResults.totalPages}'>Última</span>
                     <a th:if='${currentIndex != currentResults.totalPages}'
-                       th:href="@{${currentResults.totalPages}}">Last →</a>
+                       th:href="@{${currentResults.totalPages}}">Última</a>
                 </li>
             </ul>
-        </div>
+        </nav>
     </div>
 </div>
  <!-- /.Pagination -->
@@ -123,171 +135,109 @@
           		<form class="form-horizontal" role="form" action="#" th:action="@{/editar}" th:object="${Espacio}" method="put">             
 				
 				 <!-- Nombre de edificio --> 
-                 <div class="form-group">
-                     <label for="ejemplo_2" class="col-md-2 control-label">Nombre:</label>
-                      <div class="col-md-10">
-                         <input id="idNombre" name="nombreEsp" type="text" class="form-control" placeholder="Introduce un nombre de espacio"/>
-                      </div>
-                 </div>
+				 <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Nombre: </label>
+		                      <div class="col-md-10">
+		                         <p id="idNombre" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
                  
                  <!-- Capacidad --> 
-                 <div class="form-group">
-                     <label for="ejemplo_3" class="col-md-3 control-label">Capacidad:</label>
-                     <div class="col-md-9">
-		               <input id="idCapa" name="Capa" type="text" class="form-control" placeholder="Introduce su capacidad"/>
-		               
-                     </div>
-                 </div>
-                 
+                 <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Capacidad: </label>
+		                      <div class="col-md-10">
+		                         <p id="idCapa" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+                                  
                  <!-- Microfono --> 
-                 <div class="form-group">
-                     <label for="ejemplo_3" class="col-md-3 control-label">Microfono:</label>
-                     <div class="col-md-9">
-		               
-		               <select id = "idMicro" title="¿Tiene microfono">
-                     		<option value="true">Si</option>
-				          	<option value="false">No</option>
-				          	
-                     	</select>
-                     </div>
-                 </div>
+                 <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Micrófono: </label>
+		                      <div class="col-md-10">
+		                         <p id="idMicro" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
                  
-                 <!-- Microfono --> 
-                 <div class="form-group">
-                     <label for="ejemplo_3" class="col-md-3 control-label">Proyector:</label>
-                     <div class="col-md-9">
-                     	<select id = "idProy" title="¿Tiene proyector?">
-                     		<option value="true">Si</option>
-				          	<option value="false">No</option>
-				          	
-                     	</select>
-		               		               
-                     </div>
-                 </div>
+                 <!-- Proyector --> 
+                 <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Proyector: </label>
+		                      <div class="col-md-10">
+		                         <p id="idProy" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
                  
-                 <!-- Tipo espacio --> 
-                 <div class="form-group">
-                     <label for="ejemplo_3" class="col-md-3 control-label">Tipo:</label>
-                     <div class="col-md-9">
-                     	<select id = "idTipo" title="Tipo de espacio">
-                     		<option value="Sala">Sala</option>
-				          	<option value="Aula">Aula</option>
-				          	<option value="Laboratorio">Laboratorio</option>
-                     	</select>
-		               
-		               
-                     </div>
-                 </div>
-                 
-                 <div class="form-group">
-                     <label for="ejemplo_3" class="col-md-3 control-label">Edificio:</label>
-                     <div class="col-md-9">
-                     
-                     	<select id="idEdif" name="facul" title="Facultad">
-				          
-				          <option th:each="f : ${edificios}" th:value="${f.id}" th:text="${f.nombre_edificio}"/> 
-				        </select>
-		               
-		               
-                     </div>
-                 </div>
+                 <!-- Tipo espacio -->
+                 <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Tipo de espacio: </label>
+		                      <div class="col-md-10">
+		                         <p id="idTipo" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+                  </div>
+				
+				<!-- Edificio -->
+				<div class="row">
+                	<div class="col-md-12">
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Edificio: </label>
+		                      <div class="col-md-10">
+		                         <p id="idEdificio" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+                  </div>
                  
                  <div class="row">
-                     <div class="col-xs-6 col-md-6">
-                      <button id="btn-eliminar" type="button" class="btn-rec red">ELIMINAR</button>
-                     </div>
-                     <div class="col-xs-6 col-md-6 text-right">
-                      <button id="btn-guardar" type="button" class="btn-rec blue">GUARDAR </button>
-                     </div>
-                 </div>                
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Eliminado: </label>
+		                      <div class="col-md-10">
+		                         <p id="idActivado" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+                               
              </form>
                  
           </div>
+          
+          <div class="modal-footer">
+	        <a id="btn-eliminar" href="#" class="btn-rec gray">ELIMINAR</a>
+	        <a id="btn-editar" th:href="@{''}" class="btn-rec blue">EDITAR</a>
+	      </div>
         </div>
       </div>
     </div>
-	<script th:inline="javascript">
- var baseURL = /*[[@{/}]]*/ '/';
-
- $(document).ready(function(){
-	 	var espacio = {};
-	 	var token = $("meta[name='_csrf']").attr("content");
-	 	var header = $("meta[name='_csrf_header']").attr("content");
-	 	var reqHeaders = [];
-	 	reqHeaders[header] = token;
-	 	
-	 	$('tr').click(function(){
-	 		$('#modalEditarEspacio').modal('show');
-	 		
-	 		espacio.id =  $(this).attr("data-id");
-	 		espacio.nombre_espacio = $(this).attr("name");
-	 		espacio.capacidad = $(this).attr("capacidad");
-	 		espacio.microfono = $(this).attr("micro");
-	 		espacio.proyector = $(this).attr("proye");
-	 		espacio.tipoEspacio = $(this).attr("tipo");
-	 		espacio.idEdificio = $(this).attr("edificio");
-
-	 		//$('#modalEditarEspacio #idEspacio').text(espacio.id);
-	 		$('#modalEditarEspacio #idNombre').attr("value",espacio.nombre_espacio);
-	 		$('#modalEditarEspacio #idCapa').attr("value",espacio.capacidad);
-	 		$('#modalEditarEspacio #idMicro').attr("value",espacio.microfono);
-	 		$('#modalEditarEspacio #idProy').attr("value",espacio.proyector);
-	 		$('#modalEditarEspacio #idTipo').attr("value",espacio.tipoEspacio);
-	 		$('#modalEditarEspacio #idEdif').attr("value", espacio.idEdificio);
-	 		
-	 	});
-	 	
-	 	$("#btn-guardar").click(function(){
-	 		espacio.nombre_espacio = $("#modalEditarEspacio #idNombre").val();
-	 		espacio.capacidad = $('#modalEditarEspacio #idCapa').val();
-	 		espacio.microfono = $('#modalEditarEspacio #idMicro').val();
-	 		espacio.proyector = $('#modalEditarEspacio #idProy').val();
-	 		espacio.tipoEspacio = $('#modalEditarEspacio #idTipo').val();
-	 		espacio.idEdificio = $('#modalEditarEspacio #idEdif').val();
-	 		
-	 		$.ajax({
-	 			url: baseURL + "espacio/" + espacio.id,
-	 			type: 'PUT',
-	 			headers : reqHeaders,
-	 			data: JSON.stringify(espacio),
-	 			contentType: 'application/json',
-	 			success : function(datos) {   
-	 				alert("Espacio actualizado");
-	 				$('#modalEditarEspacio').modal('hide');
-	 				//$("#"+espacio.id +" td:nth-child(1)").text(espacio.id);
-	 				$("#"+espacio.id +" td:nth-child(1)").text(espacio.nombre_espacio);
-	 				$("#"+espacio.id +" td:nth-child(2)").text(espacio.capacidad);
-	 				$("#"+espacio.id +" td:nth-child(3)").text(espacio.microfono);
-	 				$("#"+espacio.id +" td:nth-child(4)").text(espacio.proyector);
-	 				$("#"+espacio.id +" td:nth-child(5)").text(espacio.tipoEspacio);
-	 				$("#"+espacio.id +" td:nth-child(6)").text(espacio.idEdificio);
-	 			},    
-	 			error : function(xhr, status) {
-	     			alert('Disculpe, existió un problema');
-	 			}
-	 		});
-	 	});
-	 
-	 	$("#btn-eliminar").click(function(){
-	 		$.ajax({
-	 			url: baseURL + "espacio/" + espacio.id,
-	 			type: 'DELETE',
-	 			headers : reqHeaders,
-	 			success : function(datos) {
-	 				alert("Espacio eliminado");
-	 				$('#modalEditarEspacio').modal('hide');
-	 				$("#"+espacio.id).remove();
-	 			},    
-	 			error : function(xhr, status) {
-	 				alert('Disculpe, existió un problema');
-	 			}
-	 		});
-	 	});
-	 
- });
- 
- 
- </script>			
+  <script th:inline="javascript">
+ 	var baseURL = /*[[@{/}]]*/ '/';
+ </script>
+ <script src="../../js/espacioAdministrar.js" th:src="@{/js/espacioAdministrar.js}"></script>			
  </div>
 </body>
 </html>

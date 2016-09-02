@@ -57,5 +57,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 
 	public List<Reserva> findByGrupoReservaIdAndUserId(Long idGrupo, Long idUsuario);
 	
+	@Query("FROM Reserva r WHERE (r.user.id = :idUsuario) AND (r.estadoReserva = :estado)")
+	public List<Reserva> reservasPendientesUsuario(@Param("idUsuario") Long idUsuario,@Param("estado") EstadoReserva estado);
+	
 	
 }

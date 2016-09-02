@@ -2,19 +2,24 @@ package es.fdi.reservas.reserva.web;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import es.fdi.reservas.reserva.business.boundary.EdificioService;
+import es.fdi.reservas.reserva.business.boundary.EspacioService;
+import es.fdi.reservas.reserva.business.boundary.FacultadService;
 import es.fdi.reservas.reserva.business.boundary.GrupoReservaService;
 import es.fdi.reservas.reserva.business.boundary.ReservaService;
 import es.fdi.reservas.reserva.business.boundary.ReservaSolapadaException;
 import es.fdi.reservas.reserva.business.entity.Edificio;
 import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.Facultad;
-import es.fdi.reservas.reserva.business.entity.GrupoReserva;
 import es.fdi.reservas.reserva.business.entity.Reserva;
 import es.fdi.reservas.reserva.business.entity.TipoEspacio;
 import es.fdi.reservas.users.business.boundary.UserService;
@@ -29,11 +34,20 @@ public class ReservasRestController {
 	
 	private UserService user_service;
 	
+	private EdificioService edificio_service;
+	
+	private EspacioService espacio_service;
+	
+	private FacultadService facultad_service;
+	
 	@Autowired
-	public ReservasRestController(ReservaService rs,GrupoReservaService grs, UserService us){
+	public ReservasRestController(ReservaService rs,GrupoReservaService grs, UserService us, EdificioService eds, EspacioService es, FacultadService fs){
 		reserva_service = rs;
 		grupo_service = grs;
 		user_service = us;
+		edificio_service = eds;
+		espacio_service = es;
+		facultad_service = fs;
 	}
 	
 	@RequestMapping(value="{idEspacio}/eventos", method=RequestMethod.GET)
@@ -163,7 +177,7 @@ public class ReservasRestController {
 		List<EspacioDTO> result = new ArrayList<>();
 		List<Espacio> espacios = new ArrayList<>();
 
-		espacios = reserva_service.getEspaciosPorTagName(tagName);
+		espacios = espacio_service.getEspaciosPorTagName(tagName);
 				
 		for(Espacio e : espacios) {
 			result.add(EspacioDTO.fromEspacioDTO(e));
@@ -178,9 +192,9 @@ public class ReservasRestController {
 		List<Espacio> allSpaces = new ArrayList<>();
 		
 		if(tipoEspacio.equals("Todos"))
-			 allSpaces = reserva_service.getEspaciosEdificio(idEdificio);
+			 allSpaces = espacio_service.getEspaciosEdificio(idEdificio);
 		else
-		     allSpaces = reserva_service.getTiposEspacio(idEdificio, TipoEspacio.fromTipoEspacio(tipoEspacio));
+		     allSpaces = espacio_service.getTiposEspacio(idEdificio, TipoEspacio.fromTipoEspacio(tipoEspacio));
 		
 		
 		for(Espacio e : allSpaces) {
@@ -198,7 +212,7 @@ public class ReservasRestController {
 		List<EdificioDTO> result = new ArrayList<>();
 		List<Edificio> edificios = new ArrayList<>();
 			
-		edificios = reserva_service.getEdificiosFacultad(idFacultad);
+		edificios = edificio_service.getEdificiosFacultad(idFacultad);
 			
 		for(Edificio e : edificios) {
 			result.add(EdificioDTO.fromEdificioDTO(e));
@@ -228,25 +242,10 @@ public class ReservasRestController {
 		List<FacultadDTO> result = new ArrayList<>();
 		List<Facultad> facultades = new ArrayList<>();
 
-		facultades = reserva_service.getFacultadesPorTagName(tagName);
+		facultades = facultad_service.getFacultadesPorTagName(tagName);
 				
 		for(Facultad f : facultades) {
-			result.add(FacultadDTO.fromFacultadDTO(f));
-		}
-		 
-		return result;
-	}
-	
-	@RequestMapping(value = "/grupo/tag/{tagName}", method = RequestMethod.GET)
-	public List<GrupoReservaDTO> gruposFiltro(@PathVariable("tagName") String tagName) {
-		User u = user_service.getCurrentUser();
-		List<GrupoReservaDTO> result = new ArrayList<>();
-		List<GrupoReserva> grupos = new ArrayList<>();
-
-		grupos = grupo_service.getGruposPorTagName(tagName, u.getId());
-				
-		for(GrupoReserva g : grupos) {
-			result.add(GrupoReservaDTO.fromGrupoReserva(g));
+			result.add(FacultadDTO.fromFacultadDTOAutocompletar(f));
 		}
 		 
 		return result;
@@ -260,7 +259,7 @@ public class ReservasRestController {
 		r.setComienzo(rf.getStart());
 		r.setFin(rf.getEnd());
 		r.setAsunto(rf.getTitle());
-		r.setEspacio(reserva_service.getEspacio(rf.getIdEspacio()));
+		r.setEspacio(espacio_service.getEspacio(rf.getIdEspacio()));
 		r.setReservaColor(rf.getColor());
 		r.setReglasRecurrencia(rf.getReglasRecurrencia());
 		r.setUser(user);
@@ -281,12 +280,42 @@ public class ReservasRestController {
 		reserva_service.editarReglasRecurrencia(rf);
     }
 	
+	@RequestMapping(value="/borrarExdate",method=RequestMethod.POST)
+    public void eliminarExdate(@RequestBody ReservaDTO rf){		
+		reserva_service.eliminarExdate(rf);
+    }
 	
-	@RequestMapping(value="/grupo/{idGrupo}", method=RequestMethod.DELETE)
-	public void eliminarGrupo(@PathVariable("idGrupo") long idGrupo){
-		grupo_service.eliminarGrupo(idGrupo);
+	@RequestMapping(value = "/busquedaFecha", method = RequestMethod.POST)
+	public List<ReservaDTO> busquedaPorFecha(@RequestBody BusquedaFechaDTO bfDTO){
+		List<ReservaDTO> result = new ArrayList<>();
+		List<Reserva> resultAux = new ArrayList<>();
+		DateTime start = bfDTO.getDesde();
+		DateTime end = bfDTO.getHasta();
+		List<Espacio> espacios = espacio_service.getEspaciosEdificio(bfDTO.getIdEdificio());
+		for(Espacio e : espacios){
+			resultAux = reserva_service.getAllReservasConflictivas(e.getId(), start, end);
+			
+			if(resultAux.size() == 0){//si no hay reservas se crea una
+				ReservaDTO reservaDTO = new ReservaDTO();
+				reservaDTO.setIdEspacio(e.getId());
+				reservaDTO.setNombreEspacio(e.getNombreEspacio());
+				reservaDTO.setTitle("Sin asunto");
+				reservaDTO.setStart(start);
+				reservaDTO.setEnd(end);
+				
+				result.add(reservaDTO);
+			}
+			
+			resultAux.clear();
+		}
+		
+		return result;
 	}
 	
+	@RequestMapping(value = "/cambiarReservaDeCalendario/{idGrupo2}", method = RequestMethod.POST)
+	public void cambiarDeCalendario(@PathVariable("idGrupo2") Long idGrupo2, @RequestBody ReservaDTO rfDTO){
+		reserva_service.cambiarDeCalendario(idGrupo2, rfDTO);
+	}
 	
-	
+
 }

@@ -28,8 +28,10 @@
     <link rel="stylesheet"
         href="//cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"
         th:href="@{/webjars/material-design-iconic-font/2.2.0/dist/css/material-design-iconic-font.min.css}"/>
+    <!-- CSS carousel -->
+    <link rel="stylesheet" th:href="@{/webjars/owl.carousel/2.1.6/dist/assets/owl.carousel.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/owl.carousel/2.1.6/dist/assets/owl.theme.default.min.css}"/>
     <link rel="stylesheet" type="text/css" media="all" href="../../css/estilo.css" th:href="@{/css/estilo.css}"/>
-    <!--<link rel="stylesheet" type="text/css" media="all" href="../../css/calendario.css" th:href="@{/css/calendario.css}"/>  -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'/>
 	<title>UCM RESERVAS</title>
     <!-- JS -->
@@ -58,6 +60,7 @@
      <script
         src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.0/lang-all.js"
         th:src="@{/webjars/fullcalendar/2.3.0/lang-all.js}"></script>
+     <script th:src="@{/webjars/owl.carousel/2.1.6/dist/owl.carousel.min.js}"></script>
      <script
         src="../../js/datetime-utils.js"
         th:src="@{/js/datetime-utils.js}"></script>
@@ -80,7 +83,22 @@
             }
             else if(pathname.indexOf("administrar") >= 0){
             	$("#li_administrar").addClass("active");
-            	$("#demo").collapse();
+            	//$("#demo").collapse();
+            }
+            else if(pathname.indexOf("nuevoEdificio") >= 0){
+            	$("#li_administrar").addClass("active");
+            	//$("#demo").collapse();
+            }
+            else if(pathname.indexOf("nuevoUsuario") >= 0){
+            	$("#li_administrar").addClass("active");
+            	//$("#demo").collapse();
+            }
+            else if(pathname.indexOf("nuevoEspacio") >= 0){
+            	$("#li_administrar").addClass("active");
+            	//$("#demo").collapse();
+            }else if(pathname.indexOf("nuevaFacultad") >= 0){
+            	$("#li_administrar").addClass("active");
+            	//$("#demo").collapse();
             }
             else if(pathname.indexOf("edificio") >= 0){
             	$("#li_porespacios").addClass("active");
@@ -89,6 +107,10 @@
             else if(pathname.indexOf("fecha") >= 0){
             	$("#li_porfecha").addClass("active");
             	$("#demo").collapse();
+            }else if(pathname.indexOf("administrar") >= 0){
+            	$("#li_administrar").addClass("active");
+            	$("#demo").collapse();
+            	$("#demo1").collapse();
             }
             else if(pathname.indexOf("grupo") >= 0){
             	//$("#li_porfecha").addClass("active");
@@ -220,6 +242,18 @@
             <ul class="nav navbar-right top-nav">
                 <!-- Notificaciones  -->
                 <li class="dropdown">
+                    <a href="javascript.;" class="dropdown-toggle" data-toggle="dropdown"><span th:if="${reservasPendientes} > 0" class="badge" th:text="${reservasPendientes}"></span> <i class="zmdi zmdi-notifications-none zmdi-hc-lg"> </i> <i class="fa fa-angle-down"></i></a>
+                    <ul class="dropdown-menu alert-dropdown">
+                        <li th:if="${reservasPendientes} > 0">
+                            <a  th:href="@{/edificios}">Ver reservas pendientes</a>
+                        </li>
+                         <li th:if="${reservasPendientes} == 0">
+                            <p style="margin-bottom:0px;padding:7px 10px;">No hay reservas pendientes</p>
+                        </li> 
+                     </ul>  
+                </li>
+                
+                <li class="dropdown">
                     <a href="javascript.;" class="dropdown-toggle" data-toggle="dropdown"><i class="zmdi zmdi-plus zmdi-hc-lg"> </i> <i class="fa fa-angle-down"></i></a>
                     <ul class="dropdown-menu alert-dropdown">
                         <li>
@@ -228,7 +262,20 @@
                         <li>
                             <a th:href="@{/grupo/nuevo}">Nuevo grupo </a>
                         </li>
-                        
+                        <!--/*/  <th:block sec:authorize="hasRole('ROLE_GESTOR') || hasRole('ROLE_ADMIN')"> /*/-->
+                        <li>
+                            <a th:href="@{/admin/nuevoUsuario}">Nuevo usuario </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/nuevaFacultad}">Nueva facultad </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/nuevoEdificio}">Nuevo edificio </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/nuevoEspacio}">Nuevo espacio </a>
+                        </li>
+                         <!--/*/  </th:block> /*/-->
                     </ul>
                 </li>
                 <!-- Perfil -->
@@ -240,7 +287,7 @@
                             <a th:href="@{/perfil}">
                                 <div class="media">
                                     <span class="pull-left">
-                                        <img class="img-circle" src="http://placehold.it/50x50" alt=""/>
+                                        <img class="img-circle" th:src="@{${User.imagen.attachmentUrl}}" th:alt="${User.imagen.description}" width="50" height="50" />
                                     </span>
                                     <div class="media-body">
                                         <h5 class="media-heading"><strong th:text="${User.username}">John Smith</strong>
@@ -271,7 +318,7 @@
                 <ul class="nav navbar-nav side-nav">
                 		<th:block sec:authorize="hasRole('ROLE_ADMIN')">
                 		<li id="li_administrar">
-                        	<a th:href="@{/administrar}"><i class="fa fa-cog"></i> Administrar</a>
+                        	<a th:href="@{/admin/administrar}"><i class="fa fa-cog"></i> Administrar</a>
                     	</li>
                     	</th:block>
                 	<!--/*/  <th:block sec:authorize="hasRole('ROLE_GESTOR')"> /*/-->

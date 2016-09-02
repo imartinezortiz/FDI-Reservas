@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import es.fdi.reservas.reserva.business.boundary.ReservaSolapadaException;
+import es.fdi.reservas.users.business.boundary.UserPasswordException;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
@@ -19,26 +20,18 @@ public class ExceptionHandlerController {
 	@ExceptionHandler(ReservaSolapadaException.class)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleException(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException {    
-        
-		String acceptHeader = request.getHeader("Accept");
-       
-        // If Accept header exists, check if it expects a response of type json, otherwise just return text/html
-        // Use apache commons lang3 to escape json values
-        if(acceptHeader.contains("application/json")) {
-            // return as JSON
-            String jsonString = 
-                    "{\"success\": false, \"message\": \"hhhhh\" }";
-        
-            System.out.println("In handleGeneric" + e.getMessage());
-            return jsonString;
-        } else {
-            //return as HTML
-            response.setContentType("text/html");
-           // response.getWriter().write(e.getMessage());
-            return response.toString();
-        }
-        
-		//return new ErrorResult(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+    public ErrorResult reservaSolapadaException(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException {    
+ 
+		return new ErrorResult(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
+	
+	
+	@ExceptionHandler(UserPasswordException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResult userPasswordException(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException {    
+ 
+		return new ErrorResult(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+    }
+	
 }

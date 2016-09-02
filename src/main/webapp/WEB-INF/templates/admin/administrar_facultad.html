@@ -8,23 +8,37 @@
 </head>
 <body>
 <div class="container-fluid" th:fragment="contenido">
-	<div class="row">
-	    <div class="col-md-12">
-	        <h1 class="page-header text-center">
-	            Administrar
-	        </h1>
-	    </div>
-	</div>
-<!-- /.row -->
+	
 	<div class="row">
     	<div class="col-md-12">
-            <h1 class="page-header text-center">
-                <small>Administrar facultades</small>
-            </h1>
+            <h2 class="page-header text-center">
+                <small>Lista de </small>Facultades
+            </h2>
         </div>
     </div>
            <!-- /.row -->
-
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-2">
+				<label class="form-group" style="margin-top:5px;">Filtrar por: </label>
+			</div>
+			<div class="col-md-2">
+				<select id="selec-busqueda" class="form-control">
+					<option value="nombre">Nombre</option>
+					<option value="web">Web</option>
+				</select>
+			</div>
+			<div class="col-md-8">
+			 <div class="input-group">        
+	            <input type="text" id="texto-busqueda" class="form-control"></input>
+	             <span class="input-group-addon"><a id="busquedaFacultad"><i class="fa fa-search"></i></a></span>
+	          </div>
+	    	</div>
+		</div>
+	</div>
+	
+	<hr/>
+	
     <div class="row">
 		<div class="col-md-8 col-md-offset-2">
     	
@@ -38,39 +52,43 @@
                   <thead>
                       <tr>
                           <th>Nombre</th>
-                          <th>Dirección</th>
+                          <th>Página web</th>
+                          <th>Acciones</th>
                       </tr>
                   </thead>
                   <tbody>
-                      <tr th:each="r : ${currentResults}"
-                      	th:attr="id=${r.id},data-id=${r.id},name=${r.nombreFacultad}, dir=${r.dir}">
+                      <tr th:if="${!r.deleted}" th:each="r : ${currentResults}" class="success">
                       	
                           <td th:text="${r.nombreFacultad}"></td>
-                          <td th:text="${r.dir}"></td>
-                      </tr>     
+                          <td th:text="${r.webFacultad}"></td>
+                          <td><a th:attr="id=${r.id},data-id=${r.id},name=${r.nombreFacultad},web=${r.webFacultad},act=${r.deleted},data-accion='Ver'" role="button" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
+							<a th:href="@{'/admin/administrar/facultad/editar/' + ${r.id}}" role="button" data-toggle="tooltip" data-placement="top" title="Editar"><i class="zmdi zmdi-edit zmdi-hc-lg"> </i></a>
+							<a th:attr="id=${r.id},data-id=${r.id},name=${r.nombreFacultad},web=${r.webFacultad},act=${r.deleted},data-accion='Eliminar'" role="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="zmdi zmdi-delete zmdi-hc-lg"> </i></a>	
+							</td>
+                      </tr> 
                   </tbody>
               </table>
               
           	</div> 
         <!-- /.table-responsive-->
-    	<a th:href="@{'/administrar/facultad/restaurar'}"><input type="button" class="btn btn-default" value="Restaurar facultades"/></a>
+    	<a th:href="@{'/admin/administrar/facultad/' + ${currentIndex} + '/restaurar'}"><input type="button" class="btn btn-default" value="Restaurar facultades"/></a>
 		</div>
 	</div>
 	<!-- Pagination -->
- 	<div class="row">
+ 	<div class="row" th:unless="${#lists.isEmpty(currentResults.content)}">
     <div class="col-md-12 text-center">
-        <div class='pagination pagination-centered'>
+        <nav>
             <ul class="pagination">
                 <li th:class="${currentIndex == 1}? 'disabled' : ''">
-                    <span th:if='${currentIndex == 1}'>← First</span>
+                    <span th:if='${currentIndex == 1}'>Primera</span>
                     <a th:if='${currentIndex != 1}'
-                       th:href="@{1}">← First</a>
+                       th:href="@{1}">Primera</a>
                 </li>
                 <li th:class="${currentIndex != 1}? '' : 'disabled'">
-                    <span th:if='${currentIndex == 1}'>«</span>
+                    <span th:if='${currentIndex == 1}'><i class='fa fa-angle-left'></i></span>
                     <a th:if='${currentIndex != 1}'
                        th:href="@{${(currentIndex - 1)}}"
-                       title='Go to previous page'>«</a>
+                       title='Go to previous page'><i class='fa fa-angle-left'></i></a>
                 </li>
 
                 <li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
@@ -85,17 +103,17 @@
                 </li>
 
                 <li th:class="${currentIndex != currentResults.totalPages}? '' : 'disabled'">
-                    <span th:if='${currentIndex == currentResults.totalPages}'>»</span>
+                    <span th:if='${currentIndex == currentResults.totalPages}'><i class='fa fa-angle-right'></i></span>
                     <a th:if='${currentIndex != currentResults.totalPages}'
-                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'>»</a>
+                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'><i class='fa fa-angle-right'></i></a>
                 </li>
                 <li th:class="${currentIndex == currentResults.totalPages}? 'disabled' : ''">
-                    <span th:if='${currentIndex == currentResults.totalPages}'>Last →</span>
+                    <span th:if='${currentIndex == currentResults.totalPages}'>Última</span>
                     <a th:if='${currentIndex != currentResults.totalPages}'
-                       th:href="@{${currentResults.totalPages}}">Last →</a>
+                       th:href="@{${currentResults.totalPages}}">Última</a>
                 </li>
             </ul>
-        </div>
+        </nav>
     </div>
 </div>
  <!-- /.Pagination -->
@@ -104,110 +122,64 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Editar facultad</h4>
+            <h4 class="modal-title" id="myModalLabel">Facultad</h4>
           </div>
           <div class="modal-body">
           		<form class="form-horizontal" role="form" action="#" th:action="@{/editar}" th:object="${Facultad}" method="put">             
 				
 				 <!-- Nombre de facultad --> 
-                 <div class="form-group">
-                     <label for="ejemplo_2" class="col-md-2 control-label">Nombre:</label>
-                      <div class="col-md-10">
-                         <input id="idNombre" name="nombreEdif" type="text" class="form-control" placeholder="Introduce un nombre de facultad"/>
-                      </div>
-                 </div>
+				 <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Nombre: </label>
+		                      <div class="col-md-10">
+		                         <p id="idNombre" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
                  
-                 <!-- Direccion de facultad --> 
-                 <div class="form-group">
-                     <label for="ejemplo_2" class="col-md-2 control-label">Direccion:</label>
-                      <div class="col-md-10">
-                         <input id="idDir" name="direccion" type="text" class="form-control" placeholder="Introduce una direccion para la facultad"/>
-                      </div>
-                 </div>
-                              
                  <div class="row">
-                     <div class="col-xs-6 col-md-6">
-                      <button id="btn-eliminar" type="button" class="btn-rec red">ELIMINAR</button>
-                     </div>
-                     <div class="col-xs-6 col-md-6 text-right">
-                      <button id="btn-guardar" type="button" class="btn-rec blue">GUARDAR </button>
-                     </div>
-                 </div>                
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Web: </label>
+		                      <div class="col-md-10">
+		                         <p id="idWeb" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+		         
+		         <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Eliminado: </label>
+		                      <div class="col-md-10">
+		                         <p id="idActivado" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+                                
              </form>
                  
           </div>
+          <div class="modal-footer">
+	        <a id="btn-eliminar" href="#" class="btn-rec gray">ELIMINAR</a>
+	        <a id="btn-editar" th:href="@{''}" class="btn-rec blue">EDITAR</a>
+	      </div>
         </div>
       </div>
     </div>
-	<script th:inline="javascript">
- var baseURL = /*[[@{/}]]*/ '/';
-
- $(document).ready(function(){
-	 	var facultad = {};
-	 	var token = $("meta[name='_csrf']").attr("content");
-	 	var header = $("meta[name='_csrf_header']").attr("content");
-	 	var reqHeaders = [];
-	 	reqHeaders[header] = token;
-	 	
-	 	$('tr').click(function(){
-	 		$('#modalEditarFacultad').modal('show');
-	 		
-	 		facultad.id =  $(this).attr("data-id");
-	 		facultad.nombreFacultad = $(this).attr("name");
-			facultad.dir = $(this).attr("dir");
-			
-	 		$('#modalEditarFacultad #idFacultad').text(facultad.id);
-	 		$('#modalEditarFacultad #idNombre').attr("value",facultad.nombreFacultad);
-	 		$('#modalEditarFacultad #idDir').attr("value",facultad.dir);
-	 	});
-	 	
-	 	$("#btn-guardar").click(function(){
-	 		facultad.nombreFacultad = $("#modalEditarFacultad #idNombre").val();
-	 		facultad.dir = $("#modalEditarFacultad #idDir").val();
-	 	
-
-	 		$.ajax({
-	 			url: baseURL + "facultad/" + facultad.id,
-	 			type: 'PUT',
-	 			headers : reqHeaders,
-	 			data: JSON.stringify(facultad),
-	 			contentType: 'application/json',
-	 			success : function(datos) {   
-	 				alert("Facultad actualizada");
-	 				$('#modalEditarFacultad').modal('hide');
-	 				
-	 				$("#"+facultad.id +" td:nth-child(1)").text(facultad.nombreFacultad);
-	 				$("#"+facultad.id +" td:nth-child(2)").text(facultad.dir);
-	 			},    
-	 			error : function(xhr, status) {
-	     			alert('Disculpe, existió un problema');
-	 			}
-	 		});
-	 	});
-	 
-	 	$("#btn-eliminar").click(function(){
-	 		$.ajax({
-	 			url: baseURL + "facultad/" + facultad.id,
-	 			type: 'DELETE',
-	 			headers : reqHeaders,
-	 			success : function(datos) {
-	 				alert("Facultad eliminada");
-	 				$('#modalEditarFacultad').modal('hide');
-	 				
-	 				$("#"+facultad.id).remove();
-	 			},    
-	 			error : function(xhr, status) {
-	 				
-	 				alert('Disculpe, existió un problema');
-	 			}
-	 		});
-	 	});
-	 
- });
- 
- 
- </script>	
- 		
+	
+  <script th:inline="javascript">
+ 	var baseURL = /*[[@{/}]]*/ '/';
+ 	var pag = /*[[${currentIndex}]]*/ '/';
+ </script>
+ <script src="../../js/facultad.js" th:src="@{/js/facultad.js}"></script>	
  </div>
 </body>
 </html>
