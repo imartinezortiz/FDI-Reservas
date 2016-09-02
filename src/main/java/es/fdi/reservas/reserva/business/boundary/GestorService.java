@@ -2,6 +2,7 @@ package es.fdi.reservas.reserva.business.boundary;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,18 @@ public class GestorService {
 	private GrupoReservaService grupo_service;
 	private UserService user_service;
 	
+	
+	@Autowired
+	public GestorService(ReservaService r_s, EdificioService e_s, EspacioService es_s, 
+						 GrupoReservaService g_s, UserService u_s) {
+		super();
+		this.reserva_service = r_s;
+		this.edificio_service = e_s;
+		this.espacio_service = es_s;
+		this.grupo_service = g_s;
+		this.user_service = u_s;
+	}
+
 	public Reserva getReserva(long reservaid)
 	{
 		return reserva_service.getReserva(reservaid);
