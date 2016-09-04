@@ -29,14 +29,26 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad)")
 	public Page<Reserva> findByFacultadId(@Param("idFacultad")Long idFacultad, Pageable pageable);
 	
+	//Por Usuario y Facultad
 	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad) AND (r.user.id = :idUser)")
 	public Page<Reserva> findByUserIdAndFacultadId(@Param("idUser")Long idUser, @Param("idFacultad")Long idFacultad, Pageable pageable);
 	
+	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad) AND (r.user.id = :idUser)")
+	public List<Reserva> findByUserIdAndFacultadId(@Param("idUser")Long idUser, @Param("idFacultad")Long idFacultad);
+	
+	//Por Espacio y Facultad
 	@Query("FROM Reserva r WHERE (r.espacio.id = :idEspacio) AND (r.user.id = :idUser)")
 	public Page<Reserva> findByEspacioIdAndFacultadId(@Param("idUser")Long idUser, @Param("idEspacio")Long idEspacio, Pageable pageable);
 	
+	@Query("FROM Reserva r WHERE (r.espacio.id = :idEspacio) AND (r.user.id = :idUser)")
+	public List<Reserva> findByEspacioIdAndFacultadId(@Param("idUser")Long idUser, @Param("idEspacio")Long idEspacio);
+	
+	//Por EstadoReserva y facultad
 	@Query("From Reserva r WHERE (r.estadoReserva=:estado) and (r.espacio.edificio.facultad.id=:idFacultad)")
 	public Page<Reserva> findByEstadoReservaAndFacultadId(@Param("estado")EstadoReserva estado, @Param("idFacultad")Long idFacultad, Pageable pageable);
+	
+	@Query("From Reserva r WHERE (r.estadoReserva=:estado) and (r.espacio.edificio.facultad.id=:idFacultad)")
+	public List<Reserva> findByEstadoReservaAndFacultadId(@Param("estado")EstadoReserva estado, @Param("idFacultad")Long idFacultad);
 	
 	// http://stackoverflow.com/questions/18082276/spring-data-querying-datetime-with-only-date
 	public List<Reserva> findByEspacioIdAndComienzoBetween(Long idEspacio, DateTime start, DateTime end); 
