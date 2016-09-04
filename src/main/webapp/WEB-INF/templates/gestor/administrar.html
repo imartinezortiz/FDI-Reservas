@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+    
+	<title>UCM RESERVAS - Administrar</title>
+    
+</head>
+<body>
+<div class="container-fluid" th:fragment="contenido">
+	<div class="row">
+    	<div class="col-md-12">
+        	<h1 class="page-header text-center">
+            	Administrar
+        	</h1>
+    	</div>
+	</div>
+
+	<div class="row">
+
+		<div class="col-md-6 text-center">
+			<a th:href="@{/gestor/administrar/usuarios}">
+				<div class="panel-admin media">
+			  		<div class="media-left">		    
+			      		<i class="zmdi zmdi-accounts-alt zmdi-hc-3x"></i>		   
+			  		</div>
+			  		<div class="media-body text-right">		  	
+			    		<h3 class="media-heading">Usuarios</h3>
+			    		<p style="margin-bottom: 0px;">Gestión de</p>
+			  		</div>
+				</div>
+			</a>
+		</div>
+	
+		<div class="col-md-6">
+			<a th:href="@{/gestor/administrar/espacios}">
+				<div class="panel-admin media">
+			  		<div class="media-left">
+			      		<i class="zmdi zmdi-crop-square zmdi-hc-3x"></i>
+			  		</div>
+			  		<div class="media-body text-right">		  	
+			    		<h3 class="media-heading">Espacios</h3>
+			    		<p style="margin-bottom: 0px;">Gestión de</p>
+			  		</div>
+				</div>
+			</a>
+		</div>
+	
+		<div class="col-md-6">
+	  		<a th:href="@{/gestor/administrar/edificios}">
+				<div class="panel-admin media">
+		  			<div class="media-left">
+		      			<i class="fa fa-building fa-3x"></i>
+		  			</div>
+		  			<div class="media-body text-right">		  	
+		    			<h3 class="media-heading">Edificios</h3>
+		    			<p style="margin-bottom: 0px;">Gestión de</p>
+		  			</div>
+				</div>
+	  		</a>
+		</div>
+	
+		<div class="col-md-6">
+	  		<a th:href="@{/gestor/administrar/reservas}">
+				<div class="panel-admin media">
+		  			<div class="media-left">
+		      			<i class="zmdi zmdi-balance zmdi-hc-3x"></i>
+		  			</div>
+		  			<div class="media-body text-right">		  	
+		    			<h3 class="media-heading">Reservas</h3>
+		    			<p style="margin-bottom: 0px;">Gestión de</p>
+		  			</div>
+				</div>
+	  		</a>
+		</div>
+	</div>
+</div>
+</body>
+</html>
