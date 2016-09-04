@@ -111,4 +111,9 @@ public class GestorService {
 	public List<Reserva> getReservasPendientes(Long id, EstadoReserva pendiente) {
 		return reserva_service.reservasPendientesUsuario(id, pendiente);
 	}
+	
+	public List<Reserva> reservasPendientesUsuario(Long userId, EstadoReserva er)
+	{
+		return reserva_service.reservasPendientesUsuario(userId, er);
+	}
 }

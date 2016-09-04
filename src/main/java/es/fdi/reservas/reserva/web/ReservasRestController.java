@@ -177,7 +177,7 @@ public class ReservasRestController {
 		List<EspacioDTO> result = new ArrayList<>();
 		List<Espacio> espacios = new ArrayList<>();
 
-		espacios = espacio_service.getEspaciosPorTagName(tagName);
+		espacios = espacio_service.getEspaciosPorNombre(tagName);
 				
 		for(Espacio e : espacios) {
 			result.add(EspacioDTO.fromEspacioDTO(e));

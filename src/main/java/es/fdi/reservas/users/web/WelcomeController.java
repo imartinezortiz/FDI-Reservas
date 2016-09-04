@@ -37,7 +37,7 @@ public class WelcomeController {
             return "redirect:/admin/administrar";
         }
         else if (roles.contains("ROLE_GESTOR")) {
-            return "redirect:/gestor/gestion-reservas/page/1";
+            return "redirect:/gestor/administrar";
         }
         else{
         	 return "redirect:/mis-reservas/page/1";
