@@ -34,18 +34,18 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 	
 	
 	//Por Usuario y Facultad
-	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad) AND (r.user.id = :idUser)")
-	public Page<Reserva> findByUserIdAndFacultadId(@Param("idUser")Long idUser, @Param("idFacultad")Long idFacultad, Pageable pageable);
+	@Query("from Reserva e where (e.espacio.edificio.facultad.id = :idFacultad) and ((lower(e.user.username) like lower(concat('%',:user, '%'))) or (lower(e.user.email) like lower(concat('%',:user, '%'))))")
+	public Page<Reserva> findByUserIdAndFacultadId(@Param("user")String user, @Param("idFacultad")Long idFacultad, Pageable pageable);
 	
-	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad) AND (r.user.id = :idUser)")
-	public List<Reserva> findByUserIdAndFacultadId(@Param("idUser")Long idUser, @Param("idFacultad")Long idFacultad);
+	@Query("from Reserva e where (e.espacio.edificio.facultad.id = :idFacultad) and ((lower(e.user.username) like lower(concat('%',:user, '%'))) or (lower(e.user.email) like lower(concat('%',:user, '%'))))")
+	public List<Reserva> findByUserIdAndFacultadId(@Param("user")String user, @Param("idFacultad")Long idFacultad);
 	
 	//Por Espacio y Facultad
-	@Query("FROM Reserva r WHERE (r.espacio.id = :idEspacio) AND (r.user.id = :idUser)")
-	public Page<Reserva> findByEspacioIdAndFacultadId(@Param("idUser")Long idUser, @Param("idEspacio")Long idEspacio, Pageable pageable);
+	@Query("from Reserva e where (e.espacio.edificio.facultad.id = :idFacultad) and (lower(e.espacio.nombreEspacio) like lower(concat('%',:espacio, '%')))")
+	public Page<Reserva> findByEspacioIdAndFacultadId(@Param("espacio")String espacio, @Param("idFacultad")Long idFacultad, Pageable pageable);
 	
-	@Query("FROM Reserva r WHERE (r.espacio.id = :idEspacio) AND (r.user.id = :idUser)")
-	public List<Reserva> findByEspacioIdAndFacultadId(@Param("idUser")Long idUser, @Param("idEspacio")Long idEspacio);
+	@Query("from Reserva e where (e.espacio.edificio.facultad.id = :idFacultad) and (lower(e.espacio.nombreEspacio) like lower(concat('%',:espacio, '%')))")
+	public List<Reserva> findByEspacioIdAndFacultadId(@Param("espacio")String espacio, @Param("idFacultad")Long idFacultad);
 	
 	//Por EstadoReserva y facultad
 	@Query("From Reserva r WHERE (r.estadoReserva=:estado) and (r.espacio.edificio.facultad.id=:idFacultad)")

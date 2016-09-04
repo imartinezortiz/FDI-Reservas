@@ -186,19 +186,19 @@ public class ReservaService {
 		reserva_repository.delete(idReserva);
 	}
 	
-	public Page<Reserva> getReservasUsuario(Long idUsuario, PageRequest pageRequest) {
+	public Page<Reserva> getReservasUsuario(Long idUsuario, Pageable pageRequest) {
 		return reserva_repository.findByUserId(idUsuario, pageRequest);
 	}
 	
-	public Page<Reserva> getReservasEspacio(Long espacio, PageRequest pageRequest) {
+	public Page<Reserva> getReservasEspacio(Long espacio, Pageable pageRequest) {
 		return reserva_repository.findByEspacioId(espacio, pageRequest);
 	}
 	
-	public Page<Reserva> getReservasUsuarioFacultad(Long idUsuario, Long idFacultad, PageRequest pageRequest) {
+	public Page<Reserva> getReservasUsuarioFacultad(String idUsuario, Long idFacultad, Pageable pageRequest) {
 		return reserva_repository.findByUserIdAndFacultadId(idUsuario, idFacultad, pageRequest);
 	}
 	
-	public Page<Reserva> getReservasEspacioFacultad(Long espacio, Long idFacultad, PageRequest pageRequest) {
+	public Page<Reserva> getReservasEspacioFacultad(String espacio, Long idFacultad, Pageable pageRequest) {
 		return reserva_repository.findByEspacioIdAndFacultadId(espacio, idFacultad, pageRequest);
 	}
 	
@@ -354,12 +354,12 @@ public class ReservaService {
 		return reserva_repository.findByFacultadId(facultadid, pageable);
 	}
 	
-	public Page<Reserva> findByUserIdAndFacultadId(long userid, long facultadid, Pageable pageable)
+	public Page<Reserva> findByUserIdAndFacultadId(String userid, long facultadid, Pageable pageable)
 	{
 		return reserva_repository.findByUserIdAndFacultadId(userid, facultadid, pageable);
 	}
 	
-	public Page<Reserva> findByEspacioIdAndFacultadId(long espacioid, long facultadid, Pageable pageable)
+	public Page<Reserva> findByEspacioIdAndFacultadId(String espacioid, long facultadid, Pageable pageable)
 	{
 		return reserva_repository.findByEspacioIdAndFacultadId(espacioid, facultadid, pageable);
 	}

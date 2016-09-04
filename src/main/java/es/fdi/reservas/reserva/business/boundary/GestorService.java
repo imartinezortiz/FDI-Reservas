@@ -50,12 +50,17 @@ public class GestorService {
 		return reserva_service.findByFacultadId(facultadid, pageable);
 	}
 	
-	public Page<Reserva> getReservasByUserId(long userid, long facultadid, Pageable pageable)
+	public Page<Reserva> getReservasByUserId(Long userid, Pageable pageable)
+	{
+		return reserva_service.getReservasUsuario(userid, pageable);
+	}
+	
+	public Page<Reserva> getReservasByUserId(String userid, long facultadid, Pageable pageable)
 	{
 		return reserva_service.findByUserIdAndFacultadId(userid, facultadid, pageable);
 	}
 	
-	public Page<Reserva> getReservasByEspacioId(long espacioid, long facultadid, Pageable pageable)
+	public Page<Reserva> getReservasByEspacioId(String espacioid, long facultadid, Pageable pageable)
 	{
 		return reserva_service.findByEspacioIdAndFacultadId(espacioid, facultadid, pageable);
 	}

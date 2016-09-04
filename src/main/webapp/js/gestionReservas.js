@@ -88,9 +88,9 @@ $(document).ready(function(){
 	 	});
 		
 		$("#boton-busqueda").click(function(){
-			var id_busqueda = $("#id-busqueda").val();
-			var direccion = $('#selec_busqueda').val();
-			window.location = '/reservas/gestor/gestion-reservas/'+direccion+'/'+id_busqueda;
+			var id_busqueda = $("#texto-busqueda").val();
+			var direccion = $('#selec-busqueda').val();
+			window.location = '/reservas/gestor/administrar/reservas/'+direccion+'/'+id_busqueda;
 		});
 });
 	function modalEliminarReservaSimple(){

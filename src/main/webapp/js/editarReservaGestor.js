@@ -113,7 +113,7 @@ function editarReserva(reserva, reqHeaders){
 			data: JSON.stringify(reserva),
 			contentType: 'application/json',
 			success : function(datos) {   
-				 window.location = "/reservas/gestor/gestion-reservas/page/1";
+				 window.location = "/reservas/gestor/administrar/reservas/page/1";
 			},    
 			error : function(xhr, status) {
 			

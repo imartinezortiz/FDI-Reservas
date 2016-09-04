@@ -67,12 +67,27 @@ public class GestorController {
         return "redirect:/gestor/administrar/reservas/page/1";
     }
 	
+	@RequestMapping({"/gestor/administrar/reservas/user/{userId}"})
+    public String gestionReservasFiltroUsuario(@PathVariable String userId) {
+        return "redirect:/gestor/administrar/reservas/user/"+userId+"/page/1";
+    }
+	
+	@RequestMapping({"/gestor/administrar/reservas/espacio/{espacioId}"})
+    public String gestionReservasFiltroEspacio(@PathVariable String espacioId) {
+        return "redirect:/gestor/administrar/reservas/espacio/"+espacioId+"/page/1";
+    }
+	
+	@RequestMapping({"/gestor/administrar/reservas/estado/{estadoReserva}"})
+    public String gestionReservasFiltroEstado(@PathVariable String estadoReserva) {
+        return "redirect:/gestor/administrar/reservas/estado/"+estadoReserva+"/page/1";
+    }
+	
 	@RequestMapping(value="/gestor/mis-reservas/page/{pageNumber}", method=RequestMethod.GET)
     public String misReservasPaginadas(@PathVariable Integer pageNumber, Model model) {
 		User u = gestor_service.getUsuarioActual();
 		
 		PageRequest pageRequest = new PageRequest(pageNumber - 1, 7, new Sort(new Sort.Order(Sort.Direction.ASC,"comienzo")));
-        Page<Reserva> currentResults = gestor_service.getReservasByUserId(u.getId(), u.getFacultad().getId(), pageRequest);
+        Page<Reserva> currentResults = gestor_service.getReservasByUserId(u.getId(), pageRequest);
         
         model.addAttribute("currentResults", currentResults);
     
@@ -131,7 +146,7 @@ public class GestorController {
     }
 	
 	@RequestMapping(value="/gestor/administrar/reservas/user/{user}/page/{pageNumber}", method=RequestMethod.GET)
-    public String gestiona_reservas_usuario(@PathVariable Long user, @PathVariable Integer pageNumber, Model model) {
+    public String gestiona_reservas_usuario(@PathVariable String user, @PathVariable Integer pageNumber, Model model) {
 		User u = gestor_service.getUsuarioActual();
 		
 		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
@@ -155,7 +170,7 @@ public class GestorController {
     }
 	
 	@RequestMapping(value="/gestor/administrar/reservas/espacio/{espacio}/page/{pageNumber}", method=RequestMethod.GET)
-    public String gestiona_reservas_sala(@PathVariable Long espacio, @PathVariable Integer pageNumber, Model model) {
+    public String gestiona_reservas_espacio(@PathVariable String espacio, @PathVariable Integer pageNumber, Model model) {
 		User u = gestor_service.getUsuarioActual();
 		
 		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
@@ -179,7 +194,7 @@ public class GestorController {
     }
 	
 	@RequestMapping(value="/gestor/administrar/reservas/estado/{estado}/page/{pageNumber}", method=RequestMethod.GET)
-    public String gestiona_reservas_sala(@PathVariable String estado, @PathVariable Integer pageNumber, Model model) {
+    public String gestiona_reservas_estado(@PathVariable String estado, @PathVariable Integer pageNumber, Model model) {
 		User u = gestor_service.getUsuarioActual();
 		
 		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
