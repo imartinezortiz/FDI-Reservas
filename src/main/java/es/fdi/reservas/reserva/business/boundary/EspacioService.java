@@ -47,10 +47,6 @@ public class EspacioService {
 		return espacio_repository.findAll();
 	}
 	
-	public List<Espacio> getEspaciosPorTagName(String tag) {
-		return espacio_repository.getEspaciosByTagName(tag);
-	}
-	
 	public void eliminarEspacio(long idEspacio) {
 		//espacio_repository.delete(idEspacio);
 		espacio_repository.softDelete(Long.toString(idEspacio));
@@ -59,6 +55,7 @@ public class EspacioService {
 	public Page<Espacio> getEspaciosPaginados(Pageable pageRequest) {
 		return espacio_repository.findAll(pageRequest);
 	}
+	
 	
 	public Espacio editarEspacioDeleted(Long idEspacio){
 		Espacio e = espacio_repository.findOne(idEspacio);
@@ -117,9 +114,19 @@ public class EspacioService {
 		return espacio_repository.getEspaciosByTagName(nombre,pagerequest);
 	}
 
+	public List<Espacio> getEspaciosPorNombre(String nombre) {
+		// TODO Auto-generated method stub
+		return espacio_repository.getEspaciosByTagName(nombre);
+	}
+	
 	public Page<Espacio> getEspaciosPorEdificio(String tagName, Pageable pagerequest) {
 		// TODO Auto-generated method stub
 		return espacio_repository.getEspaciosPorEdificio(tagName, pagerequest);
+	}
+	
+	public List<Espacio> getEspaciosPorEdificio(String tagName) {
+		// TODO Auto-generated method stub
+		return espacio_repository.getEspaciosPorEdificio(tagName);
 	}
 	
 	public Page<Espacio> getEspaciosEliminadosPorNombre(String nombre, Pageable pagerequest) {
@@ -132,6 +139,27 @@ public class EspacioService {
 		return espacio_repository.getEspaciosEliminadosPorEdificio(tagName, pagerequest);
 	}
 	
+	public Page<Espacio> getEspaciosPorNombreYFacultad(String nombre, Long id, Pageable pagerequest) {
+		// TODO Auto-generated method stub
+		return espacio_repository.getEspaciosByTagNameAndFacultad(nombre, id,pagerequest);
+	}
+
+	public Page<Espacio> getEspaciosPorEdificioYFacultad(String tagName, Long id, Pageable pagerequest) {
+		// TODO Auto-generated method stub
+		return espacio_repository.getEspaciosPorEdificioYFacultad(tagName, id, pagerequest);
+	}
+	
+	public Page<Espacio> getEspaciosEliminadosPorNombreYFacultad(String nombre, Long id, Pageable pagerequest) {
+		// TODO Auto-generated method stub
+		return espacio_repository.getEspaciosEliminadosByTagNameAndFacultad(nombre, id, pagerequest);
+	}
+
+	public Page<Espacio> getEspaciosEliminadosPorEdificioYFacultad(String tagName, Long id, Pageable pagerequest) {
+		// TODO Auto-generated method stub
+		return espacio_repository.getEspaciosEliminadosPorEdificioYFacultad(tagName, id, pagerequest);
+	}
+	
+	
 	public Espacio findEspacio(long espacioid)
 	{
 		return espacio_repository.findEspacio(espacioid);
@@ -140,6 +168,11 @@ public class EspacioService {
 	public Page<Espacio> findEspacioByFacultadId(long facultadid, Pageable pageable)
 	{
 		return espacio_repository.findEspacioByFacultadId(facultadid, pageable);
+	}
+	
+	public Page<Espacio> findEspacioDeletedByFacultadId(long facultadid, Pageable pageable)
+	{
+		return espacio_repository.findEspacioDeletedByFacultadId(facultadid, pageable);
 	}
 
 }

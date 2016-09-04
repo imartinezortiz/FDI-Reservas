@@ -36,8 +36,16 @@ public class EdificioService {
 		return edificio_repository.findByFacultadId(idFacultad);
 	}
 	
+	public Page<Edificio> getEdificiosEliminadosFacultad(long idFacultad, Pageable pageable) {
+		return edificio_repository.findDeletedByFacultadId(idFacultad, pageable);
+	}
+	
 	public Page<Edificio> getEdificiosPaginados(PageRequest pageRequest) {
 		return edificio_repository.findAll(pageRequest);
+	}
+	
+	public Page<Edificio> getEdificiosPaginadosFacultad(Long id,PageRequest pageRequest) {
+		return edificio_repository.findByFacultadId(id,pageRequest);
 	}
 	
 	public Edificio editarEdificio(EdificioDTO edificio, Attachment attachment){
@@ -127,6 +135,26 @@ public Edificio addNewEdificio(Edificio edificio) {
 	public List<Edificio> getEdificiosPorTagName(String tagName) {
 		return edificio_repository.getEdificiosPorTagName(tagName);
 	}
+	
+	public List<Edificio> getEdificiosEliminadosPorTagName(String tagName) {
+		return edificio_repository.getEdificiosPorTagName(tagName);
+	}
+	
+	public Page<Edificio> getEdificiosPorTagNameYFacultad(String tagName,Long id, Pageable pagerequest) {
+		return edificio_repository.getEdificiosPorTagNameYFacultad(tagName,id, pagerequest);
+	}
+	
+	public Page<Edificio> getEdificiosEliminadosPorTagNameYFacultad(String tagName,Long id, Pageable pagerequest) {
+		return edificio_repository.getEdificiosEliminadosPorTagNameYFacultad(tagName,id, pagerequest);
+	}
+	
+	public List<Edificio> getEdificiosPorTagNameYFacultad(String tagName,Long id) {
+		return edificio_repository.getEdificiosPorTagNameYFacultad(tagName,id);
+	}
+	
+	public List<Edificio> getEdificiosEliminadosPorTagNameYFacultad(String tagName,Long id) {
+		return edificio_repository.getEdificiosPorTagNameYFacultad(tagName,id);
+	}
 
 	public Edificio getEdificiosPorNombre(Long nombre) {
 		return edificio_repository.findOne(nombre);
@@ -140,6 +168,16 @@ public Edificio addNewEdificio(Edificio edificio) {
 	public Page<Edificio> getEdificiosEliminadosPorDireccion(String tagName, Pageable pagerequest) {
 		
 		return edificio_repository.getEdificiosEliminadosPorDireccion(tagName, pagerequest);
+	}
+	
+	public Page<Edificio> getEdificiosPorDireccionYFacultad(String tagName,Long idFacultad, Pageable pagerequest) {
+		
+		return edificio_repository.getEdificiosPorDireccionYFacultad(tagName,idFacultad, pagerequest);
+	}
+	
+	public Page<Edificio> getEdificiosEliminadosPorDireccionYFacultad(String tagName,Long idFacultad, Pageable pagerequest) {
+		
+		return edificio_repository.getEdificiosEliminadosPorDireccionYFacultad(tagName,idFacultad, pagerequest);
 	}
 	
 	public Page<Edificio> getEdificiosPorFacultad(String tagName, Pageable pagerequest) {
@@ -159,7 +197,7 @@ public Edificio addNewEdificio(Edificio edificio) {
 	
 	public Page<Edificio> findEdificioByFacultadId(long facultadid, Pageable pageable)
 	{
-		return edificio_repository.findEdificioByFacultadId(facultadid, pageable);
+		return edificio_repository.findByFacultadId(facultadid, pageable);
 	}
 
 }

@@ -57,16 +57,16 @@ public interface EdificioRepository extends JpaRepository<Edificio, Long>{
 	
 	//Por Facultad y TagName de Nombre 
 	@Query("from Edificio f where f.deleted=false and f.facultad.id = :idFacultad and lower(f.nombreEdificio) like lower(concat('%',:nombreEdificio, '%'))")
-	public List<Edificio> getEdificiosPorTagName(@Param("nombreEdificio") String nombreEdificio, @Param("idFacultad") Long idFacultad);
+	public List<Edificio> getEdificiosPorTagNameYFacultad(@Param("nombreEdificio") String nombreEdificio, @Param("idFacultad") Long idFacultad);
 	
 	@Query("from Edificio f where f.deleted=false and f.facultad.id = :idFacultad and lower(f.nombreEdificio) like lower(concat('%',:nombreEdificio, '%'))")
-	public Page<Edificio> getEdificiosPorTagName(@Param("nombreEdificio") String nombreEdificio, @Param("idFacultad") Long idFacultad, Pageable pagerequest);
+	public Page<Edificio> getEdificiosPorTagNameYFacultad(@Param("nombreEdificio") String nombreEdificio, @Param("idFacultad") Long idFacultad, Pageable pagerequest);
 
 	@Query("from Edificio f where f.deleted=true and f.facultad.id = :idFacultad and lower(f.nombreEdificio) like lower(concat('%',:nombreEdificio, '%'))")
-	public Page<Edificio> getEdificiosEliminadosPorTagName(@Param("nombreEdificio") String nombreEdificio, @Param("idFacultad") Long idFacultad, Pageable pagerequest);
+	public Page<Edificio> getEdificiosEliminadosPorTagNameYFacultad(@Param("nombreEdificio") String nombreEdificio, @Param("idFacultad") Long idFacultad, Pageable pagerequest);
 	
 	@Query("from Edificio f where f.deleted=true and f.facultad.id = :idFacultad and lower(f.nombreEdificio) like lower(concat('%',:nombreEdificio, '%'))")
-	public List<Edificio> getEdificiosEliminadosPorTagName(@Param("nombreEdificio") String nombreEdificio, @Param("idFacultad") Long idFacultad);
+	public List<Edificio> getEdificiosEliminadosPorTagNameYFacultad(@Param("nombreEdificio") String nombreEdificio, @Param("idFacultad") Long idFacultad);
 		
 //	@Query("from Edificio f where lower(f.direccion) like lower(concat('%',:direccion, '%'))")
 //	List<Edificio> getEdificiosPorDireccion(@Param("direccion") String tagName);

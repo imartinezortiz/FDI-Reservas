@@ -29,6 +29,10 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad)")
 	public Page<Reserva> findByFacultadId(@Param("idFacultad")Long idFacultad, Pageable pageable);
 	
+	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad)")
+	public List<Reserva> findByFacultadId(@Param("idFacultad")Long idFacultad);
+	
+	
 	//Por Usuario y Facultad
 	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad) AND (r.user.id = :idUser)")
 	public Page<Reserva> findByUserIdAndFacultadId(@Param("idUser")Long idUser, @Param("idFacultad")Long idFacultad, Pageable pageable);

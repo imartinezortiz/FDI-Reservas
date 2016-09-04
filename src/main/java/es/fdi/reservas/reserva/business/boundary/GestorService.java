@@ -87,6 +87,12 @@ public class GestorService {
 		return espacio_service.findEspacioByFacultadId(facultadid, pageable);
 	}
 	
+	public Page<Espacio> getEspaciosDeletedByFacultad(long facultadid, Pageable pageable)
+	{
+		return espacio_service.findEspacioDeletedByFacultadId(facultadid, pageable);
+	}
+	
+	
 	public GrupoReserva getGrupoReserva(long grupoid)
 	{
 		return grupo_service.findGrupoReserva(grupoid);
@@ -100,5 +106,9 @@ public class GestorService {
 	public User getUsuarioActual()
 	{
 		return user_service.getCurrentUser();
+	}
+
+	public List<Reserva> getReservasPendientes(Long id, EstadoReserva pendiente) {
+		return reserva_service.reservasPendientesUsuario(id, pendiente);
 	}
 }

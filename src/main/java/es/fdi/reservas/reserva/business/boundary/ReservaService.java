@@ -62,11 +62,9 @@ public class ReservaService {
 
 	public Reserva compruebaAutorizacion(Reserva reserva)
 	{
-		List<Espacio> lista= espacio_repository.findById(reserva.getEspacio().getId());
+		Espacio esp= espacio_repository.findEspacio(reserva.getEspacio().getId());
 		//List<Espacio> lista= espacio_repository.findAll();
-		
-		Espacio esp=lista.get(0);
-		
+			
 		if (esp.getTipoAutorizacion().toString()=="Necesaria")
 			//Autorizacion Obligatoria
 			reserva.setEstadoReserva(EstadoReserva.PENDIENTE);
@@ -123,7 +121,14 @@ public class ReservaService {
 	public List<Reserva> getReservas() {
 		return reserva_repository.findAll();
 	}
+	
+	public List<Reserva> getReservasFacultad(Long idFacultad) {
+		return reserva_repository.findByFacultadId(idFacultad);
+	}
 
+	public Page<Reserva> getReservasFacultad(Long id, Pageable pageable) {
+		return reserva_repository.findByFacultadId(id, pageable);
+	}
 	
 
 	// todas las reservas de un espacio
@@ -187,6 +192,14 @@ public class ReservaService {
 	
 	public Page<Reserva> getReservasEspacio(Long espacio, PageRequest pageRequest) {
 		return reserva_repository.findByEspacioId(espacio, pageRequest);
+	}
+	
+	public Page<Reserva> getReservasUsuarioFacultad(Long idUsuario, Long idFacultad, PageRequest pageRequest) {
+		return reserva_repository.findByUserIdAndFacultadId(idUsuario, idFacultad, pageRequest);
+	}
+	
+	public Page<Reserva> getReservasEspacioFacultad(Long espacio, Long idFacultad, PageRequest pageRequest) {
+		return reserva_repository.findByEspacioIdAndFacultadId(espacio, idFacultad, pageRequest);
 	}
 	
 	public Page<Reserva> getTodasReservasPaginadas(PageRequest pageRequest) {
