@@ -78,6 +78,8 @@ public class Espacio {
 		this.proyector = proyector;
 		this.tipoEspacio = tipoEspacio;
 		this.deleted = false;
+		this.tipoAutorizacion = Autorizacion.NECESARIA;
+		this.horasAutorizacion = 0;
 	}
 
 	public Autorizacion getTipoAutorizacion() {

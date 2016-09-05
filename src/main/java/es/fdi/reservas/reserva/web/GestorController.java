@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import es.fdi.reservas.fileupload.business.boundary.NewFileCommand;
 import es.fdi.reservas.reserva.business.boundary.GestorService;
 import es.fdi.reservas.reserva.business.boundary.GrupoReservaService;
 import es.fdi.reservas.reserva.business.boundary.ReservaService;
@@ -362,6 +363,19 @@ public class GestorController {
 		
         return "index";
     }
+	
+	@RequestMapping(value="/gestor/administrar/edificios/editar/{idEdificio}", method=RequestMethod.GET)
+	public String editarEdificio(@PathVariable("idEdificio") long idEdificio, Model model){
+		User u = gestor_service.getUsuarioActual();
+		model.addAttribute("User", u);
+		model.addAttribute("edificio", gestor_service.getEdificio(idEdificio));
+		//model.addAttribute("facultades", facultad_service.getFacultades());
+		model.addAttribute("command", new NewFileCommand());
+		model.addAttribute("idFacultad", u.getFacultad().getId());
+		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/editarEdificio");
+		return "index";
+	}
 	
 	@RequestMapping(value="/gestor/administrar/espacios/nombre/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
     public String gestiona_espacio_nombre(@PathVariable String nombre, @PathVariable Integer pageNumber, Model model) {

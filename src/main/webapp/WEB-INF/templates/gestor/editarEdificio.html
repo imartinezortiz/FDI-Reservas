@@ -40,7 +40,8 @@
                  <!-- Facultad -->
               	<div class="form-group">
                      <label>Facultad:</label>                
-		                <input id="idFacultad" name="email" type="text" class="form-control" placeholder="Elige una facultad"/>                 
+		                <input id="Facultad" th:value="${edificio.facultad.nombreFacultad}" name="facultad" type="text" class="form-control" th:readonly="readonly" placeholder="Elige una facultad"/>
+		                <input id="idFacultad" type="hidden" th:value="${idFacultad}"/>                 
                  	</div>				
 				 </div>
                  <!-- Imagen -->
@@ -56,14 +57,14 @@
 					</div>
                  
 				</div>
-				
+ 				
        	      </form>      
               <div class="row">              	
 			    <div class="col-md-12 text-center">
 			         <button id="enlaceGuardar" type="button" class="btn-normal">GUARDAR</button>
 			    </div>                   
 			  </div>
-				   <!-- /.row -->
+	 			   <!-- /.row -->
 				 
 	   
 
@@ -78,7 +79,7 @@
 	var idEdificio = /*[[${edificio.id}]]*/ '1';
 	
 </script>
-<script src="../../js/editarEdificio.js" th:src="@{/js/editarEdificio.js}"></script>
+<script src="../../js/editarEdificioGestor.js" th:src="@{/js/editarEdificioGestor.js}"></script>
 </div>
 
             <!-- /.container-fluid -->

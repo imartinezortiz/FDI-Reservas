@@ -56,6 +56,22 @@ public class EdificioRestController {
 
 	}
 	
+	@RequestMapping(value = "/gestor/administrar/edificios/editar/{idEdificio}", method = RequestMethod.PUT)
+	public void editarEdificioGestor(@PathVariable("idEdificio") long idEdificio, @RequestBody EdificioDTO edificioActualizado){
+
+			Attachment attachment = new Attachment("");
+			if (edificio_service.getAttachmentByName(edificioActualizado.getImagen()).isEmpty()){
+				//si no esta, lo añado
+				
+				attachment.setAttachmentUrl("/img/" + edificioActualizado.getImagen());
+				attachment.setStorageKey(edificio_service.getEdificio(idEdificio).getNombreEdificio() + "/" + edificioActualizado.getImagen());
+				//reserva_service.addAttachment(attachment);
+			}else{
+				attachment = edificio_service.getAttachmentByName(edificioActualizado.getImagen()).get(0);
+			}
+			edificio_service.editarEdificio(edificioActualizado, attachment);
+	}
+	
 	@RequestMapping(value = "/admin/administrar/edificio/{numPag}/restaurar/{idEdificio}", method = RequestMethod.DELETE)
 	public String restaurarEdificio(@PathVariable("numPag") Long numPag, @PathVariable("idEdificio") Long idEdificio){
 		edificio_service.restaurarEdificio(idEdificio);
