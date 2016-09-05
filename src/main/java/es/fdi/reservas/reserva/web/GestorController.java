@@ -436,7 +436,7 @@ public class GestorController {
     public String gestiona_usuario(@PathVariable Integer pageNumber, Model model) {
 		User u= gestor_service.getUsuarioActual();
 		Pageable pageable = new PageRequest(pageNumber - 1, 5);
-        Page<Espacio> currentResults = gestor_service.getUsuariosByFacultad(u.getFacultad().getId(), pageable);
+        Page<User> currentResults = gestor_service.getUsuariosByFacultad(u.getFacultad().getId(), pageable);
         
         model.addAttribute("currentResults", currentResults);
     
@@ -459,7 +459,7 @@ public class GestorController {
     public String gestiona_usuario_nombre(@PathVariable String nombre, @PathVariable Integer pageNumber, Model model) {
 		User u= gestor_service.getUsuarioActual();
 		Pageable pageable = new PageRequest(pageNumber - 1, 5);
-        Page<Espacio> currentResults = gestor_service.getEspaciosByFacultadAndNombre(nombre, u.getFacultad().getId(), pageable);
+        Page<User> currentResults = gestor_service.getUsuariosByFacultadAndNombre(nombre, u.getFacultad().getId(), pageable);
         
         model.addAttribute("currentResults", currentResults);
     
@@ -478,11 +478,11 @@ public class GestorController {
         return "index";
     }
 	
-	@RequestMapping(value="/gestor/administrar/usuarios/edificio/{edificio}/page/{pageNumber}", method=RequestMethod.GET)
-    public String gestiona_usuario_direccion(@PathVariable String edificio, @PathVariable Integer pageNumber, Model model) {
+	@RequestMapping(value="/gestor/administrar/usuarios/email/{email}/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_usuario_direccion(@PathVariable String email, @PathVariable Integer pageNumber, Model model) {
 		User u= gestor_service.getUsuarioActual();
 		Pageable pageable = new PageRequest(pageNumber - 1, 5);
-        Page<Espacio> currentResults = gestor_service.getEspaciosByFacultadAndEdificio(edificio, u.getFacultad().getId(), pageable);
+        Page<User> currentResults = gestor_service.getUsuariosByFacultadAndEmail(email, u.getFacultad().getId(), pageable);
         
         model.addAttribute("currentResults", currentResults);
     
@@ -505,7 +505,7 @@ public class GestorController {
     public String gestiona_usuario_direccion(@PathVariable Integer pageNumber, Model model) {
 		User u= gestor_service.getUsuarioActual();
 		Pageable pageable = new PageRequest(pageNumber - 1, 5);
-        Page<Espacio> currentResults = gestor_service.getEspaciosDeletedByFacultad(u.getFacultad().getId(), pageable);
+        Page<User> currentResults = gestor_service.getUsuariosDeletedByFacultad(u.getFacultad().getId(), pageable);
         
         model.addAttribute("currentResults", currentResults);
     

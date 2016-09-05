@@ -186,9 +186,24 @@ public class UserService implements UserDetailsService{
 		return user_ropository.getUsuariosPorTagName(nombre, pagerequest);
 	}
 
-	public Page<User> getUsuariosPorFacultad(String nombre, Pageable pagerequest) {
+	public Page<User> getUsuariosEliminadosPorFacultad(Long id, Pageable pagerequest) {
 		// TODO Auto-generated method stub
-		return user_ropository.getUsuariosPorFacultad(nombre, pagerequest);
+		return user_ropository.getUsuariosEliminadosPorFacultadId(id, pagerequest);
+	}
+	
+	public Page<User> getUsuariosPorFacultad(Long id, Pageable pagerequest) {
+		// TODO Auto-generated method stub
+		return user_ropository.getUsuariosPorFacultadId(id, pagerequest);
+	}
+	
+	public List<User> getUsuariosPorFacultad(String nombre) {
+		// TODO Auto-generated method stub
+		return user_ropository.getUsuariosPorFacultad(nombre);
+	}
+	
+	public Page<User> getUsuariosPorFacultad(String nombre, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return user_ropository.getUsuariosPorFacultad(nombre, pageable);
 	}
 	
 	public Page<User> getUsuariosEliminadosPorEmail(String email, Pageable pagerequest) {
@@ -214,6 +229,14 @@ public class UserService implements UserDetailsService{
 			attachment_repository.save(i);
 		}
 		
+	}
+
+	public Page<User> getUsuariosPorNombreYFacultad(String nombre, Long id, Pageable pageable) {
+		return user_ropository.getUsuariosPorNombreYFacultad(nombre,id, pageable);
+	}
+	
+	public Page<User> getUsuariosPorEmailYFacultad(String nombre, Long id, Pageable pageable) {
+		return user_ropository.getUsuariosPorEmailYFacultad(nombre,id, pageable);
 	}
 
 	

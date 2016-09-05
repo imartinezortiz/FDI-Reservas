@@ -136,7 +136,24 @@ public class GestorService {
 	{
 		return user_service.getCurrentUser();
 	}
+	
+	public Page<User> getUsuariosByFacultad(long id, Pageable pageable)
+	{
+		return user_service.getUsuariosPorFacultad(id, pageable);
+	}
 
+	public Page<User> getUsuariosByFacultadAndNombre(String nombre, Long id, Pageable pageable) {
+		return user_service.getUsuariosPorNombreYFacultad(nombre, id, pageable);
+	}
+	
+	public Page<User> getUsuariosByFacultadAndEmail(String nombre, Long id, Pageable pageable) {
+		return user_service.getUsuariosPorEmailYFacultad(nombre, id, pageable);
+	}
+
+	public Page<User> getUsuariosDeletedByFacultad(Long id, Pageable pageable) {
+		return user_service.getUsuariosEliminadosPorFacultad(id, pageable);
+	}
+	
 	public List<Reserva> getReservasPendientes(Long id, EstadoReserva pendiente) {
 		return reserva_service.reservasPendientesUsuario(id, pendiente);
 	}
@@ -145,4 +162,8 @@ public class GestorService {
 	{
 		return reserva_service.reservasPendientesUsuario(userId, er);
 	}
+
+	
+
+	
 }

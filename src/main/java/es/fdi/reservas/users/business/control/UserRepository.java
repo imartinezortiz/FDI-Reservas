@@ -42,7 +42,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	List<User> getUsuariosPorTagName(@Param("username") String username);
 
 	@Query("select e from #{#entityName} e where e.enabled=true and e.facultad.nombreFacultad like lower(concat('%',:nombre, '%'))")
-	Page<User> getUsuariosPorFacultad(@Param("nombre") String nombre, Pageable pagerequest);
+	public Page<User> getUsuariosPorFacultad(@Param("nombre") String nombre, Pageable pagerequest);
 	
 	@Query("select e from #{#entityName} e where e.enabled=false and e.facultad.nombreFacultad like lower(concat('%',:nombre, '%'))")
 	Page<User> getUsuariosEliminadosPorFacultad(@Param("nombre") String nombre, Pageable pagerequest);
@@ -58,5 +58,17 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
 	@Query("from User u where lower(u.email) like lower(concat('%',:email, '%'))")
 	List<User> getUsuariosPorEmail(@Param("email") String email);
+	
+	@Query("select e from #{#entityName} e where e.enabled=true and e.facultad.id = :facultadId")
+	Page<User> getUsuariosPorFacultadId(@Param("facultadId") Long facultadId, Pageable pagerequest);
+	
+	@Query("select e from #{#entityName} e where e.enabled=false and e.facultad.id = :facultadId")
+	Page<User> getUsuariosEliminadosPorFacultadId(@Param("facultadId") Long facultadId, Pageable pagerequest);
+	
+	@Query("select e from #{#entityName} e where e.enabled=true and e.facultad.id = :idFacultad and lower(e.username) like lower(concat('%',:username, '%'))")
+	public Page<User> getUsuariosPorNombreYFacultad(@Param("username")String username, @Param("idFacultad")Long idFacultad, Pageable pageable);
+
+	@Query("select e from #{#entityName} e where e.enabled=true and e.facultad.id = :idFacultad and lower(e.email) like lower(concat('%',:email, '%'))")
+	public Page<User> getUsuariosPorEmailYFacultad(@Param("email")String email, @Param("idFacultad")Long idFacultad, Pageable pageable);
 	
 }
