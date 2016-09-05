@@ -26,16 +26,16 @@ public interface EdificioRepository extends JpaRepository<Edificio, Long>{
 	void softDelete(@Param("idEdificio") String idEdificio);
 
 	//Por facultad
-	@Query("select e from #{#entityName} e where (e.deleted=false) AND (e.facultad.id = :idFacultad)")
+	@Query("from #{#entityName} e where (e.deleted=false) AND (e.facultad.id = :idFacultad)")
 	public Page<Edificio> findByFacultadId(@Param("idFacultad") Long idFacultad, Pageable pageable);
 	
-	@Query("select e from #{#entityName} e where (e.deleted=false) AND (e.facultad.id = :idFacultad)")
+	@Query("from #{#entityName} e where (e.deleted=false) AND (e.facultad.id = :idFacultad)")
 	public List<Edificio> findByFacultadId(@Param("idFacultad") Long idFacultad);
 	
-	@Query("select e from #{#entityName} e where (e.deleted=true) AND (e.facultad.id = :idFacultad)")
+	@Query("from #{#entityName} e where (e.deleted=true) AND (e.facultad.id = :idFacultad)")
 	public List<Edificio> findDeletedByFacultadId(@Param("idFacultad") Long idFacultad);
 	
-	@Query("select e from #{#entityName} e where (e.deleted=true) AND (e.facultad.id = :idFacultad)")
+	@Query("from #{#entityName} e where (e.deleted=true) AND (e.facultad.id = :idFacultad)")
 	public Page<Edificio> findDeletedByFacultadId(@Param("idFacultad") Long idFacultad, Pageable pageable);
 
 	//Por ID

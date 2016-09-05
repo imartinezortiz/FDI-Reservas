@@ -195,7 +195,7 @@ public Edificio addNewEdificio(Edificio edificio) {
 		return edificio_repository.findEdificio(edificioid);
 	}
 	
-	public Page<Edificio> findEdificioByFacultadId(long facultadid, Pageable pageable)
+	public Page<Edificio> findEdificioByFacultadId(long facultadid, PageRequest pageable)
 	{
 		return edificio_repository.findByFacultadId(facultadid, pageable);
 	}

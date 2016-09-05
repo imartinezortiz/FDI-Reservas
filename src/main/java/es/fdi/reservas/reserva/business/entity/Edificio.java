@@ -22,8 +22,10 @@ public class Edificio {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="EdificioId")
 	private Long id;
+	
 	@NotNull
 	private String nombreEdificio;
+	
 	@NotNull
 	private String direccion;
 	
