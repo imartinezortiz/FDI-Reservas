@@ -154,6 +154,11 @@ public class GestorService {
 		return user_service.getUsuariosEliminadosPorFacultad(id, pageable);
 	}
 	
+	public User getUsuario(Long id)
+	{
+		return user_service.getUser(id);
+	}
+	
 	public List<Reserva> getReservasPendientes(Long id, EstadoReserva pendiente) {
 		return reserva_service.reservasPendientesUsuario(id, pendiente);
 	}

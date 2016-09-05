@@ -39,7 +39,7 @@
                  <!-- Facultad -->                  
                  <div class="form-group">
                      <label>Facultad:</label>                  
-		                <input id="idFacultad" name="email" type="text" class="form-control" placeholder="Elige una facultad"/>                 
+		                <input th:readonly="readonly" th:value="${usuario.facultad.nombreFacultad}" id="idFacultad" name="email" type="text" class="form-control" placeholder="Elige una facultad"/>                 
                  	</div>				
 				 </div>
 		    	 <!-- Roles --> 
@@ -134,7 +134,7 @@
 	var rol2 = /*[[idRolDos]]*/ '1';
 	var rol3 = /*[[idRolTres]]*/ '1';
 </script>
-<script src="../../js/editarUsuario.js" th:src="@{/js/editarUsuario.js}"></script>
+<script src="../../js/editarUsuarioGestor.js" th:src="@{/js/editarUsuarioGestor.js}"></script>
 </div>
 
             <!-- /.container-fluid -->
