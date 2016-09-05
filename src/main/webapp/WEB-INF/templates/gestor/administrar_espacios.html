@@ -75,7 +75,7 @@
 <!--               <a th:href="@{'/nuevoEspacio'}"><input type="button" class="btn btn-default" value="Añadir espacio"/></a>  -->
           	</div> 
         <!-- /.table-responsive-->
-    	<a th:href="@{'/gestor/administrar/espacio/' + ${currentIndex} + '/restaurar'}"><input type="button" class="btn btn-default" value="Restaurar espacios"/></a>
+    	<a th:href="@{'/gestor/administrar/espacios/eliminados/page/1'}"><input type="button" class="btn btn-default" value="Restaurar espacios"/></a>
 		</div>
 		
 	</div>
@@ -237,7 +237,7 @@
   <script th:inline="javascript">
  	var baseURL = /*[[@{/}]]*/ '/';
  </script>
- <script src="../../js/espacioAdministrar.js" th:src="@{/js/espacioAdministrar.js}"></script>			
+ <script src="../../js/espacioAdministrarGestor.js" th:src="@{/js/espacioAdministrarGestor.js}"></script>			
  </div>
 </body>
 </html>

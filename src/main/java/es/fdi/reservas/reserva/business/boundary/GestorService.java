@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -76,10 +77,24 @@ public class GestorService {
 		
 	}
 	
-	public Page<Edificio> getEdificioByFacultadId(long facultadid, Pageable pageable)
+	public Page<Edificio> getEdificioByFacultadId(long facultadid, PageRequest pageable)
 	{
-		return edificio_service.findEdificioByFacultadId(facultadid, pageable);
-		
+		return edificio_service.findEdificioByFacultadId(facultadid, pageable);	
+	}
+	
+	public Page<Edificio> getEdificioDeletedByFacultadId(long facultadid, Pageable pageable)
+	{
+		return edificio_service.getEdificiosEliminadosFacultad(facultadid, pageable);
+	}
+	
+	public Page<Edificio> getEdificioByTagNombreAndFacutadId(String cadena,long facultadid, Pageable pageable)
+	{
+		return edificio_service.getEdificiosPorTagNameYFacultad(cadena, facultadid, pageable);
+	}
+	
+	public Page<Edificio> getEdificioByTagDireccionAndFacutadId(String cadena,long facultadid, Pageable pageable)
+	{
+		return edificio_service.getEdificiosPorDireccionYFacultad(cadena, facultadid, pageable);
 	}
 	
 	public Espacio getEspacio(long espacioid)
@@ -92,11 +107,20 @@ public class GestorService {
 		return espacio_service.findEspacioByFacultadId(facultadid, pageable);
 	}
 	
+	public Page<Espacio> getEspaciosByFacultadAndNombre(String nombre, long facultadid, Pageable pageable)
+	{
+		return espacio_service.getEspaciosPorNombreYFacultad(nombre, facultadid, pageable);
+	}
+	
+	public Page<Espacio> getEspaciosByFacultadAndEdificio(String edificio, long facultadid, Pageable pageable)
+	{
+		return espacio_service.getEspaciosPorEdificioYFacultad(edificio, facultadid, pageable);
+	}
+	
 	public Page<Espacio> getEspaciosDeletedByFacultad(long facultadid, Pageable pageable)
 	{
 		return espacio_service.findEspacioDeletedByFacultadId(facultadid, pageable);
 	}
-	
 	
 	public GrupoReserva getGrupoReserva(long grupoid)
 	{

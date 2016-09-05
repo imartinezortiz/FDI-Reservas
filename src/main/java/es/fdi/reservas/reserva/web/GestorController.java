@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import es.fdi.reservas.reserva.business.boundary.GestorService;
 import es.fdi.reservas.reserva.business.boundary.GrupoReservaService;
 import es.fdi.reservas.reserva.business.boundary.ReservaService;
+import es.fdi.reservas.reserva.business.entity.Edificio;
+import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.reserva.business.entity.Reserva;
 import es.fdi.reservas.users.business.boundary.UserService;
@@ -242,6 +245,282 @@ public class GestorController {
 		model.addAttribute("view", "gestor/editarReserva");
 		
 
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/edificios/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_edificio(@PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
+        Page<Edificio> currentResults = gestor_service.getEdificioByFacultadId(u.getFacultad().getId(), pageRequest);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/administrar_edificios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/edificios/nombre/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_edificio_nombre(@PathVariable String nombre, @PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Edificio> currentResults = gestor_service.getEdificioByTagNombreAndFacutadId(nombre, u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/administrar_edificios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/edificios/direccion/{direccion}/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_edificio_direccion(@PathVariable String direccion, @PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Edificio> currentResults = gestor_service.getEdificioByTagDireccionAndFacutadId(direccion, u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/administrar_edificios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/edificios/eliminados/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_edificio_direccion(@PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Edificio> currentResults = gestor_service.getEdificioDeletedByFacultadId(u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/papelera_edificios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/espacios/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_espacio(@PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Espacio> currentResults = gestor_service.getEspaciosByFacultad(u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/administrar_espacios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/espacios/nombre/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_espacio_nombre(@PathVariable String nombre, @PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Espacio> currentResults = gestor_service.getEspaciosByFacultadAndNombre(nombre, u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/administrar_espacios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/espacios/edificio/{edificio}/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_espacio_direccion(@PathVariable String edificio, @PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Espacio> currentResults = gestor_service.getEspaciosByFacultadAndEdificio(edificio, u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/administrar_espacios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/espacios/eliminados/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_espacio_direccion(@PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Espacio> currentResults = gestor_service.getEspaciosDeletedByFacultad(u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/papelera_espacios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/usuarios/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_usuario(@PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Espacio> currentResults = gestor_service.getUsuariosByFacultad(u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/administrar_usuarios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/usuarios/nombre/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_usuario_nombre(@PathVariable String nombre, @PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Espacio> currentResults = gestor_service.getEspaciosByFacultadAndNombre(nombre, u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/administrar_usuarios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/usuarios/edificio/{edificio}/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_usuario_direccion(@PathVariable String edificio, @PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Espacio> currentResults = gestor_service.getEspaciosByFacultadAndEdificio(edificio, u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/administrar_usuarios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/gestor/administrar/usuarios/eliminados/page/{pageNumber}", method=RequestMethod.GET)
+    public String gestiona_usuario_direccion(@PathVariable Integer pageNumber, Model model) {
+		User u= gestor_service.getUsuarioActual();
+		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+        Page<Espacio> currentResults = gestor_service.getEspaciosDeletedByFacultad(u.getFacultad().getId(), pageable);
+        
+        model.addAttribute("currentResults", currentResults);
+    
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("view", "gestor/papelera_usuarios");
+		
         return "index";
     }
 }
