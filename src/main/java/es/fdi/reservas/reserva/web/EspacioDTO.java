@@ -15,6 +15,10 @@ public class EspacioDTO {
 	
 	private String imagen;
 	
+	private String tipoAutorizacion;
+	
+	private Integer horasAutorizacion;
+	
 	public EspacioDTO(){}
 	
 	public EspacioDTO(Long id, String nombreEspacio, String edificio, int capacidad, boolean microfono,
@@ -40,6 +44,35 @@ public class EspacioDTO {
 		this.proyector = proyector;
 		this.tipoEspacio = tipoEspacio;
 		this.imagen = imagen;
+	}
+	
+	public EspacioDTO(Long id, String nombreEspacio, String edificio, int capacidad, boolean microfono,
+			boolean proyector, String tipoEspacio, String imagen, String tipoAutorizacion, Integer horasAutorizacion) {
+		super();
+		this.id = id;
+		this.nombreEspacio = nombreEspacio;
+		this.edificio = edificio;
+		this.capacidad = capacidad;
+		this.microfono = microfono;
+		this.proyector = proyector;
+		this.tipoEspacio = tipoEspacio;
+		this.imagen = imagen;
+		this.tipoAutorizacion = tipoAutorizacion;
+		this.horasAutorizacion = horasAutorizacion;
+	}
+	
+	public EspacioDTO(String nombreEspacio, String edificio, int capacidad, boolean microfono,
+			boolean proyector, String tipoEspacio, String imagen, String tipoAutorizacion, Integer horasAutorizacion) {
+		super();
+		this.nombreEspacio = nombreEspacio;
+		this.edificio = edificio;
+		this.capacidad = capacidad;
+		this.microfono = microfono;
+		this.proyector = proyector;
+		this.tipoEspacio = tipoEspacio;
+		this.imagen = imagen;
+		this.tipoAutorizacion = tipoAutorizacion;
+		this.horasAutorizacion = horasAutorizacion;
 	}
 
 	public Long getId() {
@@ -106,11 +139,27 @@ public class EspacioDTO {
 		this.imagen = imagen;
 	}
 
+	public String getTipoAutorizacion() {
+		return tipoAutorizacion;
+	}
+
+	public void setTipoAutorizacion(String tipoAutorizacion) {
+		this.tipoAutorizacion = tipoAutorizacion;
+	}
+
+	public Integer getHorasAutorizacion() {
+		return horasAutorizacion;
+	}
+
+	public void setHorasAutorizacion(Integer horasAutorizacion) {
+		this.horasAutorizacion = horasAutorizacion;
+	}
+
 	public static EspacioDTO fromEspacioDTOAutocompletar(Espacio e){
 		return new EspacioDTO(e.getId(), e.getNombreEspacio(), e.getEdificio().getNombreEdificio(), e.getCapacidad(), e.isMicrofono(), e.isProyector(), e.getTipoEspacio().getTipo(), e.getImagen().getAttachmentUrl());
 	}
 	
 	public static EspacioDTO fromEspacioDTO(Espacio e){
-		return new EspacioDTO(e.getNombreEspacio(), e.getEdificio().getNombreEdificio(), e.getCapacidad(), e.isMicrofono(), e.isProyector(), e.getTipoEspacio().getTipo(), e.getImagen().getAttachmentUrl());
+		return new EspacioDTO(e.getNombreEspacio(), e.getEdificio().getNombreEdificio(), e.getCapacidad(), e.isMicrofono(), e.isProyector(), e.getTipoEspacio().getTipo(), e.getImagen().getAttachmentUrl(), e.getTipoAutorizacion().toString(), e.getHorasAutorizacion());
 	}
 }

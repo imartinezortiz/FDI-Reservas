@@ -11,6 +11,7 @@ import es.fdi.reservas.fileupload.business.control.AttachmentRepository;
 import es.fdi.reservas.fileupload.business.entity.Attachment;
 import es.fdi.reservas.reserva.business.control.EdificioRepository;
 import es.fdi.reservas.reserva.business.control.EspacioRepository;
+import es.fdi.reservas.reserva.business.entity.Autorizacion;
 import es.fdi.reservas.reserva.business.entity.Edificio;
 import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.TipoEspacio;
@@ -73,6 +74,21 @@ public class EspacioService {
 		Long id = Long.decode(espacio.getEdificio());
 		e.setEdificio(edificio_repository.findOne(id));
 		e.setImagen(attachment);
+		return espacio_repository.save(e);
+	}
+	
+	public Espacio editarEspacioGestor(EspacioDTO espacio, Attachment attachment){
+		Espacio e = espacio_repository.findOne(espacio.getId());
+		e.setNombreEspacio(espacio.getNombreEspacio());
+		e.setCapacidad(espacio.getCapacidad());
+		e.setMicrofono(espacio.isMicrofono());
+		e.setProyector(espacio.isProyector());
+		e.setTipoEspacio(TipoEspacio.fromTipoEspacio(espacio.getTipoEspacio()));
+		Long id = Long.decode(espacio.getEdificio());
+		e.setEdificio(edificio_repository.findOne(id));
+		e.setImagen(attachment);
+		e.setTipoAutorizacion(Autorizacion.fromEstadoReserva(espacio.getTipoAutorizacion()));
+		e.setHorasAutorizacion(espacio.getHorasAutorizacion());
 		return espacio_repository.save(e);
 	}
 	

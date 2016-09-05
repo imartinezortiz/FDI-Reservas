@@ -89,6 +89,51 @@ public class EspaciosRestController {
 		return "redirect:/admin/administrar/espacios/1";
 	}
 	
+	@RequestMapping(value = "/gestor/administrar/espacio/editar/{idEspacio}", method = RequestMethod.PUT)
+	public String editarEspaciosGestor(@PathVariable("idEspacio") long idEspacio, @RequestBody EspacioDTO espacioActualizado) {
+		
+		Attachment attachment = new Attachment("");
+		
+		if (espacioActualizado.getEdificio() == null){
+			espacioActualizado.setEdificio(espacio_service.getEspacio(espacioActualizado.getId()).getEdificio().getNombreEdificio());
+		}
+		if (espacioActualizado.getImagen().equals("")){
+			attachment = espacio_service.getEspacio(espacioActualizado.getId()).getImagen();
+		}
+		else {
+//			String img = "/img/users/" + user_service.getUser(idUser).getUsername();
+//			String nombreViejo = user_service.getUser(idUser).getUsername();
+//			String nombreNuevo = userActualizado.getUsername();
+//			
+//			if (!nombreViejo.equalsIgnoreCase(nombreNuevo)){
+//				//si el nombre de usuario ha cambiado, hay que renombrar el directorio y las referencias
+//				//File dirViejo = new File("../src/main/webapp/img/"  + nombreViejo);
+//				File dirNuevo = new File("../../img/"  + nombreNuevo);
+//				boolean correcto = dirNuevo.mkdir();
+//				
+//			}
+			
+			if (espacio_service.getAttachmentByName(espacioActualizado.getImagen()).isEmpty()){
+		
+				//si no esta, lo añado
+								
+				attachment.setAttachmentUrl("/img/" + espacioActualizado.getImagen());
+				attachment.setStorageKey(espacio_service.getEspacio(idEspacio).getNombreEspacio() + "/" + espacioActualizado.getImagen());
+				//reserva_service.addAttachment(attachment);
+			}else{
+				attachment = espacio_service.getAttachmentByName(espacioActualizado.getImagen()).get(0);
+			}
+		}
+		espacio_service.editarEspacioGestor(espacioActualizado, attachment);
+		//System.out.println(imagen + " Existe");
+//	}else{
+//		System.out.println(imagen + " No existe");
+//	}
+		
+		//espacio_service.editarEspacio(espacioActualizado);
+		return "redirect:/gestor/administrar/espacios/1";
+	}
+	
 	
 	@RequestMapping(value = "/administrar/espacio/{numPag}/restaurar/{idEspacio}", method = RequestMethod.GET)
 	public String restaurarEspacio(@PathVariable("numPag") Long numPag, @PathVariable("idEspacio") Long idEspacio){
@@ -105,6 +150,21 @@ public class EspaciosRestController {
 	
 	@RequestMapping(value = "/admin/edificio/tag/{tagName}", method = RequestMethod.GET)
 	public List<EdificioDTO> edificioFiltroAutocompletar(@PathVariable("tagName") String tagName) {
+
+		List<EdificioDTO> result = new ArrayList<>();
+		List<Edificio> usuarios = new ArrayList<>();
+
+		usuarios = espacio_service.getEdificiosPorTagName(tagName);
+
+		for (Edificio u : usuarios) {
+			result.add(EdificioDTO.fromEdificioDTOAutocompletar(u));
+		}
+
+		return result;
+	}
+	
+	@RequestMapping(value = "/gestor/edificio/tag/{tagName}", method = RequestMethod.GET)
+	public List<EdificioDTO> edificioFiltroAutocompletarGestor(@PathVariable("tagName") String tagName) {
 
 		List<EdificioDTO> result = new ArrayList<>();
 		List<Edificio> usuarios = new ArrayList<>();

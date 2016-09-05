@@ -75,6 +75,18 @@
 		                                 
                  </div>
                  
+                  <div class="form-group">
+                     <label>Restriccion:</label>
+                     <select id = "idRestr" >
+                     	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} == 'Necesaria'" value="Necesaria" selected="selected">Autorizacion necesaria</option>
+                    	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} != 'Necesaria'" value="Necesaria" selected="selected">Autorizacion necesaria</option>
+                    	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} == 'Por horas'" value="Por horas" selected="selected">Hora Maxima</option>
+                    	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} != 'Por horas'" value="Por horas" selected="selected">Hora Maxima</option>
+                    	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} == 'Innecesaria'" value="Innecesaria" selected="selected">Libre</option>
+                    	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} != 'Innecesaria'" value="Innecesaria" selected="selected">Libre</option>
+                 	</select><br/>
+                 	<input type="text" id="idHoras" th:value="${espacio.horasAutorizacion}"/> 
+                 </div>
                  <!-- Facultad -->                  
                  <div class="form-group">
                      <label>Edificio:</label>                  
@@ -115,7 +127,7 @@
 	var idEspacio = /*[[${espacio.id}]]*/ '1';
 	
 </script>
-<script src="../../js/editarEspacio.js" th:src="@{/js/editarEspacio.js}"></script>
+<script src="../../js/editarEspacioGestor.js" th:src="@{/js/editarEspacioGestor.js}"></script>
 </div>
 
             <!-- /.container-fluid -->
