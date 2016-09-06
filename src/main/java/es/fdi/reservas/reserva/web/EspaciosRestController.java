@@ -141,6 +141,12 @@ public class EspaciosRestController {
 		return "redirect:/administrar/espacio/{numPag}/restaurar";
 	}
 	
+	@RequestMapping(value = "/gestor/administrar/espacio/restaurar/{idEspacio}", method = RequestMethod.DELETE)
+	public String restaurarEspacio(@PathVariable("idEspacio") Long idEspacio){
+		espacio_service.restaurarEspacio(idEspacio);
+		return "redirect:/gestor/administrar/espacio/eliminados/page/1";
+	}
+	
 	@RequestMapping(value="/admin/nuevoEspacio", method=RequestMethod.POST)
 	public String crearEspacio(Espacio f){
 		espacio_service.addNewEspacio(f);

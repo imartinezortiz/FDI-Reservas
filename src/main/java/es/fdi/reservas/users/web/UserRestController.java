@@ -39,10 +39,17 @@ public class UserRestController {
 		return "redirect:/admin/administrar/usuarios/1";
 	}
 	
-	@RequestMapping(value = "/administrar/usuarios/{numPag}/restaurar/{idUsuario}", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/administrar/usuarios/{numPag}/restaurar/{idUsuario}", method = RequestMethod.DELETE)
 	public String restaurarUsuario(@PathVariable("idUsuario") Long idUser, @PathVariable("numPag") Long numPag){
 		user_service.restaurarUser(idUser);
 		return "redirect:/reservas/administrar/usuarios/{numPag}";
+	}
+	
+	@RequestMapping(value = "/gestor/administrar/user/restaurar/{idUsuario}", method = RequestMethod.DELETE)
+	public String restaurarUsuarioGestor(@PathVariable("idUsuario") Long idUsuario){
+		System.out.println(idUsuario);
+		user_service.restaurarUser(idUsuario);
+		return "redirect:gestor/administrar/usuarios/eliminados/page/1";
 	}
 	
 	@RequestMapping(value="/admin/administrar/usuarios/editar/{idUser}/{user}/{admin}/{gestor}", method=RequestMethod.PUT)

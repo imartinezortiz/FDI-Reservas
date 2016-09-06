@@ -47,12 +47,12 @@
     <div class="row">
 		<div class="col-md-8 col-md-offset-2">
     	
-			<div class="jumbotron text-center" th:if="${#lists.isEmpty(edificios)}">
+			<div class="jumbotron text-center" th:if="${#lists.isEmpty(currentResults.content)}">
            			<i class="fa fa-ban fa-5x"></i>
            			<h4>¡Uups! No hay ningún edificio.</h4>
       		</div> 
 
-          	<div class="table-responsive" th:unless="${#lists.isEmpty(edificios)}">
+          	<div class="table-responsive" th:unless="${#lists.isEmpty(currentResults.content)}">
               <table class="table table-bordered table-hover">
                   <thead>
                       <tr>
@@ -63,7 +63,7 @@
                       </tr>
                   </thead>
                   <tbody>
-                      <tr th:each="r : ${edificios}" th:attr="id=${r.id},data-id=${r.id},name=${r.nombreEdificio},idFacultad=${r.facultad.id}" class = "danger" >
+                      <tr th:each="r : ${currentResults}" th:attr="id=${r.id},data-id=${r.id},name=${r.nombreEdificio},idFacultad=${r.facultad.id}" class = "danger" >
                       	  <td><img class="img-circle" th:alt="${r.imagen.description}" th:src="@{${r.imagen.attachmentUrl}}" height="42" width="42"></img></td>
                           <td th:text="${r.nombreEdificio}"></td>
                           <td th:text="${r.facultad.nombreFacultad}"></td>
@@ -83,7 +83,7 @@
 	</div>
 	
 	<!-- Pagination -->
- 	<div class="row" th:unless="${#lists.isEmpty(currentResults)}">
+ 	<div class="row" th:unless="${#lists.isEmpty(currentResults.content)}">
     <div class="col-md-12 text-center">
         <nav>
             <ul class="pagination">
@@ -215,7 +215,7 @@
  	var baseURL = /*[[@{/}]]*/ '/';
  	var pag = /*[[${currentIndex}]]*/ '/';
  </script>
- <script src="../../js/restaurarEdificio.js" th:src="@{/js/restaurarEdificio.js}"></script>	 
+ <script src="../../js/restaurarEdificioGestor.js" th:src="@{/js/restaurarEdificioGestor.js}"></script>	 
 </div>
 </body>
 </html>

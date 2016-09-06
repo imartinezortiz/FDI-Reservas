@@ -78,6 +78,12 @@ public class EdificioRestController {
 		return "redirect:/administrar/edificio/{numPag}/restaurar";
 	}
 	
+	@RequestMapping(value = "/gestor/administrar/edificio/restaurar/{idEdificio}", method = RequestMethod.DELETE)
+	public String restaurarEdificio(@PathVariable("idEdificio") Long idEdificio){
+		edificio_service.restaurarEdificio(idEdificio);
+		return "redirect:/administrar/edificio/eliminados/page/1";
+	}
+	
 	@RequestMapping(value="/admin/nuevoEdificio", method=RequestMethod.POST)
 	public String crearEdificio(Edificio f){
 		edificio_service.addNewEdificio(f);

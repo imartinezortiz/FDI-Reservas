@@ -97,6 +97,16 @@ public class GestorService {
 		return edificio_service.getEdificiosPorDireccionYFacultad(cadena, facultadid, pageable);
 	}
 	
+	public Page<Edificio> getEdificioDeletedByTagNombreAndFacutadId(String cadena,long facultadid, Pageable pageable)
+	{
+		return edificio_service.getEdificiosEliminadosPorTagNameYFacultad(cadena, facultadid, pageable);
+	}
+	
+	public Page<Edificio> getEdificioDeletedByTagDireccionAndFacutadId(String cadena,long facultadid, Pageable pageable)
+	{
+		return edificio_service.getEdificiosEliminadosPorDireccionYFacultad(cadena, facultadid, pageable);
+	}
+	
 	public Espacio getEspacio(long espacioid)
 	{
 		return espacio_service.findEspacio(espacioid);
