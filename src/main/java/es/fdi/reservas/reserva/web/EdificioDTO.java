@@ -23,6 +23,14 @@ public class EdificioDTO {
 		this.deleted = deleted;
 		this.imagen = idAttachment;
 	}
+	
+	public EdificioDTO(String nombre, String dir, Long idFac, String idAttachment){
+		
+		this.nombreEdificio = nombre;
+		this.direccion = dir;
+		this.idFacultad = idFac;
+		this.imagen = idAttachment;
+	}
 
 	public EdificioDTO(Long id, String nombre, String dir, Long idFac, String idImg){
 		this.id = id;

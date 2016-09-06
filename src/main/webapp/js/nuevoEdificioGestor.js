@@ -7,15 +7,17 @@ $(document).ready(function(){
 		
 		
 		$("#enviar").click(function(){
-			edificio.nombreEdificio = $("#idNombre").val();
-			edificio.direccion = $("#idDir").val();
+			edificio.nombreEdificio = $("#nombreEdificio").val();
+			edificio.direccion = $("#direccion").val();
 			edificio.idFacultad = $("#hFacultad").val();
+			edificio.imagen = $("#idAttachment").val();
 	    	editarEdificio(edificio,reqHeaders);
 		});
 });
 		
 function editarEdificio(edificio, reqHeaders){
 	
+	console.log(edificio);
 	$.ajax({
 			url: baseURL + 'gestor/nuevoEdificio',
 			type: 'POST',

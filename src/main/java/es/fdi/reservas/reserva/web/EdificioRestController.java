@@ -86,15 +86,15 @@ public class EdificioRestController {
 	}
 	
 	@RequestMapping(value="/admin/nuevoEdificio", method=RequestMethod.POST)
-	public String crearEdificio(Edificio f){
+	public String crearEdificio(@RequestBody EdificioDTO f){
 		edificio_service.addNewEdificio(f);
 	    return "redirect:/admin/administrar/edificios/1";
 	}
 	
 	@RequestMapping(value="/gestor/nuevoEdificio", method=RequestMethod.POST)
-	public ModelAndView crearEdificioGestor(Edificio f){
+	public String crearEdificioGestor(@RequestBody EdificioDTO f){
 		edificio_service.addNewEdificio(f);
-		return new ModelAndView("redirect:/gestor/administrar/edificios/page/1");
+	    return "redirect:/gestor/administrar/edificios/page/1";
 	}
 	
 	@RequestMapping(value = "/admin/edificio/usuarios/tag/{tagName}", method = RequestMethod.GET)

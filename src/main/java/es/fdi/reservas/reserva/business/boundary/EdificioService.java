@@ -22,14 +22,16 @@ public class EdificioService {
 	private FacultadRepository facultad_repository;
 	private AttachmentRepository attachment_repository;
 	private EdificioRepository edificio_repository;
+	private FacultadService facultad_service;
 
 	@Autowired
 	public EdificioService(FacultadRepository facultad_repository, AttachmentRepository attachment_repository,
-			EdificioRepository edificio_repository) {
+			EdificioRepository edificio_repository, FacultadService facultad_service) {
 		super();
 		this.facultad_repository = facultad_repository;
 		this.attachment_repository = attachment_repository;
 		this.edificio_repository = edificio_repository;
+		this.facultad_service = facultad_service;
 	}
 
 	public List<Edificio> getEdificiosFacultad(long idFacultad) {
@@ -53,7 +55,7 @@ public class EdificioService {
 		
 		e.setNombreEdificio(edificio.getNombreEdificio());
 		e.setDireccion(edificio.getDireccion());
-		Facultad fac = facultad_repository.findOne(edificio.getIdFacultad());
+		Facultad fac = facultad_service.getFacultad(edificio.getIdFacultad());
 		e.setFacultad(fac);
 		//e.setFacultad(facultad_repository.getOne(edificio.getIdFacultad()));
 		e.setImagen(attachment);
@@ -73,7 +75,7 @@ public Edificio addNewEdificio(Edificio edificio) {
 		
 		Facultad fac = edificio.getFacultad();
 		if (fac == null){
-			fac = facultad_repository.findOne((long) 27);
+			fac = facultad_service.getFacultad((long) 27);
 			edificio.setFacultad(fac);
 			//facultad_repository.save(fac);
 		}
@@ -84,6 +86,22 @@ public Edificio addNewEdificio(Edificio edificio) {
 		return null;
 		
 	}
+
+	public Edificio addNewEdificio(EdificioDTO edificio) {
+	
+	Edificio newEdificio = new Edificio();
+	newEdificio.setNombreEdificio(edificio.getNombreEdificio());
+	newEdificio.setDeleted(false); 
+	newEdificio.setDireccion(edificio.getDireccion());
+	newEdificio.setFacultad(facultad_service.getFacultadPorId(edificio.getIdFacultad()));
+			
+	newEdificio.setImagen(attachment_repository.findOne((long) 2));
+			
+	newEdificio = edificio_repository.save(newEdificio);
+
+	return null;
+	
+}
 
 	public List<Edificio> getEdificiosEliminados() {
 		
