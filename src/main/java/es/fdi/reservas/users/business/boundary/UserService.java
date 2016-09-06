@@ -239,6 +239,14 @@ public class UserService implements UserDetailsService{
 		return user_ropository.getUsuariosPorEmailYFacultad(nombre,id, pageable);
 	}
 
+	public Page<User> getUsuariosBorradosPorNombreYFacultad(String nombre, Long id, Pageable pageable) {
+		return user_ropository.getUsuariosBorradosPorNombreYFacultad(nombre, id, pageable);
+	}
+
+	public Page<User> getUsuariosBorradosPorEmailYFacultad(String email, Long id, Pageable pageable) {
+		return user_ropository.getUsuariosBorradosPorNombreYFacultad(email, id, pageable);
+	}
+
 	
 
 }

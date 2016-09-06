@@ -502,7 +502,7 @@ public class GestorController {
     public String gestiona_espacio_direccion1(@PathVariable String nombre,@PathVariable Integer pageNumber, Model model) {
 		User u= gestor_service.getUsuarioActual();
 		Pageable pageable = new PageRequest(pageNumber - 1, 5);
-        Page<Espacio> currentResults = gestor_service.getEspaciosDeletedByFacultad(u.getFacultad().getId(), pageable);
+        Page<Espacio> currentResults = gestor_service.getEspaciosDeletedByFacultadAndNombre(nombre,u.getFacultad().getId(), pageable);
         
         model.addAttribute("currentResults", currentResults);
     
@@ -521,11 +521,11 @@ public class GestorController {
         return "index";
     }
 	
-	@RequestMapping(value="/gestor/administrar/espacios/eliminados/direccion/{direccion}/page/{pageNumber}", method=RequestMethod.GET)
+	@RequestMapping(value="/gestor/administrar/espacios/eliminados/edificio/{direccion}/page/{pageNumber}", method=RequestMethod.GET)
     public String gestiona_espacio_direccio2n(@PathVariable String direccion, @PathVariable Integer pageNumber, Model model) {
 		User u= gestor_service.getUsuarioActual();
 		Pageable pageable = new PageRequest(pageNumber - 1, 5);
-        Page<Espacio> currentResults = gestor_service.getEspaciosDeletedByFacultad(u.getFacultad().getId(), pageable);
+        Page<Espacio> currentResults = gestor_service.getEspaciosDeletedByFacultadAndEdificio(direccion, u.getFacultad().getId(), pageable);
         
         model.addAttribute("currentResults", currentResults);
     
@@ -625,7 +625,7 @@ public class GestorController {
     }
 	
 	@RequestMapping(value="/gestor/administrar/usuarios/eliminados/page/{pageNumber}", method=RequestMethod.GET)
-    public String gestiona_usuario_direccion(@PathVariable Integer pageNumber, Model model) {
+    public String gestiona_usuario_eliminado(@PathVariable Integer pageNumber, Model model) {
 		User u= gestor_service.getUsuarioActual();
 		Pageable pageable = new PageRequest(pageNumber - 1, 5);
         Page<User> currentResults = gestor_service.getUsuariosDeletedByFacultad(u.getFacultad().getId(), pageable);
@@ -645,6 +645,53 @@ public class GestorController {
 		model.addAttribute("view", "gestor/papelera_usuarios");
 		
         return "index";
+	}
+        @RequestMapping(value="/gestor/administrar/usuarios/eliminados/nombre/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+        public String gestiona_usuario_eliminado_nombre(@PathVariable String nombre, @PathVariable Integer pageNumber, Model model) {
+        	User u= gestor_service.getUsuarioActual();
+    		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+    		System.out.println("nombre:"+nombre);
+    		System.out.println("page:"+pageNumber);
+            Page<User> currentResults = gestor_service.getUsuariosDeletedByFacultadAndNombre(nombre, u.getFacultad().getId(), pageable);
+            
+            model.addAttribute("currentResults", currentResults);
+        
+            int current = currentResults.getNumber() + 1;
+            int begin = Math.max(1, current - 5);
+            int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+            model.addAttribute("beginIndex", begin);
+            model.addAttribute("endIndex", end);
+            model.addAttribute("currentIndex", current); 
+    		model.addAttribute("User", u);
+    		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+    		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+    		model.addAttribute("view", "gestor/papelera_usuarios");
+    		
+            return "index";
+    }
+        
+        @RequestMapping(value="/gestor/administrar/usuarios/eliminados/email/{email}/page/{pageNumber}", method=RequestMethod.GET)
+        public String gestiona_usuario_eliminado_email(@PathVariable String email,@PathVariable Integer pageNumber, Model model) {
+    		User u= gestor_service.getUsuarioActual();
+    		Pageable pageable = new PageRequest(pageNumber - 1, 5);
+            Page<User> currentResults = gestor_service.getUsuariosDeletedByFacultadAndEmail(email, u.getFacultad().getId(), pageable);
+            
+            model.addAttribute("currentResults", currentResults);
+        
+            int current = currentResults.getNumber() + 1;
+            int begin = Math.max(1, current - 5);
+            int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+            model.addAttribute("beginIndex", begin);
+            model.addAttribute("endIndex", end);
+            model.addAttribute("currentIndex", current); 
+    		model.addAttribute("User", u);
+    		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
+    		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
+    		model.addAttribute("view", "gestor/papelera_usuarios");
+    		
+            return "index";
     }
 	
 	@RequestMapping(value="/gestor/administrar/usuarios/editar/{idUser}", method=RequestMethod.GET)

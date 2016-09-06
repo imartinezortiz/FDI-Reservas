@@ -10,7 +10,7 @@ $(document).ready(function(){
  		var searchTerm = $('#texto-busqueda').val();
  		tipoBusqueda = $('#selec-busqueda').val();
  		
- 		var link = '/reservas/gestor/administrar/edificios/restaurar/' + tipoBusqueda + '/' + searchTerm + '/page/1';
+ 		var link = '/reservas/gestor/administrar/edificios/eliminados/' + tipoBusqueda + '/' + searchTerm + '/page/1';
  		$("#busquedaEdificio").attr("href",link);
  		
  	});

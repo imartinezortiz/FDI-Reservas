@@ -10,7 +10,7 @@ $(document).ready(function(){
  		var searchTerm = $('#texto-busqueda').val();
  		tipoBusqueda = $('#selec-busqueda').val();
  		
- 		var link = '/reservas/gestor/administrar/espacios/restaurar/' + tipoBusqueda + '/' + searchTerm + '/page/1';
+ 		var link = '/reservas/gestor/administrar/espacios/eliminados/' + tipoBusqueda + '/' + searchTerm + '/page/1';
  		$("#busquedaEspacio").attr("href",link);
  		
  	});
@@ -37,7 +37,7 @@ $(document).ready(function(){
  		$('#modalEditarEspacio #idEdificio').text(edificio);
  		$('#modalEditarEspacio #idActivado').text(eliminado);
  		$('#modalEditarEdificio #idAttachment').attr("src",imagen);
- 		$('#modalEditarEspacio #btn-editar').prop("href", baseURL + 'admin/administrar/espacio/editar/' + espacio.id);
+ 		$('#modalEditarEspacio #btn-editar').prop("href", baseURL + 'gestor/administrar/espacio/editar/' + espacio.id);
  	
  		if (accion == 'Restaurar'){
  			

@@ -9,7 +9,7 @@ $(document).ready(function(){
  		var searchTerm = $('#texto-busqueda').val();
  		tipoBusqueda = $('#selec-busqueda').val();
  		
- 		var link = '/reservas/gestor/administrar/usuarios/restaurar/' + tipoBusqueda + '/' + searchTerm + '/page/1';
+ 		var link = '/reservas/gestor/administrar/usuarios/eliminados/' + tipoBusqueda + '/' + searchTerm + '/page/1';
  		$("#busquedaUsuario").attr("href",link);
  		
  	});

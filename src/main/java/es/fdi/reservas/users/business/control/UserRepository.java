@@ -70,5 +70,12 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
 	@Query("select e from #{#entityName} e where e.enabled=true and e.facultad.id = :idFacultad and lower(e.email) like lower(concat('%',:email, '%'))")
 	public Page<User> getUsuariosPorEmailYFacultad(@Param("email")String email, @Param("idFacultad")Long idFacultad, Pageable pageable);
+
+	@Query("select e from #{#entityName} e where e.enabled=false and e.facultad.id = :idFacultad and lower(e.username) like lower(concat('%',:username, '%'))")
+	public Page<User> getUsuariosBorradosPorNombreYFacultad(@Param("username") String nombre,  @Param("idFacultad")Long id, Pageable pageable);
+	
+	@Query("select e from #{#entityName} e where e.enabled=false and e.facultad.id = :idFacultad and lower(e.email) like lower(concat('%',:email, '%'))")
+	public Page<User> getUsuarioBorradossPorEmailYFacultad(@Param("email") String email, @Param("idFacultad")Long idFacultad, Pageable pageable);
+
 	
 }

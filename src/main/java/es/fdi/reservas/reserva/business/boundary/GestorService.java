@@ -178,6 +178,22 @@ public class GestorService {
 		return reserva_service.reservasPendientesUsuario(userId, er);
 	}
 
+	public Page<User> getUsuariosDeletedByFacultadAndNombre(String nombre, Long id, Pageable pageable) {
+		return user_service.getUsuariosBorradosPorNombreYFacultad(nombre, id, pageable);
+	}
+
+	public Page<User> getUsuariosDeletedByFacultadAndEmail(String email, Long id, Pageable pageable) {
+		return user_service.getUsuariosBorradosPorEmailYFacultad(email, id, pageable);
+	}
+
+	public Page<Espacio> getEspaciosDeletedByFacultadAndEdificio(String nombre, Long id, Pageable pageable) {
+		return espacio_service.getEspaciosEliminadosPorEdificioYFacultad(nombre, id, pageable);
+	}
+	
+	public Page<Espacio> getEspaciosDeletedByFacultadAndNombre(String nombre, Long id, Pageable pageable) {
+		return espacio_service.getEspaciosEliminadosPorNombreYFacultad(nombre, id, pageable);
+	}
+
 	
 
 	
