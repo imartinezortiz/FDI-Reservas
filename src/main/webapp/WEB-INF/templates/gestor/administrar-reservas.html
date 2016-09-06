@@ -21,19 +21,23 @@
 
 <!-- Vista -->
 <div class="row">
-	<div class="col-md-6 text-center">
-		<select id="selec-busqueda">
-			<option value="user">User</option>
-			<option value="espacio">Espacio</option>
-			<option value="estado">Estado</option>
-		</select>:
-		<input type="text" id="texto-busqueda"></input>
-    	<button id="boton-busqueda">Buscar</button>
-	</div>
-	<div class="col-md-2 col-md-offset-4 text-center">
-	    Ver como: 
-	    <span id="iconoLista" class="red" title="Lista"><i class="fa fa-list-ul"> </i></span>
-	    <span id="iconoCalendario" title="Calendario"><i class="fa fa-calendar"> </i> </span>
+	<div class="col-md-8 col-md-offset-2 text-center">
+		<div class="col-md-2">
+			<label class="form-group" style="margin-top:5px;">Filtrar por: </label>
+		</div>
+		<div class="col-md-2">
+			<select id="selec-busqueda">
+				<option value="user">User</option>
+				<option value="espacio">Espacio</option>
+				<option value="estado">Estado</option>
+			</select>:
+		</div>
+		<div class="col-md-8">
+			<div class="input-group">        
+	            <input type="text" id="texto-busqueda" class="form-control" placeholder="Introduce nombre de usuario"></input>
+	            <span class="input-group-addon"><a id="boton-busqueda"><i class="fa fa-search"></i></a></span>
+	        </div>
+	    </div>		
 	</div>
 </div>
 <hr/>

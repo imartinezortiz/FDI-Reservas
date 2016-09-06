@@ -5,6 +5,16 @@ $(document).ready(function(){
 	 	var reqHeaders = [];
 	 	reqHeaders[header] = token;
 		
+	 	$("#enlaceGuardar").click(function(){
+			user.id = idUsuario;
+			user.username = $("#idNombre").val();
+			user.email = $("#idEmail").val();
+			user.facultad = $("idFacultad").val();
+			user.imagen = $("#idAttachment").val();
+	    	editarUsuario(user,reqHeaders);
+	    	
+		});
+	 	
 //		for(var i in roles){
 //			if(roles[i].role == "ROLE_USER"){
 //				$("#chkUser").prop("checked","true");
@@ -43,18 +53,16 @@ function editarUsuario(user, reqHeaders){
 	var usuario = document.getElementById("chkUser").checked.toString();
 	var admin = document.getElementById("chkAdmin").checked.toString();
 	var gestor = document.getElementById("chkSecre").checked.toString();
-	
 	$.ajax({
 			
-			url: baseURL + '/administrar/usuarios/editar/' + idUsuario + '/' + usuario + '/' + admin + '/' + gestor,
-			//url: baseURL + 'admin/administrar/usuarios/editar/' + idUsuario ,
+			url: baseURL + 'gestor/administrar/usuarios/editar/' + idUsuario + '/' + usuario + '/' + admin + '/' + gestor,
 			type: 'PUT',
 			headers : reqHeaders,
 			data: JSON.stringify(user),
 			contentType: 'application/json',
 			
 			success : function(datos) {   
-				 window.location = "/reservas/admin/administrar/usuarios/page/1";
+				 window.location = "/reservas/gestor/administrar/usuarios/page/1";
 			},    
 			error : function(xhr, status) {
 				alert(usuario + admin + gestor),

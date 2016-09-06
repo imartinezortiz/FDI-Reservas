@@ -156,7 +156,7 @@ public class EspacioDTO {
 	}
 
 	public static EspacioDTO fromEspacioDTOAutocompletar(Espacio e){
-		return new EspacioDTO(e.getId(), e.getNombreEspacio(), e.getEdificio().getNombreEdificio(), e.getCapacidad(), e.isMicrofono(), e.isProyector(), e.getTipoEspacio().getTipo(), e.getImagen().getAttachmentUrl());
+		return new EspacioDTO(e.getId(), e.getNombreEspacio(), e.getEdificio().getNombreEdificio(), e.getCapacidad(), e.isMicrofono(), e.isProyector(), e.getTipoEspacio().getTipo(), e.getImagen().getAttachmentUrl(),e.getTipoAutorizacion().toString(), e.getHorasAutorizacion());
 	}
 	
 	public static EspacioDTO fromEspacioDTO(Espacio e){

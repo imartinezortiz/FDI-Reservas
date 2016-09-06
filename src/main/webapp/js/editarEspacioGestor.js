@@ -22,14 +22,14 @@ $(document).ready(function(){
 		$("#enlaceGuardar").click(function(){
 			espacio.id = idEspacio;
 			espacio.nombreEspacio = $("#idNombre").val();
+			espacio.edificio = $("#edificioHidden").val();
 			espacio.capacidad = $("#idCapa").val();
 			espacio.microfono = $("#idMicro").val();
 			espacio.proyector = $("#idProy").val();
 			espacio.tipoEspacio = $("#idTipo").val();
 			espacio.imagen = $("#idAttachment").val();
 			espacio.tipoAutorizacion=$("#idRestr").val();
-			espacio.horasAutrizacion=$("#idHoras").val();
-			
+			espacio.horasAutorizacion=$("#idHoras").val();
 	    	editarEspacio(espacio,reqHeaders);
 		});
 		
@@ -60,7 +60,7 @@ $(document).ready(function(){
 					});
 			},
 			select: function(event, ui){
-				espacio.edificio = ui.item.label;
+				$("#edificioHidden").val(ui.item.label);
 			},
 			minLength: 3
 
@@ -84,7 +84,8 @@ $(document).ready(function(){
 });	
 
 function editarEspacio(espacio, reqHeaders){
-	
+
+	console.log(espacio);
 	$.ajax({
 			url: baseURL + 'gestor/administrar/espacio/editar/' + idEspacio,
 			type: 'PUT',
@@ -93,7 +94,7 @@ function editarEspacio(espacio, reqHeaders){
 			contentType: 'application/json',
 			
 			success : function(datos) {   
-				 window.location = "/reservas/gestor/administrar/espacios/1";
+				 window.location = "/reservas/gestor/administrar/espacios";
 			},    
 			error : function(xhr, status) {
  			alert('Disculpe, existió un problema');

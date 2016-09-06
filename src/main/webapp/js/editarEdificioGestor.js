@@ -10,13 +10,13 @@ $(document).ready(function(){
 			edificio.id = idEdificio;
 			edificio.nombreEdificio = $("#idNombre").val();
 			edificio.direccion = $("#idDir").val();
-			edificio.facultad = $("#idFacultad").val();
+			edificio.idFacultad = $("#idFacultad").val();
 			edificio.imagen = $("#idAttachment").val();
 	    	editarEdificio(edificio,reqHeaders);
 		});
 	
 function editarEdificio(edificio, reqHeaders){
-	console.log(edificio)
+	console.log(edificio);
 	$.ajax({
 			url: baseURL + 'gestor/administrar/edificios/editar/' + idEdificio,
 			type: 'PUT',

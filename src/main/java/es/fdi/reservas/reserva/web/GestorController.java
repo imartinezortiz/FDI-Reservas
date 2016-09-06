@@ -129,7 +129,7 @@ public class GestorController {
 	@RequestMapping(value="/gestor/administrar/reservas/page/{pageNumber}", method=RequestMethod.GET)
     public String gestiona_reservas(@PathVariable Integer pageNumber, Model model) {
 		User u= gestor_service.getUsuarioActual();
-		PageRequest pageRequest = new PageRequest(pageNumber - 1, 7, new Sort(new Sort.Order(Sort.Direction.ASC,"comienzo")));
+		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5, new Sort(new Sort.Order(Sort.Direction.ASC,"comienzo")));
         Page<Reserva> currentResults = gestor_service.getReservasByFacultadId(u.getFacultad().getId(), pageRequest);
         
         model.addAttribute("currentResults", currentResults);
@@ -324,6 +324,8 @@ public class GestorController {
 		Pageable pageable = new PageRequest(pageNumber - 1, 5);
         Page<Edificio> currentResults = gestor_service.getEdificioDeletedByFacultadId(u.getFacultad().getId(), pageable);
         
+        System.out.println("current"+currentResults.getNumberOfElements());
+        System.out.println("current"+currentResults.getContent().get(0).getNombreEdificio());
         model.addAttribute("currentResults", currentResults);
     
         int current = currentResults.getNumber() + 1;

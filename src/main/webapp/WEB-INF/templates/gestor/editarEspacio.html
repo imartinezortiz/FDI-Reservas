@@ -90,7 +90,8 @@
                  <!-- Facultad -->                  
                  <div class="form-group">
                      <label>Edificio:</label>                  
-		                <input id="idEdificio" name="email" type="text" class="form-control" placeholder="Elige un edificio"/>                 
+		                <input id="idEdificio" name="email" type="text" class="form-control" placeholder="Elige un edificio"/> 
+		                <input type="hidden" id="edificioHidden" th:value="${espacio.edificio.id}"/>                
                  	</div>				
 				 
                  

@@ -91,6 +91,52 @@ public class UserRestController {
 		
 	}
 	
+	@RequestMapping(value="/gestor/administrar/usuarios/editar/{idUser}/{user}/{admin}/{gestor}", method=RequestMethod.PUT)
+	public void editarUsuarioGestor(@PathVariable("idUser") long idUser, @PathVariable("user") String user,
+			@PathVariable("admin") String admin, @PathVariable("gestor") String gestor,
+			@RequestBody UserDTO userActualizado) {
+					
+			Attachment attachment = new Attachment("");
+			
+			if (userActualizado.getFacultad() == null){
+				userActualizado.setFacultad(user_service.getUser(userActualizado.getId()).getFacultad().getId());
+			}
+			if (userActualizado.getImagen().equals("")){
+				attachment = user_service.getUser(userActualizado.getId()).getImagen();
+			}
+			else {
+//				String img = "/img/users/" + user_service.getUser(idUser).getUsername();
+//				String nombreViejo = user_service.getUser(idUser).getUsername();
+//				String nombreNuevo = userActualizado.getUsername();
+//				
+//				if (!nombreViejo.equalsIgnoreCase(nombreNuevo)){
+//					//si el nombre de usuario ha cambiado, hay que renombrar el directorio y las referencias
+//					//File dirViejo = new File("../src/main/webapp/img/"  + nombreViejo);
+//					File dirNuevo = new File("../../img/"  + nombreNuevo);
+//					boolean correcto = dirNuevo.mkdir();
+//					
+//				}
+//				File file = new File("/img/" + userActualizado.getImagen());
+//				boolean ex = file.exists();
+				if (user_service.getAttachmentByName(userActualizado.getImagen()).isEmpty()){
+			
+					//si no esta, lo añado
+									
+					attachment.setAttachmentUrl("/img/" + userActualizado.getImagen());
+					attachment.setStorageKey(user_service.getUser(idUser).getUsername() + "/" + userActualizado.getImagen());
+					//reserva_service.addAttachment(attachment);
+				}else{
+					attachment = user_service.getAttachmentByName(userActualizado.getImagen()).get(0);
+				}
+			}
+			user_service.editaUsuario(userActualizado, user, admin, gestor, attachment);
+			//System.out.println(imagen + " Existe");
+//		}else{
+//			System.out.println(imagen + " No existe");
+//		}
+		
+	}
+	
 	@RequestMapping(value="/admin/nuevoUsuario", method=RequestMethod.POST)
 	public String crearUsuario(User us){
 		user_service.addNewUser(us);
