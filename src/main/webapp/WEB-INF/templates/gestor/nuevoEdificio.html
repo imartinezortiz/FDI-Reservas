@@ -45,7 +45,7 @@
                                 <div class="input-group">
                                   <span class="input-group-addon"><i class="zmdi zmdi-library"></i></span>
                                   <input title="Facultad" th:value="${facul.nombreFacultad}" th:readonly="readonly" type="text" class="form-control"/>
-                                  <input type="hidden" th:value="${facul.id}"/>
+                                  <input type="hidden" th:value="${facul.id}" id="hFacultad"/>
                                 </div>
                             </div>
                             
@@ -64,6 +64,10 @@
                          </form>
                     </div>
                 </div>
+            <script th:inline="javascript">
+			var baseURL = /*[[@{/}]]*/ '/';
+			</script>
+			<script src="../../js/nuevoEdificioGestor.js" th:src="@{/js/nuevoEdificioGestor.js}"></script>
             </div>
             <!-- /.row -->
        

@@ -19,14 +19,14 @@
                                 <label for="ejemplo_email_1">Nombre espacio</label>
                                 <div class="input-group">
                                   <span class="input-group-addon"><i class="fa fa-building"></i></span>
-                                  <input name="nombreEspacio" type="text" class="form-control" placeholder="Nombre del espacio"/>
+                                  <input id="nombre" name="nombreEspacio" type="text" class="form-control" placeholder="Nombre del espacio"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="ejemplo_email_1">Capacidad</label>
                                 <div class="input-group">
                                   <span class="input-group-addon"><i class="fa fa-users"></i></span>
-                                  <input name="capacidad" type="text" class="form-control" placeholder="Introduce la capacidad del espacio"/>
+                                  <input id="capacidad" name="capacidad" type="text" class="form-control" placeholder="Introduce la capacidad del espacio"/>
                                 </div>
                             </div>
                             
@@ -66,12 +66,16 @@
 <!-- 						        </select> -->
 <!-- 					        </div> -->
                             <div class="text-center">
-                                 <button type="submit" class="btn btn-default">Crear</button>
+                                 <button id="enviar" type="button" class="btn btn-default">Crear</button>
                             </div>
 
                          </form>
                     </div>
                 </div>
+                <script th:inline="javascript">
+			var baseURL = /*[[@{/}]]*/ '/';
+			</script>
+			<script src="../../js/nuevoEspacioGestor.js" th:src="@{/js/nuevoEspacioGestor.js}"></script>
             </div>
             <!-- /.row -->
        

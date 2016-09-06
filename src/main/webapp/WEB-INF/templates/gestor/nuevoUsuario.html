@@ -27,23 +27,30 @@
 			                <label>Usuario</label>
 			                <div class="input-group">
                                   <span class="input-group-addon"><i class="zmdi zmdi-account-o zmdi-hc-lg"></i></span>
-                                  <input name="username" type="text" class="form-control" placeholder="Nombre de usuario"/>
+                                  <input id="idnombre" name="username" type="text" class="form-control" placeholder="Nombre de usuario"/>
+                            	<input id="idFacul" type="hidden" class="form-control" th:value="{facul}"/>
                             </div>
+			            </div>
+			            
+			            <div class="form-group">
+                                 
 			            </div>
 			            <!-- Email -->
 			            <div class="form-group">
 			                <label>Email</label>
 			                 <div class="input-group">
                                  <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                                 <input name="email" type="text" class="form-control" placeholder="Introduce tu email"/>
+                                 <input id="email" name="email" type="text" class="form-control" placeholder="Introduce tu email"/>
                               </div>
 			            </div>
+			            
+			            
 			            <!-- Contraseña -->
 			            <div class="form-group">
 			                <label>Contraseña</label>
 			                  <div class="input-group">
                                   <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                  <input name="password" type="password" class="form-control" placeholder="Contraseña"/>
+                                  <input id="pass"name="password" type="password" class="form-control" placeholder="Contraseña"/>
                                 </div> 
 			            </div>
 			            <!-- Imagen usuario -->
@@ -51,11 +58,7 @@
 							<label>Selecciona la imagen: </label>
 							<input type="file" id="imagen" />								
 						</div>
-						
-						 <!-- Facultad usuario -->
 			            <div class="form-group">
-							<label>Facultad: </label>
-							<input type="text" class="form-control" disabled/>
 							<input type="hidden" id="hfacultad"/>								
 						</div>
 						
@@ -66,6 +69,10 @@
 			            </div>
 			        </form>
 			    </div>
+			    <script th:inline="javascript">
+				var baseURL = /*[[@{/}]]*/ '/';
+				</script>
+				<script src="../../js/nuevoUsuarioGestor.js" th:src="@{/js/nuevoUsuarioGestor.js}"></script>
 			</div>
 			<!-- /.row -->
         
