@@ -81,6 +81,18 @@ public class Espacio {
 		this.tipoAutorizacion = Autorizacion.NECESARIA;
 		this.horasAutorizacion = 0;
 	}
+	
+	public Espacio(String nombre_espacio, int capacidad,TipoEspacio tipoEspacio) {
+		super();
+		this.nombreEspacio = nombre_espacio;
+		this.capacidad = capacidad;
+		this.microfono = false;
+		this.proyector = false;
+		this.tipoEspacio = tipoEspacio;
+		this.deleted = false;
+		this.tipoAutorizacion = Autorizacion.NECESARIA;
+		this.horasAutorizacion = 0;
+	}
 
 	public Autorizacion getTipoAutorizacion() {
 		return tipoAutorizacion;

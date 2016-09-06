@@ -1,5 +1,5 @@
 $(document).ready(function(){
-		var edificio = {};
+		var espacio = {};
 		var token = $("meta[name='_csrf']").attr("content");
 	 	var header = $("meta[name='_csrf_header']").attr("content");
 	 	var reqHeaders = [];
@@ -35,3 +35,51 @@ function editarEspacio(espacio, reqHeaders){
  			
 			}
 		});}
+
+$("#idEdif").autocomplete({
+	source:function(request, response){
+			var tag = request.term;
+			
+			$.ajax({
+				url: '/reservas/gestor/edificio/tag/' + tag,
+				type: 'GET',
+				contentType: 'application/json',
+				success : function(datos) {
+					console.log(datos);
+					
+					response($.map(datos,function(item){
+						
+							var obj = new Object();
+							obj.label = item.id;
+							obj.value = item.nombreEdificio; 
+							return obj;
+		
+					}))
+					
+				},    
+			    error : function(xhr, status) {
+			        alert('Disculpe, existió un problema');
+			    }
+			});
+	},
+	select: function(event, ui){
+		espacio.edificio = ui.item.label;
+	},
+	minLength: 3
+
+}).autocomplete("instance")._renderItem = function(ul,item){
+	
+		var inner_html = '<div class="media"><div class="media-left">' + 
+		                  '</div>' + 
+		                  '<div class="media-body">' + 
+		                  '<h5 class="media-heading">'+ item.value +'</h5>' + 
+		                  '</div></div>';
+		                  
+		        
+		                  
+            return $('<li></li>')
+                    .data("item.autocomplete", item)
+                    .append(inner_html)
+                    .appendTo(ul);
+	
+};

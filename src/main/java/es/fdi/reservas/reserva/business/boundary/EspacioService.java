@@ -15,21 +15,22 @@ import es.fdi.reservas.reserva.business.entity.Autorizacion;
 import es.fdi.reservas.reserva.business.entity.Edificio;
 import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.TipoEspacio;
+import es.fdi.reservas.reserva.web.EdificioDTO;
 import es.fdi.reservas.reserva.web.EspacioDTO;
 
 @Service
 public class EspacioService {
 
 	private EspacioRepository espacio_repository;
-	private EdificioRepository edificio_repository;
+	private EdificioService edificio_service;
 	private AttachmentRepository attachment_repository;
 	
 	@Autowired
-	public EspacioService(EspacioRepository espacio_repository, AttachmentRepository ar, EdificioRepository er) {
+	public EspacioService(EspacioRepository espacio_repository, AttachmentRepository ar, EdificioService er) {
 		super();
 		this.espacio_repository = espacio_repository;
 		this.attachment_repository = ar;
-		this.edificio_repository = er;
+		this.edificio_service = er;
 	}
 
 	public List<Espacio> getEspaciosEdificio(long idEdificio) {
@@ -72,7 +73,7 @@ public class EspacioService {
 		e.setProyector(espacio.isProyector());
 		e.setTipoEspacio(TipoEspacio.fromTipoEspacio(espacio.getTipoEspacio()));
 		Long id = Long.decode(espacio.getEdificio());
-		e.setEdificio(edificio_repository.findOne(id));
+		e.setEdificio(edificio_service.findEdificio(id));
 		e.setImagen(attachment);
 		return espacio_repository.save(e);
 	}
@@ -85,7 +86,7 @@ public class EspacioService {
 		e.setProyector(espacio.isProyector());
 		e.setTipoEspacio(TipoEspacio.fromTipoEspacio(espacio.getTipoEspacio()));
 		Long id = Long.decode(espacio.getEdificio());
-		e.setEdificio(edificio_repository.findOne(id));
+		e.setEdificio(edificio_service.findEdificio(id));
 		e.setImagen(attachment);
 		e.setTipoAutorizacion(Autorizacion.fromEstadoReserva(espacio.getTipoAutorizacion()));
 		e.setHorasAutorizacion(espacio.getHorasAutorizacion());
@@ -98,6 +99,17 @@ public class EspacioService {
 		newEspacio = espacio_repository.save(newEspacio);
 		
 		return null;
+	}
+	
+	public Espacio addNewEspacio(EspacioDTO f){
+		TipoEspacio tipoEspacio = TipoEspacio.fromTipoEspacio(f.getTipoEspacio());
+		Espacio newEspacio = new Espacio(f.getNombreEspacio(),f.getCapacidad(), tipoEspacio); 
+
+		newEspacio.setEdificio(edificio_service.getEdificio(1));
+		newEspacio.setImagen(attachment_repository.findOne((long) 1));
+		newEspacio = espacio_repository.save(newEspacio);
+		
+		return newEspacio;
 	}
 
 	public List<TipoEspacio> tiposDeEspacios(long idEdificio) {
@@ -122,7 +134,7 @@ public class EspacioService {
 
 	public List<Edificio> getEdificiosPorTagName(String tagName) {
 		
-		return edificio_repository.getEdificiosPorTagName(tagName);
+		return edificio_service.getEdificiosPorTagName(tagName);
 	}
 
 	public Page<Espacio> getEspaciosPorNombre(String nombre, Pageable pagerequest) {

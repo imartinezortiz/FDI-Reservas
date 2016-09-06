@@ -167,7 +167,7 @@ public class EspacioController {
 	@RequestMapping(value="/nuevoEspacio",method=RequestMethod.GET)
 	public String nuevoEspacio(Model model){
 		User u = user_service.getCurrentUser();
-		model.addAttribute("Espacio", new Espacio());
+		model.addAttribute("espacio", new Espacio());
 		model.addAttribute("User", u);
 		model.addAttribute("view", "admin/nuevoEspacio");
 		model.addAttribute("edificios", edificio_service.getEdificios());
