@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import es.fdi.reservas.fileupload.business.entity.Attachment;
 import es.fdi.reservas.reserva.business.boundary.EdificioService;
@@ -88,6 +89,12 @@ public class EdificioRestController {
 	public String crearEdificio(Edificio f){
 		edificio_service.addNewEdificio(f);
 	    return "redirect:/admin/administrar/edificios/1";
+	}
+	
+	@RequestMapping(value="/gestor/nuevoEdificio", method=RequestMethod.POST)
+	public ModelAndView crearEdificioGestor(Edificio f){
+		edificio_service.addNewEdificio(f);
+		return new ModelAndView("redirect:/gestor/administrar/edificios/page/1");
 	}
 	
 	@RequestMapping(value = "/admin/edificio/usuarios/tag/{tagName}", method = RequestMethod.GET)

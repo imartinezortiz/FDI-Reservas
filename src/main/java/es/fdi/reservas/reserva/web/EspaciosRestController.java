@@ -154,6 +154,13 @@ public class EspaciosRestController {
 		//return "nuevoUsuario";
 	}
 	
+	@RequestMapping(value="/gestor/nuevoEspacio", method=RequestMethod.POST)
+	public ModelAndView crearEspacioGestor(Espacio f){
+		espacio_service.addNewEspacio(f);
+		return new ModelAndView("redirect:/gestor/administrar/espacios/page/1");
+		//return "nuevoUsuario";
+	}
+	
 	@RequestMapping(value = "/admin/edificio/tag/{tagName}", method = RequestMethod.GET)
 	public List<EdificioDTO> edificioFiltroAutocompletar(@PathVariable("tagName") String tagName) {
 

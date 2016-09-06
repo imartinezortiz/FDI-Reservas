@@ -429,6 +429,17 @@ public class GestorController {
 		return "index";
 	}
 	
+	@RequestMapping(value="/gestor/nuevoEdificio", method=RequestMethod.GET)
+	public String nuevoEdificio( Model model){
+		User u = gestor_service.getUsuarioActual();
+		model.addAttribute("User", u);
+		model.addAttribute("Edificio", new Edificio());
+		model.addAttribute("view", "gestor/nuevoEdificio");
+		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("facul", u.getFacultad());
+		return "index";
+	}
+	
 	@RequestMapping(value="/gestor/administrar/espacios/nombre/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
     public String gestiona_espacio_nombre(@PathVariable String nombre, @PathVariable Integer pageNumber, Model model) {
 		User u= gestor_service.getUsuarioActual();
@@ -552,6 +563,17 @@ public class GestorController {
 		model.addAttribute("espacio", gestor_service.getEspacio(idEspacio));
 		//System.out.println(user_service.getUser(idUser).getUsername());
 		model.addAttribute("view", "gestor/editarEspacio");
+		return "index";
+	}
+	
+	@RequestMapping(value="/gestor/nuevoEspacio", method=RequestMethod.GET)
+	public String editarEspacio(Model model){
+		User u = gestor_service.getUsuarioActual();
+		model.addAttribute("User", u);
+		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("espacio", new Espacio());
+		//System.out.println(user_service.getUser(idUser).getUsername());
+		model.addAttribute("view", "gestor/nuevoEspacio");
 		return "index";
 	}
 	

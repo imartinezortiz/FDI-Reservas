@@ -262,7 +262,7 @@
                         <li>
                             <a th:href="@{/grupo/nuevo}">Nuevo grupo </a>
                         </li>
-                        <!--/*/  <th:block sec:authorize="hasRole('ROLE_GESTOR') || hasRole('ROLE_ADMIN')"> /*/-->
+                        <!--/*/  <th:block sec:authorize="hasRole('ROLE_ADMIN')"> /*/-->
                         <li>
                             <a th:href="@{/admin/nuevoUsuario}">Nuevo usuario </a>
                         </li>
@@ -274,6 +274,18 @@
                         </li>
                         <li>
                             <a th:href="@{/admin/nuevoEspacio}">Nuevo espacio </a>
+                        </li>
+                         <!--/*/  </th:block> /*/-->
+                         
+                         <!--/*/  <th:block sec:authorize="hasRole('ROLE_GESTOR')"> /*/-->
+                        <li>
+                            <a th:href="@{/gestor/nuevoUsuario}">Nuevo usuario </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/gestor/nuevoEdificio}">Nuevo edificio </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/gestor/nuevoEspacio}">Nuevo espacio </a>
                         </li>
                          <!--/*/  </th:block> /*/-->
                     </ul>
