@@ -11,9 +11,9 @@
 <!-- Page Heading -->
 <div class="row">  
 	<div class="col-md-12">
-        <h1 class="page-header text-center">
-            <small>Editar</small>
-        </h1>
+        <h2 class="page-header text-center">
+            Editar Reserva
+        </h2>
     </div>                  
 </div>
 <!-- /.row -->
@@ -97,12 +97,12 @@
                   	<!-- Grupo de Reservas -->	
                    	<div class="form-group">
                    	<label>Grupo:</label>
-                  		<select id="selec_grupo" class="form-control" >            
+                  		<select id="selec_grupo" class="form-control" >
+                  			<option value="0">Ninguno</option>            
                    	   		<option th:each="s : ${GruposReservasUser}"
-                   	   			th:text="${s.nombreCorto}"
-                   	   			th:value="${s.id}"
-                   	   			th:selected="${s.id== Reserva.getGrupoReserva().id}">
-                   	   			
+	                   	   			th:text="${s.nombreCorto}"
+	                   	   			th:value="${s.id}"
+	                   	   			th:selected="${Reserva.grupoReserva != null} ? ${Reserva.grupoReserva.id}==${s.id}">                   	   			
                    	   		</option>
                    	 	</select>	
                    
@@ -110,7 +110,7 @@
                    </div>
                    <div class="row">              	
 					    <div class="col-md-12 text-center">
-					         <button id="enlaceGuardarGestor" type="button" class="btn-rec blue">GUARDAR</button>
+					         <button id="enlaceGuardarGestor" type="button" class="btn-normal">GUARDAR</button>
 					    </div>                   
 				   </div>
 				   <!-- /.row -->

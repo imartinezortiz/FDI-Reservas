@@ -17,6 +17,7 @@ import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.reserva.business.entity.GrupoReserva;
 import es.fdi.reservas.reserva.business.entity.Reserva;
+import es.fdi.reservas.reserva.business.entity.TipoEspacio;
 import es.fdi.reservas.users.business.boundary.UserService;
 import es.fdi.reservas.users.business.entity.User;
 
@@ -192,6 +193,10 @@ public class GestorService {
 	
 	public Page<Espacio> getEspaciosDeletedByFacultadAndNombre(String nombre, Long id, Pageable pageable) {
 		return espacio_service.getEspaciosEliminadosPorNombreYFacultad(nombre, id, pageable);
+	}
+
+	public List<TipoEspacio> tiposDeEspacios(Long idEdificio) {
+		return espacio_service.tiposDeEspacios(idEdificio);
 	}
 
 	

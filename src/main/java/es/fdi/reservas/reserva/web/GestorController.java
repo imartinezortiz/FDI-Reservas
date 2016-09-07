@@ -557,9 +557,11 @@ public class GestorController {
 	@RequestMapping(value="/gestor/administrar/espacio/editar/{idEspacio}", method=RequestMethod.GET)
 	public String editarEspacio(@PathVariable("idEspacio") long idEspacio, Model model){
 		User u = gestor_service.getUsuarioActual();
+		Espacio e = gestor_service.getEspacio(idEspacio);
 		model.addAttribute("User", u);
 		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
-		model.addAttribute("espacio", gestor_service.getEspacio(idEspacio));
+		model.addAttribute("espacio", e);
+		model.addAttribute("TiposEspacio", gestor_service.tiposDeEspacios(e.getEdificio().getId()));
 		//System.out.println(user_service.getUser(idUser).getUsername());
 		model.addAttribute("view", "gestor/editarEspacio");
 		return "index";

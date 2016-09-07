@@ -11,9 +11,9 @@
 <!-- Page Heading -->
 <div class="row">  
 	<div class="col-md-12">
-        <h1 class="page-header text-center">
-            <small>Editar</small>
-        </h1>
+        <h2 class="page-header text-center">
+            Editar Espacio
+        </h2>
     </div>                  
 </div>
 <!-- /.row -->
@@ -39,45 +39,46 @@
                  
                  <div class="form-group">
                      <label>Micrófono:</label>
-                     <select id = "idMicro" title="Activado" th:value="${espacio.microfono}">
+                     <select id = "idMicro" class="form-control" th:value="${espacio.microfono}">
                     		<option value="true">Si</option>
 			          		<option value="false">No</option>
-                    	</select>                  
-		                                 
+                    	</select>                                                   
                  </div>
-             </div>   
-             <div class="col-md-6"> 
+                 
                  <div class="form-group">
                      <label>Proyector:</label>
-                     <select id = "idProy" title="Activado" th:value="${espacio.proyector}">
+                     <select id = "idProy" class="form-control" th:value="${espacio.proyector}">
                     		<option value="true">Si</option>
 			          		<option value="false">No</option>
-                    	</select>                  
-		                                 
+                    	</select>                  	                                 
                  </div>
                  
                  <div class="form-group">
                      <label>Tipo Espacio:</label>
-                     <select id = "idTipo" >
-                     <option value="aula">Aula</option>
-                     <option th:if="${espacio.tipoEspacio.tipo} == 'Sala'" value="sala" selected="selected">Sala</option>
-                    		<option th:if="${espacio.tipoEspacio.tipo} != 'Sala'" value="sala">Sala</option>
-			          		
-		          			<option value="laboratorio">Laboratorio</option>
-<!--                     		<option th:if="${espacio.tipoEspacio.tipo} == 'Sala'" value="sala" selected="selected">Sala</option> -->
-<!--                     		<option th:if="${espacio.tipoEspacio.tipo} != 'Sala'" value="sala">Sala</option> -->
-<!--                     		<option th:if="${espacio.tipoEspacio.tipo} == 'Aula'" value="aula" selected="selected">Aula</option> -->
-<!-- 			          		<option th:if="${espacio.tipoEspacio.tipo} != 'Aula'" value="aula">Aula</option> -->
-<!-- 			          		<option th:if="${espacio.tipoEspacio.tipo} == 'Laboratorio'" value="laboratorio" selected="selected">Laboratorio</option> -->
-<!-- 		          			<option th:if="${espacio.tipoEspacio.tipo} != 'Laboratorio'" value="laboratorio">Laboratorio</option> -->
-			          	
-                   	</select>                  
+                     <select id = "idTipo" class="form-control">
+                     		<option th:each="tipo : ${TiposEspacio}" 
+					        		th:text="${tipo}"
+					        		th:value="${tipo}"
+					        		th:selected="${tipo} == ${espacio.tipoEspacio}">
+			 				</option>
+			 		 </select>
+			 		 
+<!--                      <select id = "idTipo" > -->
+<!--                      <option value="aula">Aula</option> -->
+<!--                      <option th:if="${espacio.tipoEspacio.tipo} == 'Sala'" value="sala" selected="selected">Sala</option> -->
+<!--                     		<option th:if="${espacio.tipoEspacio.tipo} != 'Sala'" value="sala">Sala</option>		          		 -->
+<!-- 		          			<option value="laboratorio">Laboratorio</option>			          	 -->
+<!--                    	</select>                   -->
 		                                 
                  </div>
                  
+             </div>   
+             <div class="col-md-6"> 
+                 
+                 
                   <div class="form-group">
-                     <label>Restriccion:</label>
-                     <select id = "idRestr" >
+                     <label>Restricción:</label>
+                     <select id = "idRestr" class="form-control">
                      	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} == 'Necesaria'" value="Necesaria" selected="selected">Autorizacion necesaria</option>
                     	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} != 'Necesaria'" value="Necesaria" selected="selected">Autorizacion necesaria</option>
                     	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} == 'Por horas'" value="Por horas" selected="selected">Hora Maxima</option>
@@ -85,7 +86,7 @@
                     	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} == 'Innecesaria'" value="Innecesaria" selected="selected">Libre</option>
                     	<option th:if="${espacio.tipoAutorizacion.getTipoAutorizacion()} != 'Innecesaria'" value="Innecesaria" selected="selected">Libre</option>
                  	</select><br/>
-                 	<input type="text" id="idHoras" th:value="${espacio.horasAutorizacion}"/> 
+                 	<input type="text" class="form-control" id="idHoras" th:value="${espacio.horasAutorizacion}"/> 
                  </div>
                  <!-- Facultad -->                  
                  <div class="form-group">
@@ -111,7 +112,7 @@
           	      </div>      
                    <div class="row">              	
 					    <div class="col-md-12 text-center">
-					         <button id="enlaceGuardar" type="button" class="btn-rec blue">GUARDAR</button>
+					         <button id="enlaceGuardar" type="button" class="btn-normal">GUARDAR</button>
 					    </div>                   
 				   </div>
 				   <!-- /.row -->

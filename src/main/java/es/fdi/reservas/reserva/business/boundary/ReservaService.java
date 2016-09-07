@@ -224,6 +224,9 @@ public class ReservaService {
 		if(reservaActualizada.getEstado() != null){
 		  r.setEstadoReserva(EstadoReserva.fromEstadoReserva(reservaActualizada.getEstado()));
 		}
+		if(reservaActualizada.getIdUsuario() != null){
+			r.setUser(user_service.getUser(reservaActualizada.getIdUsuario()));
+		}
 		
 		return reserva_repository.save(r);
 	}
