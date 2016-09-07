@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import es.fdi.reservas.reserva.business.control.FacultadRepository;
 import es.fdi.reservas.reserva.business.entity.Facultad;
 import es.fdi.reservas.reserva.web.FacultadDTO;
+import es.fdi.reservas.users.business.boundary.UserService;
+import es.fdi.reservas.users.business.entity.User;
 
 @Service
 public class FacultadService {
@@ -18,31 +21,8 @@ public class FacultadService {
 	private FacultadRepository facultad_repository;
 	
 	@Autowired
-	public FacultadService(FacultadRepository facultad_repository) {
-		this.facultad_repository = facultad_repository;
-	}
-
-	public Iterable<Facultad> getFacultades() {
-		return facultad_repository.findAll();
-	}
-	
-	public void eliminarFacultad(Long idFacultad) {
-		//String aux = Long.toString(idFacultad);
-		facultad_repository.softDelete(idFacultad);
-		
-	}
-	
-	public Facultad getFacultad(long idFacul){
-		return facultad_repository.findOne(idFacul);
-	//	return facultad_repository.getFacultadPorId(idFacul);
-	}
-	
-//	public Facultad getFacultadPorNombre(String nombre){
-//		return facultad_repository.getFacultadPorNombre(nombre);
-//	}
-	
-	public Page<Facultad> getFacultadesPaginadas(PageRequest pageRequest) {
-		return facultad_repository.findAll(pageRequest);
+	public FacultadService(FacultadRepository fr){
+		facultad_repository = fr;
 	}
 	
 	public Facultad editarFacultad(FacultadDTO facultad){
@@ -61,24 +41,37 @@ public class FacultadService {
 	public Page<Facultad> getFacultadesPorTagName(String tagName, Pageable pagerequest) {
 		return facultad_repository.getFacultadesPorTagName(tagName, pagerequest);
 	}
-	
+
 	public Page<Facultad> getFacultadesEliminadasPorTagName(String tagName, Pageable pagerequest) {
 		return facultad_repository.getFacultadesEliminadasPorTagName(tagName, pagerequest);
+	}
+	
+	public User getCurrentUser(){
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if ( principal instanceof User) {
+			return (User) principal;
+		}
+		return null;
+	}
+	
+	public Facultad getFacultad(long idFacultad){
+		return facultad_repository.findOne(idFacultad);
+	}
+	
+	public Iterable<Facultad> getFacultades() {
+		return facultad_repository.findAll();
+
 	}
 	
 	public List<Facultad> getFacultadesPorTagName(String tagName) {
 		return facultad_repository.getFacultadesPorTagName(tagName);
 	}
 	
-	public Facultad addNewFacultad(Facultad facultad){
+
+	public Facultad addNewFacultad(FacultadDTO facultad){
 		Facultad newFacultad = new Facultad(facultad.getNombreFacultad(), facultad.getWebFacultad());
 		newFacultad = facultad_repository.save(newFacultad);
-		
-		if (newFacultad != null){
-			System.out.println("Facultad añadida correctamente");
-			
-		}
-		
+				
 		return newFacultad;
 	}
 	
@@ -94,9 +87,9 @@ public class FacultadService {
 		return facultad_repository.getFacultadPorId(l);
 	}
 	
-	public List<Facultad> getFacultadesEliminadas() {
+	public Page<Facultad> getFacultadesEliminadasPaginadas(Pageable pr) {
 		
-		return facultad_repository.recycleBin();
+		return facultad_repository.recycleBin(pr);
 	}
 
 	public Page<Facultad> getFacultadesPaginadasPorNombre(Long nombre, PageRequest pageRequest) {
@@ -109,8 +102,26 @@ public class FacultadService {
 		return facultad_repository.getFacultadesPorWeb(tagName, pagerequest);
 	}
 	
-public Page<Facultad> getFacultadesEliminadasPorWeb(String tagName, Pageable pagerequest) {
-		
-		return facultad_repository.getFacultadesEliminadasPorWeb(tagName, pagerequest);
+	public Page<Facultad> getFacultadesEliminadasPorWeb(String tagName, Pageable pagerequest) {
+			
+			return facultad_repository.getFacultadesEliminadasPorWeb(tagName, pagerequest);
+	}
+	
+	public Page<Facultad> getFacultadesPaginadas(PageRequest pageRequest) {
+		return facultad_repository.findAll(pageRequest);
+	}
+	
+	public void eliminarFacultad(Long idFacultad) {
+		facultad_repository.softDelete(idFacultad);	
+	}
+	
+	public List<Facultad> getFacultadesEliminadas() {		
+		return facultad_repository.recycleBin();
+	}
+	
+	public Facultad save(Facultad f){
+		return facultad_repository.save(f);
+
 	}
 }
+

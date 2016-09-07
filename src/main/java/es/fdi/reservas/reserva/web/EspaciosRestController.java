@@ -45,58 +45,16 @@ public class EspaciosRestController {
 	}
 	
 	@RequestMapping(value = "/admin/administrar/espacio/editar/{idEspacio}", method = RequestMethod.PUT)
-	public String editarEspacios(@PathVariable("idEspacio") long idEspacio, @RequestBody EspacioDTO espacioActualizado) {
-		
-		Attachment attachment = new Attachment("");
-		
-		if (espacioActualizado.getEdificio() == null){
-			espacioActualizado.setEdificio(espacio_service.getEspacio(espacioActualizado.getId()).getEdificio().getNombreEdificio());
-		}
-		if (espacioActualizado.getImagen().equals("")){
-			attachment = espacio_service.getEspacio(espacioActualizado.getId()).getImagen();
-		}
-		else {
-//			String img = "/img/users/" + user_service.getUser(idUser).getUsername();
-//			String nombreViejo = user_service.getUser(idUser).getUsername();
-//			String nombreNuevo = userActualizado.getUsername();
-//			
-//			if (!nombreViejo.equalsIgnoreCase(nombreNuevo)){
-//				//si el nombre de usuario ha cambiado, hay que renombrar el directorio y las referencias
-//				//File dirViejo = new File("../src/main/webapp/img/"  + nombreViejo);
-//				File dirNuevo = new File("../../img/"  + nombreNuevo);
-//				boolean correcto = dirNuevo.mkdir();
-//				
-//			}
-			
-			if (espacio_service.getAttachmentByName(espacioActualizado.getImagen()).isEmpty()){
-		
-				//si no esta, lo añado
-								
-				attachment.setAttachmentUrl("/img/" + espacioActualizado.getImagen());
-				attachment.setStorageKey(espacio_service.getEspacio(idEspacio).getNombreEspacio() + "/" + espacioActualizado.getImagen());
-				//reserva_service.addAttachment(attachment);
-			}else{
-				attachment = espacio_service.getAttachmentByName(espacioActualizado.getImagen()).get(0);
-			}
-		}
-		espacio_service.editarEspacio(espacioActualizado, attachment);
-		//System.out.println(imagen + " Existe");
-//	}else{
-//		System.out.println(imagen + " No existe");
-//	}
-		
-		//espacio_service.editarEspacio(espacioActualizado);
-		return "redirect:/admin/administrar/espacios/1";
+	public void editarEspacios(@PathVariable("idEspacio") long idEspacio, @RequestBody EspacioDTO espacioDTO) {
+	
+		espacio_service.editarEspacio(espacioDTO);
+
 	}
 	
 	@RequestMapping(value = "/gestor/administrar/espacio/editar/{idEspacio}", method = RequestMethod.PUT)
 	public String editarEspaciosGestor(@PathVariable("idEspacio") long idEspacio, @RequestBody EspacioDTO espacioActualizado) {
 		
 		Attachment attachment = new Attachment("");
-		
-		if (espacioActualizado.getEdificio() == null){
-			espacioActualizado.setEdificio(espacio_service.getEspacio(espacioActualizado.getId()).getEdificio().getNombreEdificio());
-		}
 		if (espacioActualizado.getImagen().equals("")){
 			attachment = espacio_service.getEspacio(espacioActualizado.getId()).getImagen();
 		}
@@ -135,23 +93,21 @@ public class EspaciosRestController {
 	}
 	
 	
-	@RequestMapping(value = "/administrar/espacio/{numPag}/restaurar/{idEspacio}", method = RequestMethod.GET)
-	public String restaurarEspacio(@PathVariable("numPag") Long numPag, @PathVariable("idEspacio") Long idEspacio){
+	@RequestMapping(value = "/admin/administrar/restaurar/espacio/{idEspacio}", method = RequestMethod.DELETE)
+	public void restaurarEspacio(@PathVariable("idEspacio") Long idEspacio){
 		espacio_service.restaurarEspacio(idEspacio);
-		return "redirect:/administrar/espacio/{numPag}/restaurar";
+	
 	}
 	
 	@RequestMapping(value = "/gestor/administrar/espacio/restaurar/{idEspacio}", method = RequestMethod.DELETE)
-	public String restaurarEspacio(@PathVariable("idEspacio") Long idEspacio){
+	public String restaurarEspacioGestor(@PathVariable("idEspacio") Long idEspacio){
 		espacio_service.restaurarEspacio(idEspacio);
 		return "redirect:/gestor/administrar/espacio/eliminados/page/1";
 	}
 	
 	@RequestMapping(value="/admin/nuevoEspacio", method=RequestMethod.POST)
-	public String crearEspacio(Espacio f){
-		espacio_service.addNewEspacio(f);
-	   return "redirect:/admin/administrar/espacios/1";
-		//return "nuevoUsuario";
+	public void crearEspacio(@RequestBody EspacioDTO f){
+		 espacio_service.addNewEspacio(f);
 	}
 	
 	@RequestMapping(value="/gestor/nuevoEspacio", method=RequestMethod.POST)

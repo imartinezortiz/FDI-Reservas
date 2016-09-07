@@ -1,15 +1,13 @@
 package es.fdi.reservas.users.business.boundary;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.swing.JOptionPane;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +22,13 @@ import es.fdi.reservas.fileupload.business.entity.Attachment;
 import es.fdi.reservas.reserva.business.boundary.FacultadService;
 import es.fdi.reservas.reserva.business.control.FacultadRepository;
 import es.fdi.reservas.reserva.business.entity.Facultad;
+
+import es.fdi.reservas.reserva.business.boundary.ReservaService;
+import es.fdi.reservas.reserva.business.entity.Espacio;
+import es.fdi.reservas.reserva.business.entity.EstadoReserva;
+import es.fdi.reservas.reserva.business.entity.GrupoReserva;
+import es.fdi.reservas.reserva.business.entity.Reserva;
+
 import es.fdi.reservas.users.business.control.UserRepository;
 import es.fdi.reservas.users.business.entity.User;
 import es.fdi.reservas.users.web.UserDTO;
@@ -33,8 +38,8 @@ import es.fdi.reservas.users.business.entity.UserRole;
 public class UserService implements UserDetailsService{
 
 	private UserRepository user_ropository;
-	
 	private PasswordEncoder password_encoder;
+	private ReservaService reserva_service;
 	
 	private FacultadService facultad_service;
 	
@@ -47,14 +52,21 @@ public class UserService implements UserDetailsService{
 		facultad_service = fr;
 		attachment_repository = ar;
 	}
+	public UserService(UserRepository ur, PasswordEncoder pe){
+		user_ropository = ur;
+		password_encoder = pe;
+		//reserva_service = rs;
+	}
+	
+	@Autowired @Lazy
+	public void setReservaService(ReservaService rs){
+		reserva_service = rs;
+
+	}
 	
 	public User getUser(Long idUsuario) {
 		return user_ropository.findOne(idUsuario);
 	}
-	
-	/*public List<User> getUsers(String idUsuario) {
-		return user_ropository.findByUsername(idUsuario);
-	}*/
 	
 	public User getCurrentUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -76,9 +88,12 @@ public class UserService implements UserDetailsService{
 		
 		return user;
 	}
-
-	public User addNewUser(User user){
-		User newUser = new User(user.getUsername(), user.getEmail(), user.getImagen());
+	
+	public User addNewUser(UserDTO user){
+		User newUser = new User(user.getUsername(), user.getEmail());
+		newUser.setFacultad(facultad_service.getFacultad(user.getFacultad()));
+		newUser.setImagen(attachment_repository.findOne((long) 2));
+		newUser.setEnabled(true);
 		newUser.addRole(new UserRole("ROLE_USER"));
 		newUser.setPassword(password_encoder.encode(user.getPassword()));
 		newUser = user_ropository.save(newUser);
@@ -106,30 +121,31 @@ public class UserService implements UserDetailsService{
 		user_ropository.delete(idUser);
 	}
 	
-	public User editarUserDeleted(Long idUser){
-		User f = user_ropository.findOne(idUser);
-		f.setEnabled(false);
-		return user_ropository.save(f);
+	public User editarUserDeleted(Long idUsuario){
+		User u = getUser(idUsuario);
+		u.setEnabled(false);
+		
+		return user_ropository.save(u);
 	}
 
 	public User editaUsuario(UserDTO userActualizado, String user, String admin, String gestor, Attachment imagen) {
 		
-		User u = user_ropository.findOne(userActualizado.getId());
+		User u = getUser(userActualizado.getId());
 		u.setUsername(userActualizado.getUsername());
 		u.setEmail(userActualizado.getEmail());
 		Facultad fac = facultad_service.getFacultadPorId(userActualizado.getFacultad());
 		u.setFacultad(fac);
 		u.setImagen(imagen);
 		attachment_repository.save(imagen);
-		if (user.equals("user") || admin.equals("admin") || gestor.equals("gestor")){//si hay alguno seleccionado
-			//u.getAuthorities().clear();
-			if (user.equals("user")){
+		if (user.equals("true") || admin.equals("true") || gestor.equals("true")){//si hay alguno seleccionado
+			u.getAuthorities().clear();
+			if (user.equals("true")){
 				u.addRole(new UserRole("ROLE_USER"));
 			}
-			if (admin.equals("admin")){
+			if (admin.equals("true")){
 				u.addRole(new UserRole("ROLE_ADMIN"));
 			}
-			if (gestor.equals("gestor")){
+			if (gestor.equals("true")){
 				u.addRole(new UserRole("ROLE_GESTOR"));
 			}
 		}
@@ -142,17 +158,17 @@ public class UserService implements UserDetailsService{
 		return user_ropository.findAll(pageRequest);
 	}
 
-	public User restaurarUser(long idUser) {
-		User f = user_ropository.findOne(idUser);
-		f.setEnabled(true);
-		return user_ropository.save(f);		
+	public User restaurarUser(long idUsuario) {
+		User u = getUser(idUsuario);
+		u.setEnabled(true);
+		
+		return user_ropository.save(u);		
 	}
 
-	public List<User> getUsuariosEliminados() {
-		
+
+	public List<User> getEliminados() {		
 		return user_ropository.recycleBin();
 	}
-
 
 	public List<User> getUsuariosPorTagName(String tagName) {
 		return user_ropository.getUsuariosPorTagName(tagName);
@@ -177,10 +193,46 @@ public class UserService implements UserDetailsService{
 		Authentication request = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());		
 		SecurityContextHolder.getContext().setAuthentication(request);		
 		
+		//actualiza la imagen
+		Attachment attachment = new Attachment("");
+		if (userDTO.getImagen().equals("")){
+			attachment = user_ropository.findOne(userDTO.getId()).getImagen();
+		}
+		else {
+			if (attachment_repository.getAttachmentByName(userDTO.getImagen()).isEmpty()){
+		
+				//si no esta, lo añado
+				String img = userDTO.getImagen();
+				int pos = img.lastIndexOf(".");
+				String punto = img.substring(0, pos);
+				String fin = img.substring(pos+1, img.length());
+				String nom = punto + "-" + userDTO.getId() + "." + fin;
+				nom = nom.replace(nom, "/img/" + nom);
+				
+				
+				attachment.setAttachmentUrl("/img/" + userDTO.getImagen());
+				attachment.setStorageKey(nom);
+				attachment_repository.save(attachment);
+				//reserva_service.addAttachment(attachment);
+			}else{
+				attachment = attachment_repository.getAttachmentByName(userDTO.getImagen()).get(0);
+			}
+			user.setImagen(attachment);
+		}
 		// Guarda los cambios en la base de datos
 		user_ropository.save(user);
-		
-	
+	}
+
+	public List<Reserva> reservasPendientesUsuario(Long idUsuario, EstadoReserva estadoReserva) {
+		return reserva_service.reservasPendientesUsuario(idUsuario, estadoReserva);
+	}
+
+	public Iterable<Espacio> getEspacios() {
+		return reserva_service.getEspacios();
+	}
+
+	public List<GrupoReserva> getGruposUsuario(Long idUsuario) {
+		return reserva_service.getGruposUsuario(idUsuario);
 	}
 	
 	public Attachment getAttachment(Long idAttachment){
@@ -247,7 +299,24 @@ public class UserService implements UserDetailsService{
 	public Page<User> getUsuariosPorNombreYFacultad(String nombre, Long id, Pageable pageable) {
 		return user_ropository.getUsuariosPorNombreYFacultad(nombre,id, pageable);
 	}
-	
+	public Page<User> getUsuariosEliminadosPaginados(Pageable pageRequest) {
+		// TODO Auto-generated method stub
+		return user_ropository.recycleBin(pageRequest);
+	}
+	public User addNewUserLogin(UserDTO user) {
+		User newUser = new User();
+		newUser.setUsername(user.getUsername());
+		newUser.setEmail(user.getEmail()); 
+		newUser.setImagen(attachment_repository.findOne((long) 10));
+		newUser.setFacultad(facultad_service.getFacultadPorId((long) 27));
+		newUser.addRole(new UserRole("ROLE_USER"));
+		newUser.setEnabled(true);
+		newUser.setPassword(password_encoder.encode(user.getPassword()));
+		newUser = user_ropository.save(newUser);
+		
+		return newUser;
+		
+	}
 	public Page<User> getUsuariosPorEmailYFacultad(String nombre, Long id, Pageable pageable) {
 		return user_ropository.getUsuariosPorEmailYFacultad(nombre,id, pageable);
 	}

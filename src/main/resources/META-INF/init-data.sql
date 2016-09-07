@@ -26,27 +26,16 @@ INSERT INTO Facultad(FacultadId, nombreFacultad, webFacultad, deleted) VALUES(25
 INSERT INTO Facultad(FacultadId, nombreFacultad, webFacultad, deleted) VALUES(26,'Facultad de Veterinaria','www.ccinformacion.ucm.es', false);
 INSERT INTO Facultad(FacultadId, nombreFacultad, webFacultad, deleted) VALUES(27,'Sin asignar','www.ucm.es', false);
 
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(1, 'Facultad de informatica', '/img/edificios/FDI/FDI.jpg', '123');
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(2, 'Edificio Basico', '/img/espacios/casa/casa.jpg', '123');
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(3, 'Facultad de Ciencias Biológicas', '/img/edificios/biologicas/biologicas.jpg', '123');
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(4, 'Facultad de Bellas Artes', '/img/edificios/bellas artes/bellas artes.jpg', '123');
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(5, 'Facultad de Ciencias de la Documentación', '/img/edificios/documentacion/documentacion.jpg', '123');
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(6, 'Edificio multiusos', '/img/edificios/multiusos/multiusos.jpg', '123');
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(7, 'Facultad de Ciencias de la Información', '/img/edificios/cc_informacion/cc_informacion.jpg', '123');
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(8, 'Usuario 1', '/img/usuarios/root/root.png', '123');
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(9, 'Usuario 2', '/img/usuarios/user/user.png', '123');
---INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(10, 'Usuario 3', '/img/usuarios/secre/secre.png', '123');
-
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(1, 'Facultad de informatica', '/img/FDI-1.jpg', '123');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(2, 'Edificio Basico', '/img/casa-2.jpg', '123');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(3, 'Facultad de Ciencias Biológicas', '/img/biologicas-3.jpg', '123');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(4, 'Facultad de Bellas Artes', '/img/bellas artes-4.jpg', '123');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(5, 'Facultad de Ciencias de la Documentación', '/img/documentacion-5.jpg', '123');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(6, 'Edificio multiusos', '/img/multiusos-6.jpg', '123');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(7, 'Facultad de Ciencias de la Información', '/img/cc_informacion-7.jpg', '123');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(8, 'Usuario 1', '/img/root-8.png', '123');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(9, 'Usuario 2', '/img/user-9.png', '123');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(10, 'Usuario 3', '/img/secre-10.png', '123');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(1, 'Facultad de informatica', '/img/FDI.jpg', '/img/FDI-1.jpg');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(2, 'Edificio Basico', '/img/casa.jpg', '/img/casa-2.jpg');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(3, 'Facultad de Ciencias Biológicas', '/img/biologicas.jpg', '/img/biologicas*3.jpg');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(4, 'Facultad de Bellas Artes', '/img/bellas artes.jpg', '/img/bellas artes-4.jpg');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(5, 'Facultad de Ciencias de la Documentación', '/img/documentacion.jpg', '/img/documentacion-5.jpg');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(6, 'Edificio multiusos', '/img/multiusos.jpg', '/img/multiusos-6.jpg');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(7, 'Facultad de Ciencias de la Información', '/img/cc_informacion.jpg', '/img/cc_informacion-7.jpg');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(8, 'Usuario 1', '/img/root.png', '/img/root-8.png');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(9, 'Usuario 2', '/img/user.png', '/img/user-9.png');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(10, 'Usuario 3', '/img/secre.png', '/img/secre-10.png');
 
 INSERT INTO User (UserId, username, email, password, enabled, accountExpired, accountLocked, credentialsExpired, FacultadId, ImagenId) VALUES (1, 'root', 'root@ucm.es', '$2a$10$//HU8yTgOoLrZX6z9cgXhuR/IJki.BtS/ZM4Pr8s/zBDCFIT.I3P6', true, false, false, false, 2, 8);
 INSERT INTO User (UserId, username, email, password, enabled, accountExpired, accountLocked, credentialsExpired, FacultadId, ImagenId) VALUES (2, 'user', 'user@ucm.es', '$2a$10$qspi.NK1570DsUrvDmxETekRTqpk/ZY2hmI3XCMER.RWPVlPAfpYK', true, false, false, false, 1, 9);
@@ -86,15 +75,15 @@ INSERT INTO GrupoReserva(GrupoReservaId, nombreCorto, nombreLargo, UserId) VALUE
 INSERT INTO GrupoReserva(GrupoReservaId, nombreCorto, nombreLargo, UserId) VALUES(5,'GII-1ºE','Lo que sea',2);
 INSERT INTO GrupoReserva(GrupoReservaId, nombreCorto, nombreLargo, UserId) VALUES(6,'GII-1ºF','Lo que sea',2);
 
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(1,'Charla Intel','2016-03-16 12:30:00','2016-03-16 14:30:00',0,2,1,1);
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(2,'Reunion TFG','2016-03-16 14:30:00','2016-03-16 16:30:00',2,1,3,1);
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(3,'Revision examen','2016-03-18 14:30:00','2016-03-18 16:30:00',0,2,4,1);
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(4,'Tutoria','2016-03-17 14:30:00','2016-03-17 16:30:00',1,2,3,2);
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(5,'Clase de repaso','2016-03-23 14:30:00','2016-03-23 16:30:00',1,2,5,2);
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(6,'PL','2016-03-07 09:00:00','2016-03-07 11:00:00',0,2,6,2);
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(7,'PL','2016-03-09 09:00:00','2016-03-09 11:00:00',0,1,6,1);
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(8,'MAR','2016-03-09 11:00:00','2016-03-09 12:00:00',0,1,6,2);
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(9,'DVI','2016-03-09 14:00:00','2016-03-09 16:00:00',0,1,1,1);
-INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(10,'Charla ELP','2016-03-24 15:30:00','2016-03-24 17:00:00',1,1,1,1);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(1,'Charla Intel','2016-09-16 12:30:00','2016-09-16 14:30:00',0,2,1,1);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(2,'Reunion TFG','2016-09-16 14:30:00','2016-09-16 16:30:00',2,1,3,1);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(3,'Revision examen','2016-09-18 14:30:00','2016-09-18 16:30:00',0,2,4,1);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(4,'Tutoria','2016-09-17 14:30:00','2016-09-17 16:30:00',1,2,3,2);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(5,'Clase de repaso','2016-09-23 14:30:00','2016-09-23 16:30:00',1,2,5,2);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(6,'PL','2016-09-07 09:00:00','2016-09-07 11:00:00',0,2,6,2);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(7,'PL','2016-09-09 09:00:00','2016-09-09 11:00:00',0,1,6,1);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(8,'MAR','2016-09-09 11:00:00','2016-09-09 12:00:00',0,1,6,2);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(9,'DVI','2016-09-09 14:00:00','2016-09-09 16:00:00',0,1,1,1);
+INSERT INTO Reserva(ReservaId, asunto, comienzo, fin, estadoReserva, UserId, EspacioId, GrupoReservaId) VALUES(10,'Charla ELP','2016-09-24 15:30:00','2016-09-24 17:00:00',1,1,1,1);
 
 

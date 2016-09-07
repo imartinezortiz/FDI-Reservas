@@ -8,23 +8,17 @@
 </head>
 <body>
 <div class="container-fluid" th:fragment="contenido">
+	
 	<div class="row">
 	    <div class="col-md-12">
-	        <h1 class="page-header text-center">
-	            Restaurar
-	        </h1>
+	        <h2 class="page-header text-center">
+	              <small>Restaurar</small> Facultades
+	        </h2>
 	    </div>
 	</div>
 	<!-- /.row -->
-	<div class="row">
-    	<div class="col-md-12">
-            <h1 class="page-header text-center">
-                <small>Facultades</small>
-            </h1>
-        </div>
-    </div>
-           <!-- /.row -->
-	<div class="row">
+	
+	<div class="row" th:unless="${#lists.isEmpty(currentResults.content)}">
 		<div class="col-md-8 col-md-offset-2 text-center">
 			<div class="col-md-2">
 				<label class="form-group" style="margin-top:5px;">Filtrar por: </label>
@@ -48,12 +42,12 @@
     <div class="row">
 		<div class="col-md-8 col-md-offset-2">
     	
-			<div class="jumbotron text-center" th:if="${#lists.isEmpty(facultades)}">
+			<div class="jumbotron text-center" th:if="${#lists.isEmpty(currentResults.content)}">
            			<i class="fa fa-ban fa-5x"></i>
            			<h4>¡Uups! No hay ninguna facultad.</h4>
       		</div> 
 
-          	<div class="table-responsive" th:unless="${#lists.isEmpty(facultades)}">
+          	<div class="table-responsive" th:unless="${#lists.isEmpty(currentResults.content)}">
               <table class="table table-bordered table-hover">
                   <thead>
                       <tr>
@@ -63,7 +57,7 @@
                       </tr>
                   </thead>
                   <tbody>
-                      <tr th:each="r : ${facultades}" th:attr="id=${r.id},data-id=${r.id},name=${r.nombreFacultad}, dir=${r.webFacultad}" class="danger">
+                      <tr th:each="r : ${currentResults}" th:attr="id=${r.id},data-id=${r.id},name=${r.nombreFacultad}, dir=${r.webFacultad}" class="danger">
                       	
                           <td th:text="${r.nombreFacultad}"></td>
                           <td th:text="${r.webFacultad}"></td>
@@ -131,7 +125,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Facultad</h4>
+            <h4 class="modal-title text-center" id="myModalLabel">Datos de la Facultad</h4>
           </div>
           <div class="modal-body">
           		<form class="form-horizontal" role="form" action="#" th:action="@{/editar}" th:object="${Facultad}" method="put">             
@@ -177,8 +171,8 @@
                  
           </div>
           <div class="modal-footer">
-	        <a id="btn-eliminar" href="#" class="btn-rec gray">ELIMINAR</a>
-	        <a id="btn-editar" th:href="@{''}" class="btn-rec blue">EDITAR</a>
+<!-- 	        <a id="btn-eliminar" href="#" class="btn-rec gray">ELIMINAR</a> -->
+<!-- 	        <a id="btn-editar" th:href="@{''}" class="btn-rec blue">EDITAR</a> -->
 	      </div>
         </div>
       </div>
@@ -188,7 +182,7 @@
  	var baseURL = /*[[@{/}]]*/ '/';
  	var pag = /*[[${currentIndex}]]*/ '/';
  </script>
- <script src="../../js/restaurarFacultad.js" th:src="@{/js/restaurarFacultad.js}"></script>
+ <script src="../../js/admin/facultad/restaurarFacultad.js" th:src="@{/js/admin/facultad/restaurarFacultad.js}"></script>
  
 </div>
 </body>

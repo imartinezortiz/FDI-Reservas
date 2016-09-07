@@ -14,7 +14,7 @@
 			<div class="row">
 			    <div class="col-md-12">
 			        <h2 class="page-header text-center">
-			           Crear Edificio
+			           Edificio
 			        </h2>
 			    </div>
 			</div>
@@ -22,51 +22,57 @@
         
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
-                         <form role="form" action="#" th:action="@{/admin/nuevoEdificio}" th:object="${Edificio}" method="post">
+                         <form role="form" action="#" th:object="${Edificio}" method="post">
                          <!-- Nombre edificio -->
                          	<div class="form-group">
-                                <label>Nombre edificio</label>
+                                <label>Nombre</label>
                                 <div class="input-group">
-                                  <span class="input-group-addon"><i class="zmdi zmdi-city"></i></span>
-                                  <input name="nombreEdificio" type="text" class="form-control" placeholder="Nombre de edificio"/>
+                                  <span class="input-group-addon"><i class="fa fa-building"></i></span>
+                                  <input name="nombreEdificio" id="idNombre" type="text" class="form-control" placeholder="Nombre de edificio"/>
                                 </div>
                             </div>
                             <!-- Direccion del edificio -->
                             <div class="form-group">
-                                <label>Direccion</label>
+                                <label>Dirección</label>
                                 <div class="input-group">
                                   <span class="input-group-addon"><i class="zmdi zmdi-map"></i></span>
-                                  <input name="direccion" type="text" class="form-control" placeholder="Direccion del edificio"/>
+                                  <input name="direccion" id="idDir" type="text" class="form-control" placeholder="Direccion del edificio"/>
                                 </div>
                             </div>
                             <!-- Facultad -->
                             <div class="form-group">
                                 <label>Facultad</label>
                                 <div class="input-group">
-                                  <span class="input-group-addon"><i class="zmdi zmdi-library"></i></span>
-                                  <select name="idFacultad" title="Facultad">
+                                  <span class="input-group-addon"><i class="zmdi zmdi-balance"></i></span>
+                                  <input type="text" id="idFacultad" class="form-control" placeholder="Introduce una facultad"/>
+<!--                                   <select name="idFacultad" title="Facultad" class="form-control"> -->
 				          
-							          <option th:each="f : ${facultades}" th:value="${f.id}" th:text="${f.nombreFacultad}"/>
+<!-- 							          <option th:each="f : ${facultades}" th:value="${f.id}" th:text="${f.nombreFacultad}"/> -->
 							          			
-							        </select>
+<!-- 							        </select> -->
                                 </div>
+                                <p class="small help-block text-left">Agregar este edificio a una facultad.</p>
                             </div>
                             
-                            <div class="form-group">
-								<label>Selecciona la imagen:</label>
-								<div class="input-group"> 
-									<span class="input-group-addon"><i class="zmdi zmdi-camera-alt"></i></span>
-									<input type="file" class="form-control" id="idAttachment" />
-								</div>
-							</div>
+<!--                             <div class="form-group"> -->
+<!-- 								<label>Selecciona la imagen:</label> -->
+<!-- 								<div class="input-group">  -->
+<!-- 									<span class="input-group-addon"><i class="zmdi zmdi-camera-alt"></i></span> -->
+<!-- 									<input type="file" class="form-control" id="idAttachment" /> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
                                                         
                             <div class="text-center">
-                                 <button id="enviar" type="button" class="btn btn-normal">Crear</button>
+                                 <button type="button" id="enlaceGuardar" class="btn-normal">CREAR</button>
                             </div>
 
                          </form>
                     </div>
                 </div>
+                <script th:inline="javascript">
+			var baseURL = /*[[@{/}]]*/ '/';
+			</script>
+			<script src="../../js/admin/edificio/nuevoEdificio.js" th:src="@{/js/admin/edificio/nuevoEdificio.js}"></script>
             </div>
             <!-- /.row -->
        

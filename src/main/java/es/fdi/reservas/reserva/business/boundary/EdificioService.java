@@ -13,25 +13,29 @@ import es.fdi.reservas.fileupload.business.entity.Attachment;
 import es.fdi.reservas.reserva.business.control.EdificioRepository;
 import es.fdi.reservas.reserva.business.control.FacultadRepository;
 import es.fdi.reservas.reserva.business.entity.Edificio;
+import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.reserva.business.entity.Facultad;
+import es.fdi.reservas.reserva.business.entity.Reserva;
 import es.fdi.reservas.reserva.web.EdificioDTO;
+import es.fdi.reservas.users.business.boundary.UserService;
+import es.fdi.reservas.users.business.entity.User;
 
 @Service
 public class EdificioService {
 	
-	private FacultadRepository facultad_repository;
-	private AttachmentRepository attachment_repository;
 	private EdificioRepository edificio_repository;
+	private UserService user_service;
 	private FacultadService facultad_service;
+	private AttachmentRepository attachment_repository;
 
 	@Autowired
-	public EdificioService(FacultadRepository facultad_repository, AttachmentRepository attachment_repository,
-			EdificioRepository edificio_repository, FacultadService facultad_service) {
+	public EdificioService(FacultadService fs, UserService us,
+			EdificioRepository edificio_repository, AttachmentRepository ar) {
 		super();
-		this.facultad_repository = facultad_repository;
-		this.attachment_repository = attachment_repository;
+		this.facultad_service = fs;
+		this.user_service = us;
 		this.edificio_repository = edificio_repository;
-		this.facultad_service = facultad_service;
+		attachment_repository = ar;
 	}
 
 	public List<Edificio> getEdificiosFacultad(long idFacultad) {
@@ -50,58 +54,38 @@ public class EdificioService {
 		return edificio_repository.findByFacultadId(id,pageRequest);
 	}
 	
-	public Edificio editarEdificio(EdificioDTO edificio, Attachment attachment){
-		Edificio e = edificio_repository.findOne(edificio.getId());
+	public Edificio editarEdificio(EdificioDTO edificioDTO){
+		Edificio e = edificio_repository.findOne(edificioDTO.getId());
 		
-		e.setNombreEdificio(edificio.getNombreEdificio());
-		e.setDireccion(edificio.getDireccion());
-		Facultad fac = facultad_service.getFacultad(edificio.getIdFacultad());
-		e.setFacultad(fac);
-		//e.setFacultad(facultad_repository.getOne(edificio.getIdFacultad()));
+		if (edificioDTO.getIdFacultad() != null){
+			e.setFacultad(facultad_service.getFacultad(edificioDTO.getIdFacultad()));
+		}
+		
+		Attachment attachment = new Attachment("");
+		if ((edificioDTO.getImagen() != null) && attachment_repository.getAttachmentByName(edificioDTO.getImagen()).isEmpty()){
+			//si no esta, lo añado
+			String img = edificioDTO.getImagen();
+			int pos = img.lastIndexOf(".");
+			String punto = img.substring(0, pos);
+			String fin = img.substring(pos+1, img.length());
+			String nom = punto + "-" + edificioDTO.getId() + "." + fin;
+			nom = nom.replace(nom, "/img/" + nom);
+			
+			
+			attachment.setAttachmentUrl("/img/" + edificioDTO.getImagen());
+			attachment.setStorageKey(nom);
+		}else{
+			attachment = attachment_repository.getAttachmentByName(edificioDTO.getImagen()).get(0);
+		}
+		
+		e.setNombreEdificio(edificioDTO.getNombreEdificio());
+		e.setDireccion(edificioDTO.getDireccion());
 		e.setImagen(attachment);
 		attachment_repository.save(attachment);
+		
 		return edificio_repository.save(e);
 	}
 	
-public Edificio addNewEdificio(Edificio edificio) {
-		
-		Attachment img = edificio.getImagen();
-		if (img == null){
-			//img = attachment_repository.getAttachmentByName("casa").get(0);
-			img = attachment_repository.findOne((long) 2);
-			edificio.setImagen(img);
-			//attachment_repository.save(img);
-		}
-		
-		Facultad fac = edificio.getFacultad();
-		if (fac == null){
-			fac = facultad_service.getFacultad((long) 27);
-			edificio.setFacultad(fac);
-			//facultad_repository.save(fac);
-		}
-		
-		Edificio newEdificio = new Edificio(edificio.getNombreEdificio(), edificio.getDireccion(),edificio.getFacultad(), edificio.getImagen());
-		newEdificio = edificio_repository.save(newEdificio);
-
-		return null;
-		
-	}
-
-	public Edificio addNewEdificio(EdificioDTO edificio) {
-	
-	Edificio newEdificio = new Edificio();
-	newEdificio.setNombreEdificio(edificio.getNombreEdificio());
-	newEdificio.setDeleted(false); 
-	newEdificio.setDireccion(edificio.getDireccion());
-	newEdificio.setFacultad(facultad_service.getFacultadPorId(edificio.getIdFacultad()));
-			
-	newEdificio.setImagen(attachment_repository.findOne((long) 2));
-			
-	newEdificio = edificio_repository.save(newEdificio);
-
-	return null;
-	
-}
 
 	public List<Edificio> getEdificiosEliminados() {
 		
@@ -118,10 +102,6 @@ public Edificio addNewEdificio(Edificio edificio) {
 	
 	public Attachment getAttachment(Long idAttachment){
 		return attachment_repository.getOne(idAttachment);
-	}
-
-	public List<Attachment> getAttachmentByName(String img) {
-		return attachment_repository.getAttachmentByName(img);
 	}
 	
 	public void eliminarEdificio(long idEdificio) {
@@ -177,6 +157,11 @@ public Edificio addNewEdificio(Edificio edificio) {
 	public Edificio getEdificiosPorNombre(Long nombre) {
 		return edificio_repository.findOne(nombre);
 	}
+	
+	public List<Edificio> getEdificiosPorFacultad(String tagName) {
+		
+		return edificio_repository.getEdificiosPorFacultad(tagName);
+	}
 
 	public Page<Edificio> getEdificiosPorDireccion(String tagName, Pageable pagerequest) {
 		
@@ -218,4 +203,75 @@ public Edificio addNewEdificio(Edificio edificio) {
 		return edificio_repository.findByFacultadId(facultadid, pageable);
 	}
 
+	public User getCurrentUser(){
+		return user_service.getCurrentUser();
+	}
+	
+	public Iterable<Facultad> getFacultades(){
+		return facultad_service.getFacultades();
+	}
+	
+	public void desactivarEdificio(long idEdificio) {
+		edificio_repository.softDelete(Long.toString(idEdificio));
+	}
+	
+	public Edificio save(Edificio e){
+		return edificio_repository.save(e);
+	}
+
+	public List<Attachment> getAttachmentByName(String imagen) {
+		return attachment_repository.getAttachmentByName(imagen);
+	}
+
+	public List<Reserva> reservasPendientesUsuario(Long idUsuario, EstadoReserva estadoReserva) {
+		return user_service.reservasPendientesUsuario(idUsuario, estadoReserva);
+	}
+
+	public Page<Edificio> getEdificiosPaginadosPorNombre(String nombre, PageRequest pagerequest) {
+		// TODO Auto-generated method stub
+		return edificio_repository.getEdificiosPorTagName(nombre, pagerequest);
+	}
+
+	public Page<Edificio> getEdificiosPaginadosPorFacultad(String nombre, PageRequest pagerequest) {
+		// TODO Auto-generated method stub
+		return edificio_repository.getEdificiosPorFacultad(nombre, pagerequest);
+	}
+
+	public Page<Edificio> getEdificiosPaginadosPorDireccion(String nombre, PageRequest pageRequest) {
+		// TODO Auto-generated method stub
+		return edificio_repository.getEdificiosPorDireccion(nombre, pageRequest);
+	}
+
+	public Page<Edificio> getEdificiosEliminadosPaginados(PageRequest pageRequest) {
+		return edificio_repository.recycleBin(pageRequest);
+	}
+	
+	public Edificio addNewEdificio(EdificioDTO edificio) {
+		
+		Edificio newEdificio = new Edificio();
+		newEdificio.setNombreEdificio(edificio.getNombreEdificio());
+		newEdificio.setDeleted(false); 
+		newEdificio.setDireccion(edificio.getDireccion());
+		newEdificio.setFacultad(facultad_service.getFacultadPorId(edificio.getIdFacultad()));
+				
+		newEdificio.setImagen(attachment_repository.findOne((long) 2));
+				
+		newEdificio = edificio_repository.save(newEdificio);
+
+		return null;
+		
+	}
+	
+	public Edificio editarEdificio(EdificioDTO edificio, Attachment attachment){
+		Edificio e = edificio_repository.findOne(edificio.getId());
+		
+		e.setNombreEdificio(edificio.getNombreEdificio());
+		e.setDireccion(edificio.getDireccion());
+		Facultad fac = facultad_service.getFacultad(edificio.getIdFacultad());
+		e.setFacultad(fac);
+		//e.setFacultad(facultad_repository.getOne(edificio.getIdFacultad()));
+		e.setImagen(attachment);
+		attachment_repository.save(attachment);
+		return edificio_repository.save(e);
+	}
 }

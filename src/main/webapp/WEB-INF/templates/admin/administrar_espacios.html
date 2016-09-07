@@ -51,8 +51,8 @@
                   <thead>
                       <tr>
                       	  <th>Imágen</th>
-                      	  <th>Edificio</th>
-                          <th>Nombre</th>                      
+                          <th>Nombre</th> 
+                          <th>Edificio</th>                     
                           <th>Tipo de espacio</th>
                           <th>Acciones</th>
                       </tr>
@@ -60,12 +60,12 @@
                   <tbody>
                       <tr th:each="r : ${currentResults}" th:classappend="${!r.deleted} ? 'success' : 'danger'" th:attr="id=${r.id}">
                       	<td class="text-center"><img class="img-circle" th:alt="${r.imagen.description}" th:src="@{${r.imagen.attachmentUrl}}" height="25" width="25"></img></td>
-                      	<td  th:text="${r.edificio.nombreEdificio}"></td>
-                        <td th:text="${r.nombreEspacio}"></td>                   
+                        <td th:text="${r.nombreEspacio}"></td>    
+                        <td  th:text="${r.edificio.nombreEdificio}"></td>               
                         <td th:text="${r.tipoEspacio.tipo}"></td> 
-                        <td><a th:attr="data-id=${r.id},name=${r.nombreEspacio},capacidad=${r.capacidad},micro=${r.microfono},proye=${r.proyector},tipo=${r.tipoEspacio.tipo},act=${r.deleted},edif=${r.edificio.nombreEdificio},act=${r.deleted},data-accion='Ver'" role="button" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
+                        <td><a th:attr="data-id=${r.id},name=${r.nombreEspacio},capacidad=${r.capacidad},micro=${r.microfono},proye=${r.proyector},tipo=${r.tipoEspacio.tipo},act=${r.deleted},edif=${r.edificio.nombreEdificio},act=${r.deleted},img=${r.imagen.attachmentUrl},data-accion='Ver'" role="button" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
 						<a th:href="@{'/admin/administrar/espacio/editar/' + ${r.id}}" role="button" data-toggle="tooltip" data-placement="top" title="Editar"><i class="zmdi zmdi-edit zmdi-hc-lg"> </i></a>
-						<a th:attr="data-id=${r.id},name=${r.nombreEspacio},capacidad=${r.capacidad},micro=${r.microfono},proye=${r.proyector},tipo=${r.tipoEspacio.tipo},act=${r.deleted},edif=${r.edificio.nombreEdificio},act=${r.deleted},data-accion='Eliminar'" role="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="zmdi zmdi-delete zmdi-hc-lg"> </i></a>	
+						<a th:attr="data-id=${r.id},name=${r.nombreEspacio},capacidad=${r.capacidad},micro=${r.microfono},proye=${r.proyector},tipo=${r.tipoEspacio.tipo},act=${r.deleted},edif=${r.edificio.nombreEdificio},act=${r.deleted},img=${r.imagen.attachmentUrl},data-accion='Eliminar'" role="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="zmdi zmdi-delete zmdi-hc-lg"> </i></a>	
 						</td>
                       </tr>  
                       
@@ -75,7 +75,7 @@
 <!--               <a th:href="@{'/nuevoEspacio'}"><input type="button" class="btn btn-default" value="Añadir espacio"/></a>  -->
           	</div> 
         <!-- /.table-responsive-->
-    	<a th:href="@{'/admin/administrar/espacio/' + ${currentIndex} + '/restaurar'}"><input type="button" class="btn btn-default" value="Restaurar espacios"/></a>
+    	<a th:href="@{'/admin/administrar/espacio/restaurar/page/1'}"><input type="button" class="btn btn-default" value="Restaurar espacios"/></a>
 		</div>
 		
 	</div>
@@ -129,98 +129,112 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Editar espacio</h4>
+            <h4 class="modal-title text-center" id="myModalLabel">Datos del espacio</h4>
           </div>
           <div class="modal-body">
           		<form class="form-horizontal" role="form" action="#" th:action="@{/editar}" th:object="${Espacio}" method="put">             
 				
 				 <!-- Nombre de edificio --> 
 				 <div class="row">
-                	<div class="col-md-12">
+                	<div class="col-xs-6">
 		                 <!-- Asunto --> 
 		                 <div class="form-group">
-		                     <label class="col-md-2 control-label">Nombre: </label>
-		                      <div class="col-md-10">
+		                     <label class="col-md-1 control-label">Nombre: </label>
+		                      <div class="col-md-11">
 		                         <p id="idNombre" class="form-control-static"> </p>
 		                      </div>
 		                 </div>
                    </div>
-		         </div>
+		         
                  
                  <!-- Capacidad --> 
-                 <div class="row">
-                	<div class="col-md-12">
+                 
+                	<div class="col-xs-6">
 		                 <!-- Asunto --> 
 		                 <div class="form-group">
-		                     <label class="col-md-2 control-label">Capacidad: </label>
-		                      <div class="col-md-10">
+		                     <label class="col-md-1 control-label">Capacidad: </label>
+		                      <div class="col-md-11">
 		                         <p id="idCapa" class="form-control-static"> </p>
 		                      </div>
 		                 </div>
                    </div>
-		         </div>
-                                  
+		         
+                 </div>                
                  <!-- Microfono --> 
                  <div class="row">
-                	<div class="col-md-12">
+                	<div class="col-xs-6">
 		                 <!-- Asunto --> 
 		                 <div class="form-group">
-		                     <label class="col-md-2 control-label">Micrófono: </label>
-		                      <div class="col-md-10">
+		                     <label class="col-md-1 control-label">Micrófono: </label>
+		                      <div class="col-md-11">
 		                         <p id="idMicro" class="form-control-static"> </p>
 		                      </div>
 		                 </div>
                    </div>
-		         </div>
+		         
                  
                  <!-- Proyector --> 
-                 <div class="row">
-                	<div class="col-md-12">
+                 
+                	<div class="col-xs-6">
 		                 <!-- Asunto --> 
 		                 <div class="form-group">
-		                     <label class="col-md-2 control-label">Proyector: </label>
-		                      <div class="col-md-10">
+		                     <label class="col-md-1 control-label">Proyector: </label>
+		                      <div class="col-md-11">
 		                         <p id="idProy" class="form-control-static"> </p>
 		                      </div>
 		                 </div>
                    </div>
+		         
 		         </div>
                  
                  <!-- Tipo espacio -->
                  <div class="row">
-                	<div class="col-md-12">
+                	<div class="col-xs-6">
 		                 <!-- Asunto --> 
 		                 <div class="form-group">
-		                     <label class="col-md-2 control-label">Tipo de espacio: </label>
-		                      <div class="col-md-10">
+		                     <label class="col-xs-6 control-label">Tipo de espacio: </label>
+		                      <div class="col-xs-6">
 		                         <p id="idTipo" class="form-control-static"> </p>
 		                      </div>
 		                 </div>
                    </div>
-                  </div>
+                  
 				
 				<!-- Edificio -->
-				<div class="row">
-                	<div class="col-md-12">
+				
+                	<div class="col-xs-6">
 		                 <div class="form-group">
-		                     <label class="col-md-2 control-label">Edificio: </label>
-		                      <div class="col-md-10">
+		                     <label class="col-xs-3 control-label">Edificio: </label>
+		                      <div class="col-xs-3">
 		                         <p id="idEdificio" class="form-control-static"> </p>
 		                      </div>
 		                 </div>
                    </div>
+                  
                   </div>
                  
                  <div class="row">
-                	<div class="col-md-12">
+                	<div class="col-xs-6">
 		                 <!-- Asunto --> 
 		                 <div class="form-group">
-		                     <label class="col-md-2 control-label">Eliminado: </label>
-		                      <div class="col-md-10">
+		                     <label class="col-md-1 control-label">Eliminado: </label>
+		                      <div class="col-md-11">
 		                         <p id="idActivado" class="form-control-static"> </p>
 		                      </div>
 		                 </div>
                    </div>
+		         
+                	<div class="col-xs-6">
+		                 
+		                 <div class="form-group">
+		                     <label class="col-md-1 control-label">Imágen: </label>
+		                      <div class="col-md-11">
+		                      <img class="img-circle" id="idAttachment" alt="" src="" height="42" width="42"></img>
+		                         <p  class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         
 		         </div>
                                
              </form>
@@ -237,7 +251,7 @@
   <script th:inline="javascript">
  	var baseURL = /*[[@{/}]]*/ '/';
  </script>
- <script src="../../js/espacioAdministrar.js" th:src="@{/js/espacioAdministrar.js}"></script>			
+ <script src="../../js/admin/espacio/espacioAdministrar.js" th:src="@{/js/admin/espacio/espacioAdministrar.js}"></script>			
  </div>
 </body>
 </html>

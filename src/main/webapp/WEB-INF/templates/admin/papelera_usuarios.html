@@ -10,21 +10,15 @@
 <div class="container-fluid" th:fragment="contenido">
 	<div class="row">
 	    <div class="col-md-12">
-	        <h1 class="page-header text-center">
-	            Restaurar
-	        </h1>
+	        <h2 class="page-header text-center">
+	              <small>Restaurar</small> Usuarios
+	        </h2>
 	    </div>
 	</div>
 	<!-- /.row -->
-	<div class="row">
-        <div class="col-md-12">
-            <h1 class="page-header text-center">
-                <small>Usuarios</small>
-            </h1>
-        </div>
-    </div>
+	
     
-    <div class="row">
+    <div class="row" th:unless="${#lists.isEmpty(currentResults.content)}">
 		<div class="col-md-8 col-md-offset-2 text-center">
 			<div class="col-md-2">
 				<label class="form-group" style="margin-top:5px;">Filtrar por: </label>
@@ -48,15 +42,15 @@
 	<div class="row">
     	<div class="col-md-8 col-md-offset-2">
          	
-			<div class="jumbotron text-center" th:if="${#lists.isEmpty(usuarios)}">
+			<div class="jumbotron text-center" th:if="${#lists.isEmpty(currentResults.content)}">
                 <i class="fa fa-ban fa-5x"></i>
                 <h4>¡Uups! No hay ningún usuario.</h4>
            </div> 
 			
-            <div class="table-responsive" th:unless="${#lists.isEmpty(usuarios)}" >
+            <div class="table-responsive" th:unless="${#lists.isEmpty(currentResults.content)}" >
                 <table class="table table-bordered table-hover">
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                         	<th>Imágen</th>
                             <th>Nombre</th>
                             <th>Email</th>
@@ -64,14 +58,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="r : ${usuarios}"
-                        	th:attr="id=${r.id},data-id=${r.id},name=${r.username},email=${r.email}" class="danger">
-                        	<td ><img class="img-circle" th:alt="${r.imagen.description}" th:src="@{${r.imagen.attachmentUrl}}" height="42" width="42"></img></td>
+                        <tr th:each="r : ${currentResults}" th:attr="id=${r.id}" class="danger ">
+                        	<td class="text-center"><img class="img-circle " th:alt="${r.imagen.description}" th:src="@{${r.imagen.attachmentUrl}}" height="25" width="25"></img></td>
                             <td th:text="${r.username}"></td>
                             <td th:text="${r.email}"></td>
                             <td>
-                            	<a th:attr="id=${r.id},data-id=${r.id},name=${r.username},email=${r.email},facul=${r.facultad.nombreFacultad},roles=${r.rolesToString()},act=${r.enabled},img=${r.imagen.attachmentUrl},data-accion='Ver'" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
-								<a th:attr="id=${r.id},data-id=${r.id},name=${r.username},email=${r.email},facul=${r.facultad.nombreFacultad},roles=${r.rolesToString()},act=${r.enabled},data-accion='Restaurar'" role="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="zmdi zmdi-refresh"> </i></a>	
+                            	<a th:attr="id=${r.id},data-id=${r.id},name=${r.username},email=${r.email},facul=${r.facultad.nombreFacultad},roles=${r.rolesToString()},act=${r.enabled},img=${r.imagen.attachmentUrl},data-accion='Ver'" role="button" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
+								<a th:attr="id=${r.id},data-id=${r.id},name=${r.username},email=${r.email},facul=${r.facultad.nombreFacultad},roles=${r.rolesToString()},act=${r.enabled},img=${r.imagen.attachmentUrl},data-accion='Restaurar'" role="button" data-toggle="tooltip" data-placement="top" title="Restaurar"><i class="zmdi zmdi-refresh"> </i></a>	
 							
 <!--                             <a th:href="@{'/administrar/usuarios/' + ${pagina} + '/restaurar/' + ${r.id}}"><input type="button" class="btn btn-default" value="Restaurar"/></a> -->
                             </td>
@@ -85,7 +78,7 @@
  	</div>
 
 	<!-- Pagination -->
- 	<div class="row" th:unless="${#lists.isEmpty(currentResults)}">
+ 	<div class="row" th:unless="${#lists.isEmpty(currentResults.content)}">
     <div class="col-md-12 text-center">
         <nav>
             <ul class="pagination">
@@ -133,7 +126,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Usuario</h4>
+            <h4 class="modal-title text-center" id="myModalLabel">Datos del Usuario</h4>
           </div>
           <div class="modal-body">
           		<form class="form-horizontal" role="form" action="#" th:action="@{/editar}" th:object="${User}" method="put">             
@@ -197,12 +190,25 @@
 		                 </div>
                    </div>
 		         </div>
+		         
+		         <div class="row">
+                	<div class="col-md-12">
+		                 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Imágen: </label>
+		                      <div class="col-md-10">
+		                      <img class="img-circle" id="idAttachment" alt="" src="" height="42" width="42"></img>
+		                         <p  class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
 		                     
              </form>
              </div>
                  <div class="modal-footer">
 <!-- 			        <a id="btn-eliminar" href="#" class="btn-rec gray">ELIMINAR</a> -->
-			        <a id="btn-editar" th:href="@{''}" class="btn-rec blue">EDITAR</a>
+<!-- 			        <a id="btn-editar" th:href="@{''}" class="btn-rec blue">EDITAR</a> -->
 			      </div> 
           
         </div>
@@ -212,8 +218,9 @@
 
  <script th:inline="javascript">
  	var baseURL = /*[[@{/}]]*/ '/';
+ 	var pag = /*[[${currentIndex}]]*/ '/';
  </script>
- <script src="../../js/restaurarUsuario.js" th:src="@{/js/restaurarUsuario.js}"></script>
+ <script src="../../js/admin/user/restaurarUsuario.js" th:src="@{/js/admin/user/restaurarUsuario.js}"></script>
  
 </div>
 </body>

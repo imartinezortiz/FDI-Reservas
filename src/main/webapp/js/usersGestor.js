@@ -59,7 +59,6 @@
 	 			type: 'DELETE',
 	 			headers : reqHeaders,
 	 			success : function(datos) {
-	 				alert("Usuario eliminado");
 	 				$('#modalEditarUsuario').modal('hide');
 	 				$("#"+user.id).remove();
 	 			},    
