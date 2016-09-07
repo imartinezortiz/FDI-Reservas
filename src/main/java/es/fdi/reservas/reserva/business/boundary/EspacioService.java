@@ -10,13 +10,11 @@ import org.springframework.stereotype.Service;
 import es.fdi.reservas.fileupload.business.control.AttachmentRepository;
 import es.fdi.reservas.fileupload.business.entity.Attachment;
 import es.fdi.reservas.reserva.business.control.EspacioRepository;
-import es.fdi.reservas.reserva.business.entity.Autorizacion;
 import es.fdi.reservas.reserva.business.entity.Edificio;
 import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.reserva.business.entity.Reserva;
 import es.fdi.reservas.reserva.business.entity.TipoEspacio;
-import es.fdi.reservas.reserva.web.EdificioDTO;
 import es.fdi.reservas.reserva.web.EspacioDTO;
 import es.fdi.reservas.users.business.boundary.UserService;
 import es.fdi.reservas.users.business.entity.User;
@@ -32,7 +30,7 @@ public class EspacioService {
 	@Autowired
 	public EspacioService(EspacioRepository er, UserService us, AttachmentRepository ar, EdificioService edr) {
 		super();
-		this.espacio_repository = espacio_repository;
+		this.espacio_repository = er;
 		user_service = us;
 		this.attachment_repository = ar;
 		this.edificio_service = edr;
@@ -109,7 +107,7 @@ public class EspacioService {
 		e.setMicrofono(espacio.isMicrofono());
 		e.setProyector(espacio.isProyector());
 		e.setTipoEspacio(TipoEspacio.fromTipoEspacio(espacio.getTipoEspacio()));
-		e.setEdificio(edificio_service.findEdificio(espacio.getIdEdificio()));
+		e.setEdificio(edificio_service.getEdificio(espacio.getIdEdificio()));
 		e.setImagen(attachment);
 		return espacio_repository.save(e);
 	}
@@ -121,14 +119,12 @@ public class EspacioService {
 		e.setMicrofono(espacio.isMicrofono());
 		e.setProyector(espacio.isProyector());
 		e.setTipoEspacio(TipoEspacio.fromTipoEspacio(espacio.getTipoEspacio()));
-		e.setEdificio(edificio_service.findEdificio(espacio.getIdEdificio()));
+		e.setEdificio(edificio_service.getEdificio(espacio.getIdEdificio()));
 		e.setImagen(attachment);
-		e.setTipoAutorizacion(Autorizacion.fromEstadoReserva(espacio.getTipoAutorizacion()));
-		e.setHorasAutorizacion(espacio.getHorasAutorizacion());
 		return espacio_repository.save(e);
 	}
 	
-	public Espacio addNewEspacio(EspacioDTO espacioDTO){
+public Espacio addNewEspacio(EspacioDTO espacioDTO){
 		TipoEspacio tipoEspacio = TipoEspacio.fromTipoEspacio(espacioDTO.getTipoEspacio());
 		Espacio newEspacio = new Espacio(espacioDTO.getNombreEspacio(),espacioDTO.getCapacidad(), tipoEspacio); 
 

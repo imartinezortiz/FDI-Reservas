@@ -9,16 +9,16 @@ $(document).ready(function(){
 		$("#enviar").click(function(){
 			espacio.nombreEspacio = $("#nombre").val();
 			espacio.capacidad = $("#capacidad").val();
-			espacio.idFacultad = $("#hFacultad").val();
 			espacio.microfono= $("#microfono").val();
 			espacio.proyector= $("#proyector").val();
 			espacio.tipoEspacio= $("#tipoEspacio").val();
+			espacio.idEdificio=$("#hEdif").val();
 	    	editarEspacio(espacio,reqHeaders);
 		});
 });
 		
 function editarEspacio(espacio, reqHeaders){
-	
+	console.log(espacio);
 	$.ajax({
 			url: baseURL + 'gestor/nuevoEspacio',
 			type: 'POST',
@@ -64,6 +64,7 @@ $("#idEdif").autocomplete({
 	},
 	select: function(event, ui){
 		espacio.edificio = ui.item.label;
+		$("#hEdif").val(ui.item.label);
 	},
 	minLength: 3
 

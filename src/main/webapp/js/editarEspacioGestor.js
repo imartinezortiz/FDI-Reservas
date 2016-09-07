@@ -22,7 +22,7 @@ $(document).ready(function(){
 		$("#enlaceGuardar").click(function(){
 			espacio.id = idEspacio;
 			espacio.nombreEspacio = $("#idNombre").val();
-			espacio.edificio = $("#edificioHidden").val();
+			espacio.idEdificio = $("#edificioHidden").val();
 			espacio.capacidad = $("#idCapa").val();
 			espacio.microfono = $("#idMicro").val();
 			espacio.proyector = $("#idProy").val();

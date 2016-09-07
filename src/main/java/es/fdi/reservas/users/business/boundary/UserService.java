@@ -101,18 +101,6 @@ public class UserService implements UserDetailsService{
 		return newUser;
 	}
 	
-	public User addNewUser(UserDTO user){
-		User newUser = new User(user.getUsername(), user.getEmail());
-		newUser.setFacultad(facultad_service.getFacultad(user.getFacultad()));
-		newUser.setImagen(attachment_repository.findOne((long) 2));
-		newUser.setEnabled(true);
-		newUser.addRole(new UserRole("ROLE_USER"));
-		newUser.setPassword(password_encoder.encode(user.getPassword()));
-		newUser = user_ropository.save(newUser);
-		
-		return newUser;
-	}
-	
 	public Iterable<User> getUsuarios() {
 		return user_ropository.findAll();
 	}

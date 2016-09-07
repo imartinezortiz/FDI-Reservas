@@ -3,7 +3,6 @@ package es.fdi.reservas.reserva.business.control;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.TipoEspacio;
-import es.fdi.reservas.users.business.entity.User;
+
 
 @Repository
 public interface EspacioRepository extends JpaRepository<Espacio, Long>{

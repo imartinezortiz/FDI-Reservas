@@ -409,6 +409,7 @@ public class GestorController {
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current); 
 		model.addAttribute("User", u);
+		model.addAttribute("facul", u.getFacultad().getId());
 		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
 		model.addAttribute("reservasPendientes", gestor_service.getReservasPendientes(u.getId(), EstadoReserva.PENDIENTE).size());
 		model.addAttribute("view", "gestor/administrar_espacios");
