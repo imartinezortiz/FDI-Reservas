@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import es.fdi.reservas.fileupload.business.boundary.NewFileCommand;
 import es.fdi.reservas.reserva.business.boundary.GestorService;
 import es.fdi.reservas.reserva.business.boundary.GrupoReservaService;
 import es.fdi.reservas.reserva.business.boundary.ReservaService;
@@ -188,6 +187,7 @@ public class GestorController {
 
         model.addAttribute("beginIndex", begin);
         model.addAttribute("endIndex", end);
+        model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
         model.addAttribute("currentIndex", current); 
 		model.addAttribute("User", u);
 		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
@@ -421,8 +421,6 @@ public class GestorController {
 		User u = gestor_service.getUsuarioActual();
 		model.addAttribute("User", u);
 		model.addAttribute("edificio", gestor_service.getEdificio(idEdificio));
-		//model.addAttribute("facultades", facultad_service.getFacultades());
-		model.addAttribute("command", new NewFileCommand());
 		model.addAttribute("idFacultad", u.getFacultad().getId());
 		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
 		model.addAttribute("view", "gestor/editarEdificio");
@@ -726,6 +724,18 @@ public class GestorController {
 		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
 		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
 		model.addAttribute("view", "gestor/editarUsuario");
+		return "index";
+	}
+	
+	@RequestMapping(value="/gestor/nuevoUsuario", method=RequestMethod.GET)
+	public String nuevoUsuario(Model model){
+		User u = gestor_service.getUsuarioActual();
+		model.addAttribute("User", u);
+		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("user", new User());
+		model.addAttribute("facul", u.getFacultad().getId());
+		//System.out.println(user_service.getUser(idUser).getUsername());
+		model.addAttribute("view", "gestor/nuevoUsuario");
 		return "index";
 	}
 }

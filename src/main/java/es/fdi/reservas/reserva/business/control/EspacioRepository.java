@@ -3,6 +3,7 @@ package es.fdi.reservas.reserva.business.control;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,11 +13,11 @@ import org.springframework.stereotype.Repository;
 
 import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.TipoEspacio;
+import es.fdi.reservas.users.business.entity.User;
 
 @Repository
 public interface EspacioRepository extends JpaRepository<Espacio, Long>{
 
-	//Por Edificio
 	@Query("select f from #{#entityName} f where f.deleted=false and f.edificio.id = :idEdificio")
 	public List<Espacio> findByEdificioId(@Param("idEdificio") Long idEdificio);
 
@@ -28,6 +29,8 @@ public interface EspacioRepository extends JpaRepository<Espacio, Long>{
 
 	@Query("select f from #{#entityName} f where f.deleted=true and f.edificio.id = :idEdificio")
 	public Page<Espacio> findDeletedByEdificioId(@Param("idEdificio") Long idEdificio, Pageable pageable);
+	
+	public List<Espacio> findById(Long Id);
 	
 	//Por Edificio y TipoEspacio
 	@Query("select f from #{#entityName} f where f.deleted=false and f.edificio.id = :idEdificio and f.tipoEspacio = :tipoEspacio")
@@ -90,6 +93,10 @@ public interface EspacioRepository extends JpaRepository<Espacio, Long>{
 	
 	@Query("select e from #{#entityName} e where e.deleted=true and e.edificio.nombreEdificio like lower(concat('%',:nombre, '%'))")
 	public Page<Espacio> getEspaciosEliminadosPorEdificio(@Param("nombre") String nombre, Pageable pagerequest);
+
+	@Query("select e from #{#entityName} e where e.deleted=true")
+	public Page<Espacio> getEspaciosEliminadosPaginados(Pageable page);
+
 	
 	@Query("select e from #{#entityName} e where e.deleted=false and e.edificio.nombreEdificio like lower(concat('%',:nombre, '%'))")
 	public List<Espacio> getEspaciosPorEdificio(@Param("nombre") String nombre);
@@ -115,7 +122,6 @@ public interface EspacioRepository extends JpaRepository<Espacio, Long>{
 	//////////////////JAVIER////////////////////////////
 	@Query("select f from Espacio f where f.id = :idEspacio")
 	public Espacio findEspacio(@Param("idEspacio") long idEspacio);
-	
 	//Por Facultad
 	@Query("select f from Espacio f where f.deleted=false and f.edificio.facultad.id = :idFacultad")
 	public Page<Espacio> findEspacioByFacultadId(@Param("idFacultad") long idFacultad, Pageable pageable);

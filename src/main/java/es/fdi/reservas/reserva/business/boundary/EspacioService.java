@@ -1,36 +1,41 @@
 package es.fdi.reservas.reserva.business.boundary;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.fdi.reservas.fileupload.business.control.AttachmentRepository;
 import es.fdi.reservas.fileupload.business.entity.Attachment;
-import es.fdi.reservas.reserva.business.control.EdificioRepository;
 import es.fdi.reservas.reserva.business.control.EspacioRepository;
 import es.fdi.reservas.reserva.business.entity.Autorizacion;
 import es.fdi.reservas.reserva.business.entity.Edificio;
 import es.fdi.reservas.reserva.business.entity.Espacio;
+import es.fdi.reservas.reserva.business.entity.EstadoReserva;
+import es.fdi.reservas.reserva.business.entity.Reserva;
 import es.fdi.reservas.reserva.business.entity.TipoEspacio;
 import es.fdi.reservas.reserva.web.EdificioDTO;
 import es.fdi.reservas.reserva.web.EspacioDTO;
+import es.fdi.reservas.users.business.boundary.UserService;
+import es.fdi.reservas.users.business.entity.User;
 
 @Service
 public class EspacioService {
 
 	private EspacioRepository espacio_repository;
+	private UserService user_service;
 	private EdificioService edificio_service;
 	private AttachmentRepository attachment_repository;
 	
 	@Autowired
-	public EspacioService(EspacioRepository espacio_repository, AttachmentRepository ar, EdificioService er) {
+	public EspacioService(EspacioRepository er, UserService us, AttachmentRepository ar, EdificioService edr) {
 		super();
 		this.espacio_repository = espacio_repository;
+		user_service = us;
 		this.attachment_repository = ar;
-		this.edificio_service = er;
+		this.edificio_service = edr;
 	}
 
 	public List<Espacio> getEspaciosEdificio(long idEdificio) {
@@ -39,19 +44,6 @@ public class EspacioService {
 
 	public Espacio getEspacio(long id_espacio) {
 		return espacio_repository.findOne(id_espacio);
-	}
-
-	public List<Espacio> getTiposEspacio(long idEdificio, TipoEspacio idTipoEspacio) {
-		return espacio_repository.findByEdificioIdAndTipoEspacio(idEdificio, idTipoEspacio);
-	}
-	
-	public Iterable<Espacio> getEspacios() {
-		return espacio_repository.findAll();
-	}
-	
-	public void eliminarEspacio(long idEspacio) {
-		//espacio_repository.delete(idEspacio);
-		espacio_repository.softDelete(Long.toString(idEspacio));
 	}
 	
 	public Page<Espacio> getEspaciosPaginados(Pageable pageRequest) {
@@ -64,6 +56,51 @@ public class EspacioService {
 		e.setDeleted(true);
 		return espacio_repository.save(e);
 	}
+		
+	public Espacio editarEspacio(EspacioDTO espacioDTO){
+		Espacio e = espacio_repository.findOne(espacioDTO.getId());
+
+		Attachment attachment = new Attachment("");
+		
+		if (espacioDTO.getIdEdificio() != null){
+			e.setEdificio(edificio_service.getEdificio(espacioDTO.getIdEdificio()));
+		}
+		
+		if (espacioDTO.getImagen().equals("")){
+			attachment = espacio_repository.findOne(espacioDTO.getId()).getImagen();
+		}
+		else {
+
+			
+			if (attachment_repository.getAttachmentByName(espacioDTO.getImagen()).isEmpty()){
+		
+				//si no esta, lo añado
+				String img = espacioDTO.getImagen();
+				int pos = img.lastIndexOf(".");
+				String punto = img.substring(0, pos);
+				String fin = img.substring(pos+1, img.length());
+				String nom = punto + "-" + espacioDTO.getId() + "." + fin;
+				nom = nom.replace(nom, "/img/" + nom);
+				
+				
+				attachment.setAttachmentUrl("/img/" + espacioDTO.getImagen());
+				attachment.setStorageKey(nom);
+				attachment_repository.save(attachment);
+			}else{
+				attachment = attachment_repository.getAttachmentByName(espacioDTO.getImagen()).get(0);
+			}
+		}
+		
+		e.setNombreEspacio(espacioDTO.getNombreEspacio());
+		e.setCapacidad(espacioDTO.getCapacidad());
+		e.setMicrofono(espacioDTO.isMicrofono());
+		e.setProyector(espacioDTO.isProyector());
+		e.setTipoEspacio(TipoEspacio.fromTipoEspacio(espacioDTO.getTipoEspacio()));
+		
+		e.setImagen(attachment);
+		
+		return espacio_repository.save(e);
+	}
 	
 	public Espacio editarEspacio(EspacioDTO espacio, Attachment attachment){
 		Espacio e = espacio_repository.findOne(espacio.getId());
@@ -72,8 +109,7 @@ public class EspacioService {
 		e.setMicrofono(espacio.isMicrofono());
 		e.setProyector(espacio.isProyector());
 		e.setTipoEspacio(TipoEspacio.fromTipoEspacio(espacio.getTipoEspacio()));
-		Long id = Long.decode(espacio.getEdificio());
-		e.setEdificio(edificio_service.findEdificio(id));
+		e.setEdificio(edificio_service.findEdificio(espacio.getIdEdificio()));
 		e.setImagen(attachment);
 		return espacio_repository.save(e);
 	}
@@ -85,32 +121,27 @@ public class EspacioService {
 		e.setMicrofono(espacio.isMicrofono());
 		e.setProyector(espacio.isProyector());
 		e.setTipoEspacio(TipoEspacio.fromTipoEspacio(espacio.getTipoEspacio()));
-		Long id = Long.decode(espacio.getEdificio());
-		e.setEdificio(edificio_service.findEdificio(id));
+		e.setEdificio(edificio_service.findEdificio(espacio.getIdEdificio()));
 		e.setImagen(attachment);
 		e.setTipoAutorizacion(Autorizacion.fromEstadoReserva(espacio.getTipoAutorizacion()));
 		e.setHorasAutorizacion(espacio.getHorasAutorizacion());
 		return espacio_repository.save(e);
 	}
 	
-	public Espacio addNewEspacio(Espacio espacio){
-		Espacio newEspacio = new Espacio(espacio.getNombreEspacio(),espacio.getCapacidad(), espacio.isMicrofono(), espacio.isProyector(), espacio.getTipoEspacio()); 
-				//TipoEspacio.fromTipoEspacio(espacio.getTipoEspacio()), edificio_repository.findOne(espacio.getIdEdificio()));
-		newEspacio = espacio_repository.save(newEspacio);
-		
-		return null;
-	}
-	
-	public Espacio addNewEspacio(EspacioDTO f){
-		TipoEspacio tipoEspacio = TipoEspacio.fromTipoEspacio(f.getTipoEspacio());
-		Espacio newEspacio = new Espacio(f.getNombreEspacio(),f.getCapacidad(), tipoEspacio); 
+	public Espacio addNewEspacio(EspacioDTO espacioDTO){
+		TipoEspacio tipoEspacio = TipoEspacio.fromTipoEspacio(espacioDTO.getTipoEspacio());
+		Espacio newEspacio = new Espacio(espacioDTO.getNombreEspacio(),espacioDTO.getCapacidad(), tipoEspacio); 
 
-		newEspacio.setEdificio(edificio_service.getEdificio(1));
+		newEspacio.setEdificio(edificio_service.getEdificio(espacioDTO.getIdEdificio()));
 		newEspacio.setImagen(attachment_repository.findOne((long) 1));
 		newEspacio = espacio_repository.save(newEspacio);
 		
 		return newEspacio;
-	}
+	}		
+
+public List<Edificio> getEdificiosPorTagName(String tagName) {	
+		return edificio_service.getEdificiosPorTagName(tagName);
+	}	
 
 	public List<TipoEspacio> tiposDeEspacios(long idEdificio) {
 		return espacio_repository.tiposDeEspacios(idEdificio);
@@ -132,13 +163,7 @@ public class EspacioService {
 		return attachment_repository.getAttachmentByName(imagen);
 	}
 
-	public List<Edificio> getEdificiosPorTagName(String tagName) {
-		
-		return edificio_service.getEdificiosPorTagName(tagName);
-	}
-
 	public Page<Espacio> getEspaciosPorNombre(String nombre, Pageable pagerequest) {
-		// TODO Auto-generated method stub
 		return espacio_repository.getEspaciosByTagName(nombre,pagerequest);
 	}
 
@@ -148,7 +173,6 @@ public class EspacioService {
 	}
 	
 	public Page<Espacio> getEspaciosPorEdificio(String tagName, Pageable pagerequest) {
-		// TODO Auto-generated method stub
 		return espacio_repository.getEspaciosPorEdificio(tagName, pagerequest);
 	}
 	
@@ -158,13 +182,57 @@ public class EspacioService {
 	}
 	
 	public Page<Espacio> getEspaciosEliminadosPorNombre(String nombre, Pageable pagerequest) {
-		// TODO Auto-generated method stub
 		return espacio_repository.getEspaciosEliminadosByTagName(nombre,pagerequest);
 	}
 
 	public Page<Espacio> getEspaciosEliminadosPorEdificio(String tagName, Pageable pagerequest) {
-		// TODO Auto-generated method stub
 		return espacio_repository.getEspaciosEliminadosPorEdificio(tagName, pagerequest);
+	}
+
+	public User getCurrentUser(){
+		return user_service.getCurrentUser();
+	}
+	
+	public Iterable<Edificio> getEdificios(){
+		return edificio_service.getEdificios();
+	}
+	
+	public Iterable<Espacio> getEspacios() {
+		return espacio_repository.findAll();
+	}
+	
+	// Espacios de un edificio de un TipoEspacio en concreto
+	public List<Espacio> getTiposEspacio(long idEdificio, TipoEspacio idTipoEspacio) {
+		return espacio_repository.findByEdificioIdAndTipoEspacio(idEdificio, idTipoEspacio);
+	}
+	
+	public List<Espacio> getEspaciosPorTagName(String tag) {
+		return espacio_repository.getEspaciosByTagName(tag);
+	}
+	
+	public Page<Espacio> getEspaciosPaginados(PageRequest pageRequest) {
+		return espacio_repository.findAll(pageRequest);
+	}
+	
+	public void eliminarEspacio(long idEspacio) {
+		espacio_repository.softDelete(Long.toString(idEspacio));
+	}
+	
+	public Espacio save(Espacio e){
+		return espacio_repository.save(e);
+	}
+
+	public Page<Espacio> getEspaciosEliminadosPaginados(Pageable pageRequest) {
+		return espacio_repository.getEspaciosEliminadosPaginados(pageRequest);
+	}
+
+	public List<Reserva> reservasPendientesUsuario(Long idUsuario, EstadoReserva estadoReserva) {
+		return user_service.reservasPendientesUsuario(idUsuario, estadoReserva);
+	}
+
+	public Page<Espacio> getEspaciosPaginadosPorNombre(PageRequest pageRequest, String nombre) {
+		// TODO Auto-generated method stub
+		return espacio_repository.getEspaciosByTagName(nombre, pageRequest);
 	}
 	
 	public Page<Espacio> getEspaciosPorNombreYFacultad(String nombre, Long id, Pageable pagerequest) {
@@ -203,4 +271,9 @@ public class EspacioService {
 		return espacio_repository.findEspacioDeletedByFacultadId(facultadid, pageable);
 	}
 
+	public Page<Espacio> getEspaciosPaginadosPorEdificio(PageRequest pageRequest, String nombre) {
+		// TODO Auto-generated method stub
+		return espacio_repository.getEspaciosPorEdificio(nombre, pageRequest);
+	}
 }
+

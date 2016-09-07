@@ -19,6 +19,9 @@ public interface EdificioRepository extends JpaRepository<Edificio, Long>{
 	List<Edificio> findAll();
 
 	@Query("select e from #{#entityName} e where e.deleted=true")
+	Page<Edificio> recycleBin(Pageable pr);
+	
+	@Query("select e from #{#entityName} e where e.deleted=true")
 	List<Edificio> recycleBin();
 	
 	@Modifying
@@ -97,8 +100,8 @@ public interface EdificioRepository extends JpaRepository<Edificio, Long>{
 	public List<Edificio> getEdificiosEliminadosPorDireccionYFacultad(@Param("direccion") String tagName, @Param("idFacultad") Long idFacultad);
 	
 	
-//	@Query("select e from #{#entityName} e where e.deleted=false and e.facultad.nombreFacultad like lower(concat('%',:nombre, '%'))")
-//	List<Edificio> getEdificiosPorFacultad(@Param("nombre") String nombre);
+	@Query("select e from #{#entityName} e where e.deleted=false and e.facultad.nombreFacultad like lower(concat('%',:nombre, '%'))")
+	List<Edificio> getEdificiosPorFacultad(@Param("nombre") String nombre);
 	
 	//Por TagName de Facultad
 	@Query("select e from #{#entityName} e where e.facultad.nombreFacultad like lower(concat('%',:nombre, '%'))")
@@ -109,9 +112,6 @@ public interface EdificioRepository extends JpaRepository<Edificio, Long>{
 	
 	@Query("select e from #{#entityName} e where e.facultad.nombreFacultad like lower(concat('%',:nombre, '%'))")
 	public List<Edificio> getEdificiosEliminadosPorFacultad(@Param("nombre") String nombre);
-	
-	@Query("select e from #{#entityName} e where e.deleted=false and e.facultad.nombreFacultad like lower(concat('%',:nombre, '%'))")
-	public List<Edificio> getEdificiosPorFacultad(@Param("nombre") String nombre);
 	
 	//MIRAR SI SALE MAL y si hay que usarlo
 	@Query("select e from #{#entityName} e where e.deleted=false and e.nombreEdificio = :edificio")

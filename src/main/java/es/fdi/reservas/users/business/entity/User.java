@@ -74,7 +74,7 @@ public class User implements UserDetails{
 	private Attachment imagen;
 
 	public User() {
-		
+		this.roles = new ArrayList<UserRole>();
 	}
 	
 	public User(String username, String email, Attachment img) {
@@ -83,6 +83,13 @@ public class User implements UserDetails{
 		this.enabled = true;
 		this.roles = new ArrayList<UserRole>();
 		this.imagen = img;		
+	}
+	
+	public User(String username, String email) {
+		this.username = username;
+		this.email = email;
+		this.enabled = true;
+		this.roles = new ArrayList<UserRole>();	
 	}
 	
 	public String getPassword() {
