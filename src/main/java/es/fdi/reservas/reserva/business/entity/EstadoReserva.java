@@ -5,12 +5,19 @@ import java.util.List;
 
 public enum EstadoReserva {
 
-	CONFIRMADA("Confirmada"), PENDIENTE("Pendiente"), DENEGADA("Denegada");
+	CONFIRMADA("Confirmada"), PENDIENTE("Pendiente"), DENEGADA("Denegada"), OTRO("Otro");
 	
 	private String estado;
 	
 	private EstadoReserva(String estado){
-		this.setEstado(estado);
+		if (estado.equalsIgnoreCase("Confirmada")) 
+			this.setEstado("Confirmada");
+		else if (estado.equalsIgnoreCase("Pendiente"))
+			this.setEstado("Pendiente");
+		else if (estado.equalsIgnoreCase("Denegada"))
+			this.setEstado("Denegada");
+		else
+			this.setEstado("otro");
 	}
 
 	public String getEstado() {
@@ -22,12 +29,14 @@ public enum EstadoReserva {
 	}
 	
 	public static EstadoReserva fromEstadoReserva(String estado){
-		if(estado.equals("Confirmada"))
+		if(estado.equalsIgnoreCase("Confirmada"))
 			return EstadoReserva.CONFIRMADA;
-		else if(estado.equals("Pendiente"))
+		else if(estado.equalsIgnoreCase("Pendiente"))
 			return EstadoReserva.PENDIENTE;
-		else
+		else if(estado.equalsIgnoreCase("Denegada"))
 		    return EstadoReserva.DENEGADA;
+		else
+			return EstadoReserva.OTRO;
 	}
 	
 	public static List<EstadoReserva> getAll()

@@ -2,7 +2,6 @@ package es.fdi.reservas.reserva.business.entity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,7 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+
+import es.fdi.reservas.fileupload.business.entity.Attachment;
 
 @Entity
 public class Espacio {
@@ -40,12 +42,16 @@ public class Espacio {
 	@Enumerated(EnumType.ORDINAL)
 	private TipoEspacio tipoEspacio;
 
-	@NotNull
+	//@NotNull
 	private Autorizacion tipoAutorizacion;
-	@NotNull
+	//@NotNull
 	private int horasAutorizacion;
 	@NotNull
 	private boolean deleted;
+	
+	@OneToOne(optional=true)
+	@JoinColumn(name="ImagenId")
+	private Attachment imagen;
 	
 	public Espacio(){
 		
@@ -63,18 +69,16 @@ public class Espacio {
 		this.deleted = false;
 	}*/
 	
-	public Espacio(String nombre_espacio, int capacidad, boolean microfono, boolean proyector,
-			TipoEspacio tipoEspacio, Edificio edificio, Autorizacion autorizacion, int horas) {
+	public Espacio(String nombre_espacio, int capacidad,TipoEspacio tipoEspacio) {
 		super();
 		this.nombreEspacio = nombre_espacio;
 		this.capacidad = capacidad;
-		this.microfono = microfono;
-		this.proyector = proyector;
-		this.tipoAutorizacion=autorizacion;
-		this.horasAutorizacion=horas;
 		this.tipoEspacio = tipoEspacio;
-		this.edificio = edificio;
+		this.microfono = false;
+		this.proyector = false;	
 		this.deleted = false;
+		this.tipoAutorizacion = Autorizacion.NECESARIA;
+		this.horasAutorizacion = 0;
 	}
 
 	public Autorizacion getTipoAutorizacion() {
@@ -106,6 +110,14 @@ public class Espacio {
 
 	public Espacio(Long idEspacio){
 		id = idEspacio;
+	}
+	
+	public Attachment getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(Attachment imagen) {
+		this.imagen = imagen;
 	}
 
 	public String getNombreEspacio() {

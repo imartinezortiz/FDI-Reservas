@@ -59,7 +59,15 @@ public class GrupoReservaService {
 	public List<GrupoReserva> getGruposUsuario(Long idUsuario) {
 		return grupo_repository.findByUserId(idUsuario);
 	}
-
+	
+	public GrupoReserva findGrupoReserva(long grupoid){
+		return grupo_repository.getOne(grupoid);
+	}
+	
+	public List<GrupoReserva> findGrupoReservaByUserId(long userid){
+		return grupo_repository.findByUserId(userid);
+	}
+	
 	public void editarGrupoReserva(Long idGrupo, GrupoReservaDTO grDTO) {
 		GrupoReserva grupo = getGrupoReserva(idGrupo);
 		grupo.setNombreCorto(grDTO.getNombreCorto());
@@ -75,5 +83,5 @@ public class GrupoReservaService {
 	public List<Reserva> reservasPendientesUsuario(Long idUsuario, EstadoReserva estadoReserva) {
 		return user_service.reservasPendientesUsuario(idUsuario, estadoReserva);
 	}
-	
+
 }

@@ -2,16 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet"
-        href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
-        th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"/>
-    <link rel="stylesheet"
-        href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0-3/css/font-awesome.min.css"
-        th:href="@{/webjars/font-awesome/4.5.0/css/font-awesome.min.css}"/>
-    <link rel="stylesheet" type="text/css" media="all" href="../../css/estilo.css" th:href="@{/css/estilo.css}"/>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'/>
+
 	<title>UCM RESERVAS - Añadir Facultad</title>
      <!-- JS -->
     <script 
@@ -23,55 +14,51 @@
 </head>
 <body>
 
-	<div class="container-fluid" th:fragment="contenido">
-
-        
-
-       
-
-    
-        
+<div class="container-fluid" th:fragment="contenido">
+        <!-- Page Heading -->
+			<div class="row">
+			    <div class="col-md-12">
+			        <h2 class="page-header text-center">
+			           Facultad
+			        </h2>
+			    </div>
+			</div>
+			<!-- /.row -->
             <div class="row">
-                <div class="col-md-4 col-md-offset-4">
-                    <div class="div-login">
-                         <h2 class=" page-header text-center">Añadir facultad</h2>
-                         <form role="form" action="#" th:action="@{/admin/nuevaFacultad}" th:object="${Facultad}" method="post">
+                <div class="col-md-6 col-md-offset-3">
+                    
+                         <form role="form" action="#" th:object="${Facultad}" method="post">
+                         <!-- Nombre facultad -->
                          	<div class="form-group">
-                                <label for="ejemplo_email_1">Nombre facultad</label>
+                                <label>Nombre</label>
                                 <div class="input-group">
-                                  <span class="input-group-addon"><i class="fa fa-building"></i></span>
-                                  <input name="nombreFacultad" type="text" class="form-control" placeholder="Nombre de facultad"/>
+                                  <span class="input-group-addon"><i class="zmdi zmdi-balance"></i></span>
+                                  <input id="idNombre" name="nombreFacultad" type="text" class="form-control" placeholder="Nombre de facultad"/>
                                 </div>
                             </div>
+                            <!-- Web -->                          
                             <div class="form-group">
-                                <label for="ejemplo_email_1">Direccion</label>
+                                <label>Página web</label>
                                 <div class="input-group">
                                   <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                                  <input name="dir" type="text" class="form-control" placeholder="Introduce la direccion"/>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="ejemplo_email_1">Pagina web</label>
-                                <div class="input-group">
-                                  <span class="input-group-addon"><i class="fa fa-at"></i></span>
-                                  <input name="webFacultad" type="text" class="form-control" placeholder="Introduce la pagina web"/>
+                                  <input id="idWeb" name="webFacultad" type="text" class="form-control" placeholder="Introduce la pagina web"/>
                                 </div>
                             </div>
                             
                             <div class="text-center">
-                                 <button type="submit" class="btn btn-default">Crear</button>
+                                 <button type="button" id="enlaceGuardar" class="btn-normal">CREAR</button>
                             </div>
 
                          </form>
                     </div>
                 </div>
+                <script th:inline="javascript">
+			var baseURL = /*[[@{/}]]*/ '/';
+			</script>
+			<script src="../../js/admin/facultad/nuevaFacultad.js" th:src="@{/js/admin/facultad/nuevaFacultad.js}"></script>
             </div>
             <!-- /.row -->
        
-
-
-        </div>
         <!-- /.container-fluid -->
 
         

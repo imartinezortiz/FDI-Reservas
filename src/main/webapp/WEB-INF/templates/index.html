@@ -79,11 +79,21 @@
             
             if(pathname.indexOf("gestor") >= 0){
             	$("#li_gestionar").addClass("active");
-            	//$("#demo").collapse();
             }
             else if(pathname.indexOf("administrar") >= 0){
             	$("#li_administrar").addClass("active");
-            	//$("#demo").collapse();
+            }
+            else if(pathname.indexOf("nuevoEdificio") >= 0){
+            	$("#li_administrar").addClass("active");
+            }
+            else if(pathname.indexOf("nuevoUsuario") >= 0){
+            	$("#li_administrar").addClass("active");
+            }
+            else if(pathname.indexOf("nuevoEspacio") >= 0){
+            	$("#li_administrar").addClass("active");
+            }
+            else if(pathname.indexOf("nuevaFacultad") >= 0){
+            	$("#li_administrar").addClass("active");
             }
             else if(pathname.indexOf("edificio") >= 0){
             	$("#li_porespacios").addClass("active");
@@ -98,27 +108,12 @@
             	$("#demo1").collapse();
             }
             else if(pathname.indexOf("grupo") >= 0){
-            	//$("#li_porfecha").addClass("active");
             	$("#demo1").collapse();
             }
             else{
             	$("#li_misreservas").addClass("active");
             }
             
-		/*
-         $("#demo1 li").hover(
-           function(){           	  
-        	 $(this).find(".fa-trash").css("visibility","visible");
-           },
-           function(){      	  
-        	 $(this).find(".fa-trash").css("visibility","hidden");
-          });
-         
-         $("#demo1 i").click(function(){
-        	var x = $(this).attr("data-idGrupo");
-        	
-        	alert(x);
-         });*/
             
          $("#autoGrupo").autocomplete({
         		source:function(request, response){
@@ -242,23 +237,35 @@
                     <a href="javascript.;" class="dropdown-toggle" data-toggle="dropdown"><i class="zmdi zmdi-plus zmdi-hc-lg"> </i> <i class="fa fa-angle-down"></i></a>
                     <ul class="dropdown-menu alert-dropdown">
                         <li>
-                            <a th:href="@{/edificios}">Nueva reserva</a>
+                            <a th:href="@{/edificios}">Nueva Reserva</a>
                         </li> 
                         <li>
-                            <a th:href="@{/grupo/nuevo}">Nuevo grupo </a>
+                            <a th:href="@{/grupo/nuevo}">Nuevo Grupo </a>
                         </li>
-                        <!--/*/  <th:block sec:authorize="hasRole('ROLE_GESTOR') || hasRole('ROLE_ADMIN')"> /*/-->
+                        <!--/*/  <th:block sec:authorize="hasRole('ROLE_ADMIN')"> /*/-->
                         <li>
-                            <a th:href="@{/admin/nuevoUsuario}">Nuevo usuario </a>
-                        </li>
-                        <li>
-                            <a th:href="@{/admin/nuevaFacultad}">Nueva facultad </a>
+                            <a th:href="@{/admin/nuevoUsuario}">Nuevo Usuario </a>
                         </li>
                         <li>
-                            <a th:href="@{/admin/nuevoEdificio}">Nuevo edificio </a>
+                            <a th:href="@{/admin/nuevaFacultad}">Nueva Facultad </a>
                         </li>
                         <li>
-                            <a th:href="@{/admin/nuevoEspacio}">Nuevo espacio </a>
+                            <a th:href="@{/admin/nuevoEdificio}">Nuevo Edificio </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/nuevoEspacio}">Nuevo Espacio </a>
+                        </li>
+                         <!--/*/  </th:block> /*/-->
+                         
+                         <!--/*/  <th:block sec:authorize="hasRole('ROLE_GESTOR')"> /*/-->
+                        <li>
+                            <a th:href="@{/gestor/nuevoUsuario}">Nuevo Usuario </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/gestor/nuevoEdificio}">Nuevo Edificio </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/gestor/nuevoEspacio}">Nuevo Espacio </a>
                         </li>
                          <!--/*/  </th:block> /*/-->
                     </ul>
@@ -272,13 +279,13 @@
                             <a th:href="@{/perfil}">
                                 <div class="media">
                                     <span class="pull-left">
-                                        <img class="img-circle" src="http://placehold.it/50x50" alt=""/>
+                                        <img class="img-circle" th:src="@{${User.imagen.attachmentUrl}}" th:alt="${User.imagen.description}" width="50" height="50" />
                                     </span>
                                     <div class="media-body">
-                                        <h5 class="media-heading"><strong th:text="${User.username}">John Smith</strong>
+                                        <h5 class="media-heading"><strong th:text="${User.username}"></strong>
                                         </h5>
                                         
-                                        <p th:text="${User.email}">Lorem ipsum dolor sit amet, consectetur...</p>
+                                        <p th:text="${User.email}"></p>
                                     </div>
                                 </div>
                             </a>
@@ -308,7 +315,7 @@
                     	</th:block>
                 	<!--/*/  <th:block sec:authorize="hasRole('ROLE_GESTOR')"> /*/-->
                    	 	<li id="li_gestionar" >
-                        	<a th:href="@{/gestor}"><i class="fa fa-book"> </i> Gestionar Reservas</a>
+                        	<a th:href="@{/gestor/administrar}"><i class="fa fa-cog"> </i> Gestionar</a>
                     	</li>
                     <!--/*/  </th:block> /*/-->
                     <!--/*/  <th:block sec:authorize="hasRole('ROLE_USER')"> /*/-->

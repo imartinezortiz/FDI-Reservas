@@ -2,7 +2,6 @@ package es.fdi.reservas.reserva.business.entity;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,8 +22,10 @@ public class Edificio {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="EdificioId")
 	private Long id;
+	
 	@NotNull
 	private String nombreEdificio;
+	
 	@NotNull
 	private String direccion;
 	
@@ -38,18 +39,22 @@ public class Edificio {
 	@NotNull
 	private boolean deleted;
 	
-//	@OneToOne
-//	@JoinColumn(name="ImagenId")
-//	private Attachment imagen;
+	@OneToOne(optional=true)
+	@JoinColumn(name="ImagenId")
+	private Attachment imagen;
 	
 	public Edificio(){
 		
 	}
 	
-	public Edificio(String name){
-		nombreEdificio = name;
-		
+
+	public Edificio(String nombreEdificio,String direccion, Facultad facultad, Attachment img) {
+		super();
+		this.nombreEdificio = nombreEdificio;
+		this.direccion = direccion;
 		this.deleted = false;
+		this.imagen = img;
+		this.facultad= facultad;
 	}
 
 	public boolean isDeleted() {
@@ -95,14 +100,14 @@ public class Edificio {
 	public Facultad getFacultad() {
 		return facultad;
 	}
-//	
-//	public Attachment getImagen() {
-//		return imagen;
-//	}
-//
-//	public void setImagen(Attachment imagen) {
-//		this.imagen = imagen;
-//	}
+	
+	public Attachment getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(Attachment imagen) {
+		this.imagen = imagen;
+	}
 
 	public void setFacultad(Facultad facultad) {
 		this.facultad = facultad;

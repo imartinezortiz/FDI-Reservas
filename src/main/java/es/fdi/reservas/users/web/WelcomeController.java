@@ -1,7 +1,8 @@
 package es.fdi.reservas.users.web;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ import es.fdi.reservas.users.business.entity.UserRole;
 
 @Controller
 public class WelcomeController {
-    
+
 
 	private UserService user_service;
 	
@@ -32,14 +33,15 @@ public class WelcomeController {
         User user = user_service.getCurrentUser();
         List<String> roles = user.getRoles();
 
-        if (roles.contains("ROLE_ADMIN")) {
+    	if (roles.contains("ROLE_ADMIN")) {
             return "redirect:/admin/administrar";
         }
         else if (roles.contains("ROLE_GESTOR")) {
-            return "redirect:/gestor/gestion-reservas/page/1";
+            return "redirect:/gestor/administrar";
         }
         else{
-        	return "redirect:/mis-reservas/page/1";
+        	 return "redirect:/mis-reservas/page/1";
         }
+       
     }
 }

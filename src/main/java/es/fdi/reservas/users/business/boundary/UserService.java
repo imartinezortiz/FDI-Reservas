@@ -1,10 +1,12 @@
 package es.fdi.reservas.users.business.boundary;
 
+import java.util.Iterator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +15,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import es.fdi.reservas.reserva.business.boundary.GrupoReservaService;
+import es.fdi.reservas.fileupload.business.control.AttachmentRepository;
+import es.fdi.reservas.fileupload.business.entity.Attachment;
+import es.fdi.reservas.reserva.business.boundary.FacultadService;
+import es.fdi.reservas.reserva.business.entity.Facultad;
 import es.fdi.reservas.reserva.business.boundary.ReservaService;
 import es.fdi.reservas.reserva.business.entity.Espacio;
 import es.fdi.reservas.reserva.business.entity.EstadoReserva;
@@ -24,20 +29,23 @@ import es.fdi.reservas.users.business.entity.User;
 import es.fdi.reservas.users.web.UserDTO;
 import es.fdi.reservas.users.business.entity.UserRole;
 
-
 @Service
 public class UserService implements UserDetailsService{
 
 	private UserRepository user_ropository;
 	private PasswordEncoder password_encoder;
-	private ReservaService reserva_service;
+	private ReservaService reserva_service;	
+	private FacultadService facultad_service;
+	private AttachmentRepository attachment_repository;
 	
 	@Autowired
-	public UserService(UserRepository ur, PasswordEncoder pe){
-		user_ropository = ur;
-		password_encoder = pe;
-		//reserva_service = rs;
+	public UserService(UserRepository usuarios, PasswordEncoder passwordEncoder, FacultadService fr, AttachmentRepository ar){
+		user_ropository = usuarios;
+		password_encoder = passwordEncoder;
+		facultad_service = fr;
+		attachment_repository = ar;
 	}
+
 	
 	@Autowired @Lazy
 	public void setReservaService(ReservaService rs){
@@ -68,9 +76,12 @@ public class UserService implements UserDetailsService{
 		
 		return user;
 	}
-
-	public User addNewUser(User user){
+	
+	public User addNewUser(UserDTO user){
 		User newUser = new User(user.getUsername(), user.getEmail());
+		newUser.setFacultad(facultad_service.getFacultad(user.getFacultad()));
+		newUser.setImagen(attachment_repository.findOne((long) 2));
+		newUser.setEnabled(true);
 		newUser.addRole(new UserRole("ROLE_USER"));
 		newUser.setPassword(password_encoder.encode(user.getPassword()));
 		newUser = user_ropository.save(newUser);
@@ -93,22 +104,25 @@ public class UserService implements UserDetailsService{
 		return user_ropository.save(u);
 	}
 
-	public User editaUsuario(UserDTO userActualizado, String user, String admin, String secre) {
+	public User editaUsuario(UserDTO userActualizado, String user, String admin, String gestor, Attachment imagen) {
 		
 		User u = getUser(userActualizado.getId());
 		u.setUsername(userActualizado.getUsername());
 		u.setEmail(userActualizado.getEmail());
-		u.setEnabled(userActualizado.isEnabled());
-		if (user.equals("1") || admin.equals("1") || secre.equals("1")){//si hay alguno seleccionado
+		Facultad fac = facultad_service.getFacultadPorId(userActualizado.getFacultad());
+		u.setFacultad(fac);
+		u.setImagen(imagen);
+		attachment_repository.save(imagen);
+		if (user.equals("true") || admin.equals("true") || gestor.equals("true")){//si hay alguno seleccionado
 			u.getAuthorities().clear();
-			if (user.equals("1")){
+			if (user.equals("true")){
 				u.addRole(new UserRole("ROLE_USER"));
 			}
-			if (admin.equals("1")){
+			if (admin.equals("true")){
 				u.addRole(new UserRole("ROLE_ADMIN"));
 			}
-			if (secre.equals("1")){
-				u.addRole(new UserRole("ROLE_SECRE"));
+			if (gestor.equals("true")){
+				u.addRole(new UserRole("ROLE_GESTOR"));
 			}
 		}
 		return user_ropository.save(u);
@@ -130,7 +144,6 @@ public class UserService implements UserDetailsService{
 	public List<User> getEliminados() {		
 		return user_ropository.recycleBin();
 	}
-
 
 	public List<User> getUsuariosPorTagName(String tagName) {
 		return user_ropository.getUsuariosPorTagName(tagName);
@@ -155,6 +168,32 @@ public class UserService implements UserDetailsService{
 		Authentication request = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());		
 		SecurityContextHolder.getContext().setAuthentication(request);		
 		
+		//actualiza la imagen
+		Attachment attachment = new Attachment("");
+		if (userDTO.getImagen().equals("")){
+			attachment = user_ropository.findOne(userDTO.getId()).getImagen();
+		}
+		else {
+			if (attachment_repository.getAttachmentByName(userDTO.getImagen()).isEmpty()){
+		
+				//si no esta, lo añado
+				String img = userDTO.getImagen();
+				int pos = img.lastIndexOf(".");
+				String punto = img.substring(0, pos);
+				String fin = img.substring(pos+1, img.length());
+				String nom = punto + "-" + userDTO.getId() + "." + fin;
+				nom = nom.replace(nom, "/img/" + nom);
+				
+				
+				attachment.setAttachmentUrl("/img/" + userDTO.getImagen());
+				attachment.setStorageKey(nom);
+				attachment_repository.save(attachment);
+				//reserva_service.addAttachment(attachment);
+			}else{
+				attachment = attachment_repository.getAttachmentByName(userDTO.getImagen()).get(0);
+			}
+			user.setImagen(attachment);
+		}
 		// Guarda los cambios en la base de datos
 		user_ropository.save(user);
 	}
@@ -171,6 +210,94 @@ public class UserService implements UserDetailsService{
 		return reserva_service.getGruposUsuario(idUsuario);
 	}
 	
+	public Attachment getAttachment(Long idAttachment){
+		return attachment_repository.getOne(idAttachment);
+	}
+
+	public List<Attachment> getAttachmentByName(String img) {
+		return attachment_repository.getAttachmentByName(img);
+	}
+
+	public Page<User> getUsuariosPorEmail(String email, Pageable pagerequest) {
+		return user_ropository.getUsuariosPorEmail(email, pagerequest);
+	}
+
+	public Page<User> getUsuariosPorNombre(String nombre, Pageable pagerequest) {
+		return user_ropository.getUsuariosPorTagName(nombre, pagerequest);
+	}
+
+	public Page<User> getUsuariosEliminadosPorFacultad(Long id, Pageable pagerequest) {
+		return user_ropository.getUsuariosEliminadosPorFacultadId(id, pagerequest);
+	}
 	
+	public Page<User> getUsuariosPorFacultad(Long id, Pageable pagerequest) {
+		return user_ropository.getUsuariosPorFacultadId(id, pagerequest);
+	}
+	
+	public List<User> getUsuariosPorFacultad(String nombre) {
+		return user_ropository.getUsuariosPorFacultad(nombre);
+	}
+	
+	public Page<User> getUsuariosPorFacultad(String nombre, Pageable pageable) {
+		return user_ropository.getUsuariosPorFacultad(nombre, pageable);
+	}
+	
+	public Page<User> getUsuariosEliminadosPorEmail(String email, Pageable pagerequest) {
+		return user_ropository.getUsuariosEliminadosPorEmail(email, pagerequest);
+	}
+
+	public Page<User> getUsuariosEliminadosPorNombre(String nombre, Pageable pagerequest) {
+		return user_ropository.getUsuariosEliminadosPorTagName(nombre, pagerequest);
+	}
+
+	public Page<User> getUsuariosEliminadosPorFacultad(String nombre, Pageable pagerequest) {
+		return user_ropository.getUsuariosEliminadosPorFacultad(nombre, pagerequest);
+	}
+
+	public void actualizaReferencias(String nombreViejo, String nombreNuevo) {
+		List<Attachment> imgs = attachment_repository.getAttachmentByName(nombreViejo);
+		Iterator<Attachment> it = imgs.iterator();
+		Attachment i;
+		while (it.hasNext()){
+			i = it.next();
+			i.setAttachmentUrl(i.getAttachmentUrl().replace(nombreViejo, nombreNuevo));
+			attachment_repository.save(i);
+		}
+		
+	}
+
+	public Page<User> getUsuariosPorNombreYFacultad(String nombre, Long id, Pageable pageable) {
+		return user_ropository.getUsuariosPorNombreYFacultad(nombre,id, pageable);
+	}
+	
+	public Page<User> getUsuariosEliminadosPaginados(Pageable pageRequest) {
+		return user_ropository.recycleBin(pageRequest);
+	}
+	
+	public User addNewUserLogin(UserDTO user) {
+		User newUser = new User();
+		newUser.setUsername(user.getUsername());
+		newUser.setEmail(user.getEmail()); 
+		newUser.setImagen(attachment_repository.findOne((long) 10));
+		newUser.setFacultad(facultad_service.getFacultadPorId((long) 27));
+		newUser.addRole(new UserRole("ROLE_USER"));
+		newUser.setEnabled(true);
+		newUser.setPassword(password_encoder.encode(user.getPassword()));
+		newUser = user_ropository.save(newUser);
+		
+		return newUser;
+		
+	}
+	public Page<User> getUsuariosPorEmailYFacultad(String nombre, Long id, Pageable pageable) {
+		return user_ropository.getUsuariosPorEmailYFacultad(nombre,id, pageable);
+	}
+
+	public Page<User> getUsuariosBorradosPorNombreYFacultad(String nombre, Long id, Pageable pageable) {
+		return user_ropository.getUsuariosBorradosPorNombreYFacultad(nombre, id, pageable);
+	}
+
+	public Page<User> getUsuariosBorradosPorEmailYFacultad(String email, Long id, Pageable pageable) {
+		return user_ropository.getUsuariosBorradosPorNombreYFacultad(email, id, pageable);
+	}
 
 }

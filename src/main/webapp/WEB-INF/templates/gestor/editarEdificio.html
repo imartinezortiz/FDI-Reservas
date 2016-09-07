@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+	<meta charset="utf-8"/>
+	<title>Listado de espacios</title>
+</head>
+<body>
+
+<div class="container-fluid" th:fragment="contenido">
+
+<!-- Page Heading -->
+<div class="row">  
+	<div class="col-md-12">
+        <h1 class="page-header text-center">
+            <small>Editar</small>
+        </h1>
+    </div>                  
+</div>
+<!-- /.row -->
+
+<div class="row">
+	<div class="col-md-12">
+	   <form role="form" action="#" method="put" enctype="multipart/form-data">
+	   		<div class="col-md-6">
+	   		
+	   		<!-- Nombre edificio --> 
+                 <div class="form-group">
+                     <label>Nombre:</label>
+                      <div>
+                         <input id="idNombre" name="nombre" type="text" class="form-control" th:value="${edificio.nombreEdificio}"/>
+                      </div>
+                 </div>
+                 
+                 <!-- Direccion --> 
+                 <div class="form-group">
+                     <label>Direccion:</label>                  
+		                <input id="idDir" name="direccion" type="text" class="form-control" th:value="${edificio.direccion}"/>                 
+                 </div>
+                 
+                 <!-- Facultad -->
+              	<div class="form-group">
+                     <label>Facultad:</label>                
+		                <input id="Facultad" th:value="${edificio.facultad.nombreFacultad}" name="facultad" type="text" class="form-control" th:readonly="readonly" placeholder="Elige una facultad"/>
+		                <input id="idFacultad" type="hidden" th:value="${idFacultad}"/>                 
+                 	</div>				
+				 </div>
+                 <!-- Imagen -->
+                 <div class="media">
+					<span class="pull-left">
+						<img class="img-circle" th:title="${edificio.imagen.description}" th:alt="${edificio.imagen.description}" th:src="@{${edificio.imagen.attachmentUrl}}" height="75" width="75"></img>
+					</span>
+					<div class="media-body">
+						<div class="form-group">
+							<label>Selecciona la imagen: 
+							<input type="file" id="idAttachment" th:value="${edificio.imagen.attachmentUrl}"/></label>
+						</div>
+					</div>
+                 
+				</div>
+ 				
+       	      </form>      
+              <div class="row">              	
+			    <div class="col-md-12 text-center">
+			         <button id="enlaceGuardar" type="button" class="btn-normal">GUARDAR</button>
+			    </div>                   
+			  </div>
+	 			   <!-- /.row -->
+				 
+	   
+
+   </div>                  
+</div>
+<!-- /.row -->
+	
+
+
+<script th:inline="javascript">
+	var baseURL = /*[[@{/}]]*/ '/';
+	var idEdificio = /*[[${edificio.id}]]*/ '1';
+	
+</script>
+<script src="../../js/editarEdificioGestor.js" th:src="@{/js/editarEdificioGestor.js}"></script>
+</div>
+
+            <!-- /.container-fluid -->
+
+</body>
+</html>	

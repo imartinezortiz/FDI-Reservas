@@ -45,7 +45,7 @@ $(document).ready(function(){
 	    	reserva.reglasRecurrencia = reglas;
 	    	reserva.estado= $("#selec_estado").val();
 	    	
-	    	console.log(reserva.estado);
+	    	console.log(reserva);
 	    	editarReserva(reserva,reqHeaders);
   	
 		});
@@ -79,7 +79,7 @@ $(document).ready(function(){
 					});
 			},
 			select: function(event, ui){
-				reserva.user=ui.item.label;	
+				reserva.idUsuario=ui.item.label;	
 			},
 			minLength: 3
 
@@ -113,7 +113,7 @@ function editarReserva(reserva, reqHeaders){
 			data: JSON.stringify(reserva),
 			contentType: 'application/json',
 			success : function(datos) {   
-				 window.location = "/reservas/gestor/gestion-reservas/page/1";
+				 window.location = "/reservas/gestor/administrar/reservas/page/1";
 			},    
 			error : function(xhr, status) {
 			

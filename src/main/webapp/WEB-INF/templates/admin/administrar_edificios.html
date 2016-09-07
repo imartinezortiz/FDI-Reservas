@@ -8,94 +8,95 @@
 </head>
 <body>
 <div class="container-fluid" th:fragment="contenido">
-	<div class="row">
-	    <div class="col-md-12">
-	        <h1 class="page-header text-center">
-	            Administrar
-	        </h1>
-	    </div>
-	</div>
-<!-- /.row -->
+	
 	<div class="row">
     	<div class="col-md-12">
-            <h1 class="page-header text-center">
-                <small>Administrar edificios</small>
-            </h1>
+             <h2 class="page-header text-center">
+               <small>Lista de </small>Edificios
+            </h2>
         </div>
     </div>
            <!-- /.row -->
-
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-2">
+				<label class="form-group" style="margin-top:5px;">Filtrar por: </label>
+			</div>
+			<div class="col-md-2">
+				<select id="selec-busqueda" class="form-control">
+					<option value="nombre">Nombre</option>
+					<option value="direccion">Dirección</option>
+					<option value="facultad">Facultad</option>
+				</select>
+			</div>
+			<div class="col-md-8">
+			 <div class="input-group">        
+	            <input type="text" id="texto-busqueda" class="form-control" placeholder="Introduce nombre de edificio"></input>
+	             <span class="input-group-addon"><a id="busquedaEdificio"><i class="fa fa-search"></i></a></span>
+	          </div>
+	    	</div>
+		</div>
+	</div>
+<hr/>
     <div class="row">
 		<div class="col-md-8 col-md-offset-2">
     	
-			<div class="jumbotron text-center" th:if="${#lists.isEmpty(currentResults)}">
+			<div class="jumbotron text-center" th:if="${#lists.isEmpty(currentResults.content)}">
            			<i class="fa fa-ban fa-5x"></i>
            			<h4>¡Uups! No hay ningún edificio.</h4>
       		</div> 
 
-          	<div class="table-responsive" th:unless="${#lists.isEmpty(currentResults)}">
+          	<div class="table-responsive" th:unless="${#lists.isEmpty(currentResults.content)}">
               <table class="table table-bordered table-hover">
                   <thead>
                       <tr>
                       		<th>Imagen</th>
                           	<th>Nombre</th>
                           	<th>Dirección</th>
+                          	<th>Facultad</th>
                           	<th>Acciones</th>
                       </tr>
                   </thead>
                   <tbody>
                   	<tr></tr>
-                      <tr th:if="${!r.deleted}" th:each="r : ${currentResults}" class="success">
-                      	 <!--                       	<td th:text = "${r.imagen.getFile()}">Mi imagen</td> -->
-							<td></td>
-                          <td th:text="${r.nombreEdificio}"></td>
-                          <td th:text="${r.direccion}"></td>
-                          <td><a th:attr="id=${r.id},data-id=${r.id},name=${r.nombreEdificio},dir=${r.direccion},act=${r.deleted}" role="button" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
+                      <tr th:each="r : ${currentResults}" th:classappend="${!r.deleted} ? 'success' : 'danger'" th:attr="id=${r.id}">
+                      	 
+						  <td class="text-center"><img class="img-circle" th:title="${r.imagen.description}" th:alt="${r.imagen.description}" th:src="@{${r.imagen.attachmentUrl}}" height="25" width="25"></img></td>
+                          <td th:text="${#strings.abbreviate(r.nombreEdificio,21)}" th:title="${r.nombreEdificio}"></td>
+                          <td th:text="${#strings.abbreviate(r.direccion,21)}" th:title="${r.direccion}"></td>
+                          <td th:text="${#strings.abbreviate(r.facultad.nombreFacultad,21)}" th:title="${r.facultad.nombreFacultad}"></td>
+                          <td><a th:attr="id=${r.id},data-id=${r.id},name=${r.nombreEdificio},dir=${r.direccion},fac=${r.facultad.nombreFacultad},act=${r.deleted},img=${r.imagen.attachmentUrl},data-accion='Ver'" role="button" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
 							<a th:href="@{'/admin/administrar/edificios/editar/' + ${r.id}}" role="button" data-toggle="tooltip" data-placement="top" title="Editar"><i class="zmdi zmdi-edit zmdi-hc-lg"> </i></a>
-							<a th:attr="id=${r.id},data-id=${r.id},name=${r.nombreEdificio},dir=${r.direccion},act=${r.deleted}" role="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="zmdi zmdi-delete zmdi-hc-lg"> </i></a>	
+							<a th:attr="data-id=${r.id},name=${r.nombreEdificio},fac=${r.facultad.nombreFacultad},dir=${r.direccion},act=${r.deleted},data-accion='Eliminar'" role="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="zmdi zmdi-delete zmdi-hc-lg"> </i></a>	
 							</td>
                       </tr>
                       
-                      <tr th:if="${r.deleted}" th:each="r : ${currentResults}" class="danger">
-<!--                       	<td th:text = "${r.imagen.getFile()}">Mi imagen</td> -->
-							<td></td>
-                          <td th:text="${r.nombreEdificio}"></td>
-                          <td th:text="${r.direccion}"></td>
-                          <td><a th:attr="id=${r.id},data-id=${r.id},name=${r.nombreEdificio},dir=${r.direccion},act=${r.deleted}" role="button" data-toggle="tooltip" data-placement="top" title="Ver" ><i class="zmdi zmdi-eye zmdi-hc-lg"> </i></a>
-							<a th:href="@{'/admin/administrar/edificios/editar/' + ${r.id}}" role="button" data-toggle="tooltip" data-placement="top" title="Editar"><i class="zmdi zmdi-edit zmdi-hc-lg"> </i></a>
-							<a th:attr="id=${r.id},data-id=${r.id},name=${r.nombreEdificio},dir=${r.direccion},act=${r.deleted}" role="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="zmdi zmdi-delete zmdi-hc-lg"> </i></a>	
-							</td>
-                      </tr> 
-                      
-                      <!-- <tr>
-                      	<td><input id="btn-crear" type="text" class="btn btn-default" value="Añadir edificio"/></td>
-                      	<td></td>
-                      </tr>    --> 
-                      
+
+                                            
                   </tbody>
               </table>
                 
           	</div> 
         <!-- /.table-responsive-->
-    	<a th:href="@{'/admin/administrar/edificios/' + ${currentIndex} + '/restaurar'}"><input type="button" class="btn btn-default" value="Restaurar edificios"/></a>
+    	<a th:href="@{'/admin/administrar/edificios/restaurar/page/' + ${currentIndex}}"><input type="button" class="btn btn-default" value="Restaurar edificios"/></a>
 		</div>
 	</div>
 	
 	<!-- Pagination -->
- 	<div class="row">
+ 	<div class="row" th:unless="${#lists.isEmpty(currentResults.content)}">
     <div class="col-md-12 text-center">
-        <div class='pagination pagination-centered'>
+        <nav>
             <ul class="pagination">
                 <li th:class="${currentIndex == 1}? 'disabled' : ''">
-                    <span th:if='${currentIndex == 1}'>← First</span>
+                    <span th:if='${currentIndex == 1}'>Primera</span>
                     <a th:if='${currentIndex != 1}'
-                       th:href="@{1}">← First</a>
+                       th:href="@{1}">Primera</a>
                 </li>
                 <li th:class="${currentIndex != 1}? '' : 'disabled'">
-                    <span th:if='${currentIndex == 1}'>«</span>
+                    <span th:if='${currentIndex == 1}'><i class='fa fa-angle-left'></i></span>
                     <a th:if='${currentIndex != 1}'
                        th:href="@{${(currentIndex - 1)}}"
-                       title='Go to previous page'>«</a>
+                       title='Go to previous page'><i class='fa fa-angle-left'></i></a>
                 </li>
 
                 <li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
@@ -109,18 +110,18 @@
                     </a>
                 </li>
 
-                <li th:class="${currentIndex != currentResults.totalPages}? '' : 'disabled'">
-                    <span th:if='${currentIndex == currentResults.totalPages}'>»</span>
-                    <a th:if='${currentIndex != currentResults.totalPages}'
-                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'>»</a>
+                <li th:class="${currentIndex != totalPages}? '' : 'disabled'">
+                    <span th:if='${currentIndex == totalPages}'><i class='fa fa-angle-right'></i></span>
+                    <a th:if='${currentIndex != totalPages}'
+                       th:href="@{${(currentIndex + 1)}}" title='Go to next page'><i class='fa fa-angle-right'></i></a>
                 </li>
-                <li th:class="${currentIndex == currentResults.totalPages}? 'disabled' : ''">
-                    <span th:if='${currentIndex == currentResults.totalPages}'>Last →</span>
-                    <a th:if='${currentIndex != currentResults.totalPages}'
-                       th:href="@{${currentResults.totalPages}}">Last →</a>
+                <li th:class="${currentIndex == totalPages}? 'disabled' : ''">
+                    <span th:if='${currentIndex == totalPages}'>Última</span>
+                    <a th:if='${currentIndex != totalPages}'
+                       th:href="@{${totalPages}}">Última</a>
                 </li>
             </ul>
-        </div>
+        </nav>
     </div>
 </div>
  <!-- /.Pagination -->
@@ -130,7 +131,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Editar edificio</h4>
+            <h4 class="modal-title text-center" id="myModalLabel">Datos del edificio</h4>
           </div>
           <div class="modal-body">
           		<form class="form-horizontal" role="form" action="#" th:action="@{/editar}" th:object="${Edificio}" method="put">             
@@ -165,6 +166,19 @@
                 	<div class="col-md-12">
 		                 <!-- Asunto --> 
 		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Facultad: </label>
+		                      <div class="col-md-10">
+		                         <p id="idFacul" class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
+		         
+		         		         
+		         <div class="row">
+                	<div class="col-md-12">
+		                 <!-- Asunto --> 
+		                 <div class="form-group">
 		                     <label class="col-md-2 control-label">Eliminado: </label>
 		                      <div class="col-md-10">
 		                         <p id="idActivado" class="form-control-static"> </p>
@@ -173,23 +187,23 @@
                    </div>
 		         </div>
 		         
-<!-- 		         <div class="row"> -->
-<!--                 	<div class="col-md-12"> -->
-<!-- 		                 Asunto  -->
-<!-- 		                 <div class="form-group"> -->
-<!-- 		                     <label class="col-md-2 control-label">Imágen: </label> -->
-<!-- 		                      <div class="col-md-10"> -->
-<!-- 		                         <p id="idImagen" class="form-control-static"> </p> -->
-<!-- 		                      </div> -->
-<!-- 		                 </div> -->
-<!--                    </div> -->
-<!-- 		         </div> -->
+		         <div class="row">
+                	<div class="col-md-12">
+		                 
+		                 <div class="form-group">
+		                     <label class="col-md-2 control-label">Imágen: </label>
+		                      <div class="col-md-10">
+		                      <img class="img-circle" id="idAttachment" alt="" src="" height="42" width="42"></img>
+		                         <p  class="form-control-static"> </p>
+		                      </div>
+		                 </div>
+                   </div>
+		         </div>
                     
              </form>
                  
           </div>
           <div class="modal-footer">
-	        <a id="btn-eliminar" href="#" class="btn-rec gray">ELIMINAR</a>
 	        <a id="btn-editar" th:href="@{''}" class="btn-rec blue">EDITAR</a>
 	      </div>
         </div>
@@ -198,7 +212,7 @@
  	  <script th:inline="javascript">
  	var baseURL = /*[[@{/}]]*/ '/';
  </script>
- <script src="../../js/edificio.js" th:src="@{/js/edificio.js}"></script>	
+ <script src="../../js/admin/edificio/edificioAdministrar.js" th:src="@{/js/admin/edificio/edificioAdministrar.js}"></script>	
  </div>
 </body>
 </html>

@@ -28,6 +28,44 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 	public Page<Reserva> findByUserId(long idUsuario, Pageable pageable); 
 	// Reservas paginadas de un edificio
 	public Page<Reserva> findByEspacioId(long idEspacio, Pageable pageable); 
+
+
+	public Page<Reserva> findByEstadoReserva(EstadoReserva estado, Pageable pageable);
+ 
+	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad)")
+	public Page<Reserva> findByFacultadId(@Param("idFacultad")Long idFacultad, Pageable pageable);
+	
+	@Query("FROM Reserva r WHERE (r.espacio.edificio.facultad.id = :idFacultad)")
+	public List<Reserva> findByFacultadId(@Param("idFacultad")Long idFacultad);
+	
+	
+	//Por Usuario y Facultad
+	@Query("from Reserva e where (e.espacio.edificio.facultad.id = :idFacultad) and ((lower(e.user.username) like lower(concat('%',:user, '%'))) or (lower(e.user.email) like lower(concat('%',:user, '%'))))")
+	public Page<Reserva> findByUserIdAndFacultadId(@Param("user")String user, @Param("idFacultad")Long idFacultad, Pageable pageable);
+	
+	@Query("from Reserva e where (e.espacio.edificio.facultad.id = :idFacultad) and ((lower(e.user.username) like lower(concat('%',:user, '%'))) or (lower(e.user.email) like lower(concat('%',:user, '%'))))")
+	public List<Reserva> findByUserIdAndFacultadId(@Param("user")String user, @Param("idFacultad")Long idFacultad);
+	
+	//Por Espacio y Facultad
+	@Query("from Reserva e where (e.espacio.edificio.facultad.id = :idFacultad) and (lower(e.espacio.nombreEspacio) like lower(concat('%',:espacio, '%')))")
+	public Page<Reserva> findByEspacioIdAndFacultadId(@Param("espacio")String espacio, @Param("idFacultad")Long idFacultad, Pageable pageable);
+	
+	@Query("from Reserva e where (e.espacio.edificio.facultad.id = :idFacultad) and (lower(e.espacio.nombreEspacio) like lower(concat('%',:espacio, '%')))")
+	public List<Reserva> findByEspacioIdAndFacultadId(@Param("espacio")String espacio, @Param("idFacultad")Long idFacultad);
+	
+	//Por EstadoReserva y facultad
+	@Query("From Reserva r WHERE (r.estadoReserva=:estado) and (r.espacio.edificio.facultad.id=:idFacultad)")
+	public Page<Reserva> findByEstadoReservaAndFacultadId(@Param("estado")EstadoReserva estado, @Param("idFacultad")Long idFacultad, Pageable pageable);
+	
+	@Query("From Reserva r WHERE (r.estadoReserva=:estado) and (r.espacio.edificio.facultad.id=:idFacultad)")
+	public List<Reserva> findByEstadoReservaAndFacultadId(@Param("estado")EstadoReserva estado, @Param("idFacultad")Long idFacultad);
+	
+	// http://stackoverflow.com/questions/18082276/spring-data-querying-datetime-with-only-date
+	public List<Reserva> findByEspacioIdAndComienzoBetween(Long idEspacio, DateTime start, DateTime end); 
+
+	public List<Reserva> findByEspacioIdAndFinBetween(Long idEspacio, DateTime start, DateTime end);
+	
+	public List<Reserva> findByEspacioId(long idEspacio);
 	
 	@Query("FROM Reserva r WHERE (r.espacio.id = :idEspacio) AND (r.estadoReserva <> 2) AND (( :start BETWEEN r.comienzo AND r.fin) OR ( :end BETWEEN r.comienzo AND r.fin ) OR (r.comienzo BETWEEN :start AND :end) OR (r.fin BETWEEN :start AND :end) )")
 	public List<Reserva> reservasConflictivas(@Param("idEspacio")Long idEspacio, @Param("start") DateTime start, @Param("end") DateTime end);

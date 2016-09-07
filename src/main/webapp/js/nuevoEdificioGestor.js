@@ -4,40 +4,33 @@ $(document).ready(function(){
 	 	var header = $("meta[name='_csrf_header']").attr("content");
 	 	var reqHeaders = [];
 	 	reqHeaders[header] = token;
-	 	
 		
 		
-		
-		$("#enlaceGuardar").click(function(){
-			edificio.id = idEdificio;
-			edificio.nombreEdificio = $("#idNombre").val();
-			edificio.direccion = $("#idDir").val();
-			edificio.deleted = $("#idActivado").val();
-			//edificio.imagen = $("#idImagen").val();
-			
+		$("#enviar").click(function(){
+			edificio.nombreEdificio = $("#nombreEdificio").val();
+			edificio.direccion = $("#direccion").val();
+			edificio.idFacultad = $("#hFacultad").val();
+			edificio.imagen = $("#idAttachment").val();
 	    	editarEdificio(edificio,reqHeaders);
-  	
 		});
+});
 		
-});	
-
 function editarEdificio(edificio, reqHeaders){
 	
+	console.log(edificio);
 	$.ajax({
-			url: baseURL + 'admin/administrar/edificios/editar/' + idEdificio,
-			type: 'PUT',
+			url: baseURL + 'gestor/nuevoEdificio',
+			type: 'POST',
 			headers : reqHeaders,
 			data: JSON.stringify(edificio),
 			contentType: 'application/json',
 			
 			success : function(datos) {   
-				 window.location = "/reservas/admin/administrar/edificios/1";
+				 window.location = "/reservas/gestor/administrar/edificios/page/1";
 			},    
 			error : function(xhr, status) {
 				alert(baseURL),
  			alert('Disculpe, existió un problema');
  			
 			}
-		});
-	
-}
+		});}

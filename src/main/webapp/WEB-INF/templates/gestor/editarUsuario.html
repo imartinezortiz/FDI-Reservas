@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+	<meta charset="utf-8"/>
+	<title>Listado de espacios</title>
+</head>
+<body>
+
+<div class="container-fluid" th:fragment="contenido">
+
+<!-- Page Heading -->
+<div class="row">  
+	<div class="col-md-12">
+        <h1 class="page-header text-center">
+            <small>Editar</small>
+        </h1>
+    </div>                  
+</div>
+<!-- /.row -->
+
+<div class="row">
+	<div class="col-md-12">
+	   <form role="form" action="#" method="put" enctype="multipart/form-data">
+	   		<div class="col-md-6">
+	   		
+	   		<!-- Nombre del usuario --> 
+                 <div class="form-group">
+                     <label>Nombre:</label>
+                      <div>
+                         <input id="idNombre" name="nombre" type="text" class="form-control" th:value="${usuario.username}"/>
+                      </div>
+                 </div>
+                 
+                 <!-- Correo --> 
+                 <div class="form-group">
+                     <label>Correo:</label>                  
+		                <input id="idEmail" name="email" type="text" class="form-control" th:value="${usuario.email}"/>                 
+                 </div>
+                 <!-- Facultad -->                  
+                 <div class="form-group">
+                     <label>Facultad:</label>                  
+		                <input th:readonly="readonly" th:value="${usuario.facultad.nombreFacultad}" id="idFacultad" name="email" type="text" class="form-control" placeholder="Elige una facultad"/>                 
+                 	</div>				
+				 </div>
+		    	 <!-- Roles --> 
+				 <div class="col-md-6">
+				 	<div class="form-group">
+				 		<label>Roles:</label>	                              
+                	
+				 		<div class="checkbox">
+						    <label th:if="${usuario.isAdmin()}">
+						      <input class="checkbox" type="checkbox" id="chkAdmin"  value="admin" checked='true'/> Administrador
+						    </label>
+						</div>
+						<div class="checkbox">
+						    <label th:if="${!usuario.isAdmin()}">
+						      <input class="checkbox" type="checkbox" id="chkAdmin"  value="admin"/> Administrador
+						    </label>
+						</div>
+						
+						<div class="checkbox">
+						    <label th:if="${usuario.isUser()}">
+						      <input class="checkbox" type="checkbox" id="chkUser" th:value="user" checked='true'/> Usuario básico
+						    </label>
+					    </div>
+					    
+					    <div class="checkbox">
+						    <label th:if="${!usuario.isUser()}">
+						      <input class="checkbox" type="checkbox" id="chkUser" th:value="user"/> Usuario básico
+						    </label>
+					    </div>
+						<div class="checkbox" >
+						    <label th:if="${usuario.isGestor()}">
+						      <input class="checkbox" type="checkbox" id="chkSecre" th:value="gestor" checked='true'/> Gestor
+						    </label>
+					    </div>
+					    <div class="checkbox">
+						    <label th:if="${!usuario.isGestor()}">
+						      <input class="checkbox" type="checkbox" id="chkSecre" th:value="gestor"/> Gestor
+						    </label>
+					    </div>
+				 	</div>
+		 	        <!-- Imagen -->
+		 	         <div class="media">
+                          <span class="pull-left">
+                              <img class="img-circle" th:title="${usuario.imagen.description}" th:alt="${usuario.imagen.description}" th:src="@{${usuario.imagen.attachmentUrl}}" height="75" width="75"></img>
+                          </span>
+                          <div class="media-body">
+                             <div class="form-group">
+								<label>Selecciona una imágen: </label>
+								<input type="file" id="idAttachment" th:src="${usuario.imagen.attachmentUrl}"/>
+								
+							</div>
+                          </div>
+                      </div>
+		 	        <!--   
+					<div class="for-group">
+						<label>Imágen actual</label>
+						<br></br>
+						<img class="img-circle" th:title="${usuario.imagen.description}" th:alt="${usuario.imagen.description}" th:src="@{${usuario.imagen.attachmentUrl}}" height="100" width="100"></img>
+					</div>
+					<div class="form-group">
+						<label>Selecciona una imágen: </label>
+						<input type="file" id="idAttachment" th:src="${usuario.imagen.attachmentUrl}"/>
+						
+					</div>-->
+					
+					                         
+                  
+			   </div>
+				   <!-- /.row -->
+				  
+	   </form>
+	   
+	    <div class="row">              	
+		    <div class="col-md-12 text-center">
+		         <button id="enlaceGuardar" type="button" class="btn-normal">GUARDAR</button>
+		    </div>                   
+	   </div>
+   </div>                  
+</div>
+<!-- /.row -->
+	
+
+
+<script th:inline="javascript">
+	var baseURL = /*[[@{/}]]*/ '/';
+	var idUsuario = /*[[${usuario.id}]]*/ '1';
+	var roles = /*[[${usuario.roles}]]*/ '1';
+// 	var usuario = /*[[$chkUser]]*/ '1';
+// 	var admin = /*[[$chkAdmin]]*/ '1';
+// 	var gestor = /*[[$chkSecre]]*/ '1';
+	var rol1 = /*[[idRolUno]]*/ '1';
+	var rol2 = /*[[idRolDos]]*/ '1';
+	var rol3 = /*[[idRolTres]]*/ '1';
+</script>
+<script src="../../js/editarUsuarioGestor.js" th:src="@{/js/editarUsuarioGestor.js}"></script>
+</div>
+
+            <!-- /.container-fluid -->
+
+</body>
+</html>	

@@ -9,28 +9,26 @@ $(document).ready(function(){
 		
 		
 		$("#enlaceGuardar").click(function(){
-			facultad.id = idFacultad;
 			facultad.nombreFacultad = $("#idNombre").val();
 			facultad.webFacultad = $("#idWeb").val();
-			facultad.deleted = $("#idActivado").val();
-			
-	    	editarFacultad(facultad,reqHeaders);
+			console.log(facultad);
+	    	nuevaFacultad(facultad,reqHeaders);
   	
 		});
 		
 });	
 
-function editarFacultad(facultad, reqHeaders){
+function nuevaFacultad(facultad, reqHeaders){
 	
 	$.ajax({
-			url: baseURL + 'admin/administrar/facultad/editar/' + idFacultad,
+			url: baseURL + 'admin/nuevaFacultad',
 			type: 'PUT',
 			headers : reqHeaders,
 			data: JSON.stringify(facultad),
 			contentType: 'application/json',
 			
 			success : function(datos) {   
-				 window.location = "/reservas/admin/administrar/facultad/1";
+				 window.location = "/reservas/admin/administrar/facultad/page/1";
 			},    
 			error : function(xhr, status) {
 				alert(baseURL),

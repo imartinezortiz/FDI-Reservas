@@ -2,7 +2,6 @@ package es.fdi.reservas.reserva.web;
 
 import java.util.List;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,8 +23,7 @@ import es.fdi.reservas.users.business.entity.User;
 public class ReservaController {
 	
 	private ReservaService reserva_service;
-	
-	@Autowired
+
 	public ReservaController(ReservaService rs){
 		reserva_service = rs;
 	}

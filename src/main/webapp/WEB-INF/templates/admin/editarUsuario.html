@@ -20,10 +20,10 @@
 
 <div class="row">
 	<div class="col-md-12">
-	   <form role="form" action="#" method="put">
+	   <form role="form" action="#" method="put" enctype="multipart/form-data">
 	   		<div class="col-md-6">
 	   		
-	   		<!-- Asunto --> 
+	   		<!-- Nombre del usuario --> 
                  <div class="form-group">
                      <label>Nombre:</label>
                       <div>
@@ -31,54 +31,92 @@
                       </div>
                  </div>
                  
-                 <!-- Fecha inicio --> 
+                 <!-- Correo --> 
                  <div class="form-group">
                      <label>Correo:</label>                  
 		                <input id="idEmail" name="email" type="text" class="form-control" th:value="${usuario.email}"/>                 
                  </div>
-                 
-                                  
-                                  
-                	               
-                    <!-- Asistentes  -->
-                   <div class="form-group">
-                       <label>Facultad:</label>
-                        <div class="ui-widget">                      
-						    <input id="autoFacultades" type="text"  class="form-control" placeholder="Agrega facultad" th:value="${usuario.facultad.nombreFacultad}"/>				    							                       	                    	
-                        </div>
-                   </div>
-					<div id="facultad"></div> 
+                 <!-- Facultad -->                  
+                 <div class="form-group">
+                     <label>Facultad:</label>                  
+		                <input id="idFacultad" name="email" type="text" class="form-control" placeholder="Elige una facultad"/>                 
+                 	</div>				
+				 </div>
+		    	 <!-- Roles --> 
+				 <div class="col-md-6">
+				 	<div class="form-group">
+				 		<label>Roles:</label>	                              
+                	
+				 		<div class="checkbox">
+						    <label th:if="${usuario.isAdmin()}">
+						      <input class="checkbox" type="checkbox" id="chkAdmin"  value="admin" checked='true' onclick="calcAdmin();"/> Administrador
+						    </label>
+						</div>
+						<div class="checkbox">
+						    <label th:if="${!usuario.isAdmin()}">
+						      <input class="checkbox" type="checkbox" id="chkAdmin"  value="admin" onclick="calcAdmin();"/> Administrador
+						    </label>
+						</div>
+						
+						<div class="checkbox">
+						    <label th:if="${usuario.isUser()}">
+						      <input class="checkbox" type="checkbox" id="chkUser" th:value="user" checked='true' disabled='true'/> Usuario básico
+						    </label>
+					    </div>
+					    
+					    <div class="checkbox">
+						    <label th:if="${!usuario.isUser()}">
+						      <input class="checkbox" type="checkbox" id="chkUser" th:value="user" disabled='true'/> Usuario básico
+						    </label>
+					    </div>
+						<div class="checkbox" >
+						    <label th:if="${usuario.isGestor()}">
+						      <input class="checkbox" type="checkbox" id="chkSecre" th:value="gestor" checked='true' onclick="calcGestor();"/> Gestor
+						    </label>
+					    </div>
+					    <div class="checkbox">
+						    <label th:if="${!usuario.isGestor()}">
+						      <input class="checkbox" type="checkbox" id="chkSecre" th:value="gestor" onclick="calcGestor();"/> Gestor
+						    </label>
+					    </div>
+				 	</div>
+		 	        <!-- Imagen -->
+		 	         <div class="media">
+                          <span class="pull-left">
+                              <img class="img-circle" th:title="${usuario.imagen.description}" th:alt="${usuario.imagen.description}" th:src="@{${usuario.imagen.attachmentUrl}}" height="75" width="75"></img>
+                          </span>
+                          <div class="media-body">
+                             <div class="form-group">
+								<label>Selecciona una imágen: </label>
+								<input type="file" id="idAttachment" th:src="${usuario.imagen.attachmentUrl}"/>
+								
+							</div>
+                          </div>
+                      </div>
+		 	        <!--   
+					<div class="for-group">
+						<label>Imágen actual</label>
+						<br></br>
+						<img class="img-circle" th:title="${usuario.imagen.description}" th:alt="${usuario.imagen.description}" th:src="@{${usuario.imagen.attachmentUrl}}" height="100" width="100"></img>
+					</div>
+					<div class="form-group">
+						<label>Selecciona una imágen: </label>
+						<input type="file" id="idAttachment" th:src="${usuario.imagen.attachmentUrl}"/>
+						
+					</div>-->
 					
-					 </div>
-					 
-					 <div class="col-md-6">
-					 	<div class="form-group">
-					 		<label>Roles:</label>
-					 		<div class="checkbox">
-							    <label>
-							      <input type="checkbox" id="chkAdmin"  value="1"/> Administrador
-							    </label>
-							  </div>
-							<div class="checkbox">
-							    <label>
-							      <input type="checkbox" id="chkUser" value="1"/> Usuario básico
-							    </label>
-							  </div>
-							<div class="checkbox">
-							    <label>
-							      <input type="checkbox" id="chkSecre" value="1"/> Gestor
-							    </label>
-							  </div>
-					 	</div>
-					 	    </div>                              
-                   <div class="row">              	
-					    <div class="col-md-12 text-center">
-					         <button id="enlaceGuardar" type="button" class="btn-rec blue">GUARDAR</button>
-					    </div>                   
-				   </div>
+					                         
+                  
+			   </div>
 				   <!-- /.row -->
 				  
 	   </form>
+	   
+	    <div class="row">              	
+		    <div class="col-md-12 text-center">
+		         <button id="enlaceGuardar" type="button" class="btn-normal">GUARDAR</button>
+		    </div>                   
+	   </div>
    </div>                  
 </div>
 <!-- /.row -->
@@ -88,11 +126,15 @@
 <script th:inline="javascript">
 	var baseURL = /*[[@{/}]]*/ '/';
 	var idUsuario = /*[[${usuario.id}]]*/ '1';
-	var usuario = /*[[#chkUser]]*/ '1';
-	var admin = /*[[#chkAdmin]]*/ '1';
-	var gestor = /*[[#chkSecre]]*/ '1';
+	var roles = /*[[${usuario.roles}]]*/ '1';
+// 	var usuario = /*[[$chkUser]]*/ '1';
+// 	var admin = /*[[$chkAdmin]]*/ '1';
+// 	var gestor = /*[[$chkSecre]]*/ '1';
+	var rol1 = /*[[idRolUno]]*/ '1';
+	var rol2 = /*[[idRolDos]]*/ '1';
+	var rol3 = /*[[idRolTres]]*/ '1';
 </script>
-<script src="../../js/editarUsuario.js" th:src="@{/js/editarUsuario.js}"></script>
+<script src="../../js/admin/user/editarUsuario.js" th:src="@{/js/admin/user/editarUsuario.js}"></script>
 </div>
 
             <!-- /.container-fluid -->

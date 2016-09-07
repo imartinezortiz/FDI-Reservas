@@ -9,50 +9,75 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import es.fdi.reservas.reserva.business.boundary.ReservaService;
+import es.fdi.reservas.reserva.business.boundary.FacultadService;
 import es.fdi.reservas.reserva.business.entity.Facultad;
-import es.fdi.reservas.users.business.boundary.UserService;
 import es.fdi.reservas.users.business.entity.User;
+import es.fdi.reservas.users.web.UserDTO;
+
 
 @RestController
 public class FacultadRestController {
-
-private ReservaService reserva_service;
 	
-	private UserService user_service;
+	private FacultadService facultad_service;
 	
 	@Autowired
-	public FacultadRestController(UserService userService, ReservaService reservaservice){
-		user_service = userService;
-		reserva_service = reservaservice;
+	public FacultadRestController(FacultadService fs){
+		facultad_service = fs;
 	}
 	
 
 	@RequestMapping(value = "/facultad/{idFacultad}", method = RequestMethod.DELETE)
-	public void eliminarFacultad(@PathVariable("idFacultad") Long idFacultad) {
-		//reserva_service.eliminarFacultad(facultad);
-		reserva_service.editarFacultadDeleted(idFacultad);
+	public void eliminarFacultad(@PathVariable("idFacultad") long idFacultad) {
+		facultad_service.editarFacultadDeleted(idFacultad);
 	}
 	
 	@RequestMapping(value = "/admin/administrar/facultad/editar/{idFacultad}", method = RequestMethod.PUT)
 	public void editarFacultad(@PathVariable("idFacultad") long idFacultad, @RequestBody FacultadDTO facultadActualizado) {
-		reserva_service.editarFacultad(facultadActualizado);
+		facultad_service.editarFacultad(facultadActualizado);
 	}
 	
 
-	@RequestMapping(value = "/admin/administrar/facultad/{numPag}/restaurar/{idFacultad}", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/administrar/facultad/{numPag}/restaurar/{idFacultad}", method = RequestMethod.DELETE)
 	public String restaurarFacultad(@PathVariable("idFacultad") Long idFacultad, @PathVariable("numPag") Long numPag){
-		reserva_service.restaurarFacultad(idFacultad);
+		facultad_service.restaurarFacultad(idFacultad);
 		return "redirect:admin/administrar/facultad/{numPag}";
 	}
 	
 
-	@RequestMapping(value="/admin/nuevaFacultad", method=RequestMethod.POST)
-	public String crearFacultad(Facultad f){
-		reserva_service.addNewFacultad(f);
-	   return "redirect:/admin/administrar/facultad";
-		//return "nuevoUsuario";
+	@RequestMapping(value="/admin/nuevaFacultad", method=RequestMethod.PUT)
+	public String crearFacultad(@RequestBody FacultadDTO f){
+		facultad_service.addNewFacultad(f);
+	   return "redirect:/admin/administrar/facultad/page/1";
 	}
+	
+//	@RequestMapping(value = "/admin/facultad/nombre/tag/{tagName}", method = RequestMethod.GET)
+//	public List<FacultadDTO> facultadesFiltroAutocompletar(@PathVariable("tagName") String tagName) {
+//
+//		List<FacultadDTO> result = new ArrayList<>();
+//		List<Facultad> usuarios = new ArrayList<>();
+//
+//		usuarios = facultad_service.getFacultadesPorTagName(tagName);
+//
+//		for (Facultad u : usuarios) {
+//			result.add(FacultadDTO.fromFacultadDTOAutocompletar(u));
+//		}
+//
+//		return result;
+//	}
+//	
+//	@RequestMapping(value = "/admin/facultad/web/tag/{tagName}", method = RequestMethod.GET)
+//	public List<FacultadDTO> emailFiltroAutocompletar(@PathVariable("tagName") String tagName) {
+//
+//		List<FacultadDTO> result = new ArrayList<>();
+//		List<Facultad> usuarios = new ArrayList<>();
+//
+//		usuarios = facultad_service.getFacultadesPorWeb(tagName);
+//
+//		for (Facultad u : usuarios) {
+//			result.add(FacultadDTO.fromFacultadDTOAutocompletar(u));
+//		}
+//
+//		return result;
+//	}
 }

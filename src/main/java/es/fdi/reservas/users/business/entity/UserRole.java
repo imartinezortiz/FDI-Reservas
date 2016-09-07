@@ -31,5 +31,17 @@ public class UserRole implements GrantedAuthority, Serializable {
 		return this.role;
 	}
 	
+	public String rolToString(){
+		switch (role){
+		case "ROLE_USER":
+			return "Usuario";
+		case "ROLE_ADMIN":
+			return "Administrador";
+		case "ROLE_GESTOR":
+			return "Gestor";
+		default:
+			return "";
+		}
+	}
 
 }

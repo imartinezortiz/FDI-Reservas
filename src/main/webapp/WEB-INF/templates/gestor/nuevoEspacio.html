@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+    
+	<title>UCM RESERVAS - Añadir espacio</title>
+    
+</head>
+<body>
+
+	<div class="container-fluid" th:fragment="contenido">
+        
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="div-login">
+                         <h2 class=" page-header text-center">Añadir espacio</h2>
+                         <form role="form" action="#" th:action="@{/admin/nuevoEspacio}" th:object="${espacio}" method="post">
+                         	<div class="form-group">
+                                <label for="ejemplo_email_1">Nombre espacio</label>
+                                <div class="input-group">
+                                  <span class="input-group-addon"><i class="fa fa-building"></i></span>
+                                  <input id="nombre" name="nombreEspacio" type="text" class="form-control" placeholder="Nombre del espacio"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ejemplo_email_1">Capacidad</label>
+                                <div class="input-group">
+                                  <span class="input-group-addon"><i class="fa fa-users"></i></span>
+                                  <input id="capacidad" name="capacidad" type="text" class="form-control" placeholder="Introduce la capacidad del espacio"/>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="ejemplo_email_1">Microfono</label>
+                                    <select id="microfono" name="microfono" title="¿Tiene microfono?">
+							          
+							          <option value="true">Sí</option>
+							          <option value="false">No</option>
+							        </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="ejemplo_email_1">Proyector</label>
+                                    <select id="proyector" name="proyector" title="¿Tiene proyector?">
+							          
+							          <option value="true">Sí</option>
+							          <option value="false">No</option>
+							        </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="ejemplo_email_1">Tipo espacio</label>
+                                    <select id="tipoEspacio" name="tipoEspacio" title="Tipo de espacio">
+							          
+							          <option th:value="Aula">Aula</option>
+							          <option th:value="Sala">Sala</option>
+							          <option th:value="Laboratorio">Laboratorio</option>
+							        </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="ejemplo_email_1">Edificio</label>
+                                <div class="input-group">
+                                  <span class="input-group-addon"><i class="fa fa-users"></i></span>
+                                  <input id="idEdif" name="capacidad" type="text" class="form-control" placeholder="Introduce el nombre del edificio"/>
+                                <input type="hidden" id="hEdif" th:value="1"/>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                 <input id="enviar" type="button" value="Crear" class="btn btn-default"/>
+                            </div>
+
+                         </form>
+                    </div>
+                </div>
+                <script th:inline="javascript">
+			var baseURL = /*[[@{/}]]*/ '/';
+			</script>
+			<script src="../../js/nuevoEspacioGestor.js" th:src="@{/js/nuevoEspacioGestor.js}"></script>
+            </div>
+            <!-- /.row -->
+       
+
+
+        </div>
+        <!-- /.container-fluid -->
+
+        
+           <footer>
+            <div class="row">
+                 <div class="div-footer text-center">
+                    <i class="fa fa-copyright"></i> UCM Reservas - 2016
+                 </div>
+            </div>
+          </footer>
+</body>
+</html>

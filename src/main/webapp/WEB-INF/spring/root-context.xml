@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:util="http://www.springframework.org/schema/util"
 	   xmlns:context="http://www.springframework.org/schema/context" 
 	   xmlns:tx="http://www.springframework.org/schema/tx"
 	   xmlns:data="http://www.springframework.org/schema/data/jpa"
@@ -9,6 +10,8 @@
 			       http://www.springframework.org/schema/beans/spring-beans.xsd
 			       http://www.springframework.org/schema/context
 			       http://www.springframework.org/schema/context/spring-context.xsd
+			       http://www.springframework.org/schema/util
+			       http://www.springframework.org/schema/util/spring-util.xsd
 			       http://www.springframework.org/schema/tx
 				   http://www.springframework.org/schema/tx/spring-tx.xsd
 			       http://www.springframework.org/schema/data/jpa
@@ -19,8 +22,22 @@
 		beans -->
 		<context:component-scan base-package="es.fdi.reservas.reserva.business" />
 		<context:component-scan base-package="es.fdi.reservas.users.business" />
+		
+		<context:component-scan base-package="es.fdi.reservas.fileupload.business.boundary" />
+		<context:component-scan base-package="es.fdi.reservas.storage.business.boundary" />
 	
-
+	<!-- -->
+	<!-- Application config -->
+	<!-- -->
+	<util:properties id="storagePrefs">
+		<prop key="rootPath">WEB-INF/storage</prop>
+		<prop key="serviceURL">http://localhost:8080/springmvc-file-upload2/storage/</prop>
+	</util:properties>
+	
+	<util:properties id="examplePrefs">
+		<prop key="bucket">att</prop>
+	</util:properties>
+	
 	<!-- Hibernate -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
@@ -42,6 +59,7 @@
 				<value>es.fdi.reservas.reserva.business.entity</value>
 				<value>es.fdi.reservas.users.business.entity</value>
 				<value>es.fdi.reservas.fileupload.business.entity</value>
+				<value>es.fdi.reservas.storage.business.entity</value>
 			</array>
 		</property>
 		<property name="jpaVendorAdapter">
@@ -78,4 +96,10 @@
 	<data:repositories base-package="es.fdi.reservas.fileupload.business.control"
 		entity-manager-factory-ref="myEmf"
 		transaction-manager-ref="transactionManager" />
+		
+	<data:repositories base-package="es.fdi.reservas.storage.business.control"
+		entity-manager-factory-ref="myEmf" transaction-manager-ref="transactionManager" />
+		
+	<data:repositories base-package="es.fdi.reservas.fileupload.business.control"
+		entity-manager-factory-ref="myEmf" transaction-manager-ref="transactionManager" />
 </beans>

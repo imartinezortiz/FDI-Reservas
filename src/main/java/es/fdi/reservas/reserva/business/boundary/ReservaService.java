@@ -5,21 +5,20 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import es.fdi.reservas.fileupload.business.control.AttachmentRepository;
+import es.fdi.reservas.fileupload.business.entity.Attachment;
 import es.fdi.reservas.reserva.business.control.ReservaRepository;
-import es.fdi.reservas.reserva.business.entity.Edificio;
-import es.fdi.reservas.reserva.business.entity.Espacio;
-import es.fdi.reservas.reserva.business.entity.EstadoReserva;
-import es.fdi.reservas.reserva.business.entity.Facultad;
-import es.fdi.reservas.reserva.business.entity.GrupoReserva;
-import es.fdi.reservas.reserva.business.entity.Reserva;
-import es.fdi.reservas.reserva.business.entity.TipoEspacio;
+import es.fdi.reservas.reserva.business.entity.*;
 import es.fdi.reservas.users.business.boundary.UserService;
 import es.fdi.reservas.users.business.entity.User;
 import es.fdi.reservas.reserva.web.ReservaDTO;
-import es.fdi.reservas.reserva.web.*;
 
+
+import es.fdi.reservas.reserva.web.*;
 
 @Service
 public class ReservaService {
@@ -30,16 +29,23 @@ public class ReservaService {
 	private EspacioService espacio_service;
 	private GrupoReservaService grupo_service;
 	private UserService user_service;
+
+
+	
+	private AttachmentRepository attachment_repository;
 	
 	@Autowired
 	public ReservaService(ReservaRepository rr, FacultadService fs, EdificioService es, 
-						EspacioService ess, GrupoReservaService grs, UserService us){
+						EspacioService ess, GrupoReservaService grs, UserService us, 
+						AttachmentRepository ar){
+
 		reserva_repository = rr;
 		facultad_service = fs;
 		edificio_service = es;
 		espacio_service = ess;
 		grupo_service = grs;
 		user_service = us;
+		attachment_repository = ar;
 	}
 
 	public List<Reserva> getAllReservasConflictivas(Long idEspacio, DateTime start, DateTime end){
@@ -67,9 +73,7 @@ public class ReservaService {
 	public Reserva compruebaAutorizacion(Reserva reserva)
 	{
 		Espacio esp = espacio_service.getEspacio(reserva.getEspacio().getId());
-		//List<Espacio> lista= espacio_repository.findAll();
-		
-		//Espacio esp=lista.get(0);
+
 		
 		if (esp.getTipoAutorizacion().toString()=="Necesaria")
 			//Autorizacion Obligatoria
@@ -127,7 +131,14 @@ public class ReservaService {
 	public List<Reserva> getReservas() {
 		return reserva_repository.findAll();
 	}
+	
+	public List<Reserva> getReservasFacultad(Long idFacultad) {
+		return reserva_repository.findByFacultadId(idFacultad);
+	}
 
+	public Page<Reserva> getReservasFacultad(Long id, Pageable pageable) {
+		return reserva_repository.findByFacultadId(id, pageable);
+	}
 	public Iterable<Edificio> getEdificios(){
 		return edificio_service.getEdificios();
 	}
@@ -137,6 +148,7 @@ public class ReservaService {
 		return reserva_repository.reservasEspacio(idEspacio);
 	}
 	// todos los espacios de un edificio 
+
 	public List<Espacio> getEspaciosEdificio(long idEdificio) {
 		return espacio_service.getEspaciosEdificio(idEdificio);
 	}
@@ -149,6 +161,7 @@ public class ReservaService {
 		return espacio_service.getTiposEspacio(idEdificio, idTipoEspacio);
 	}
 
+
 	public Reserva getReserva(long idReserva) {
 		return reserva_repository.findOne(idReserva);
 	}
@@ -156,7 +169,7 @@ public class ReservaService {
 	public Iterable<Facultad> getFacultades() {
 		return facultad_service.getFacultades();
 	}
-	
+
 	public Iterable<Espacio> getEspacios() {
 		return espacio_service.getEspacios();
 	}
@@ -164,7 +177,7 @@ public class ReservaService {
 	public List<Edificio> getEdificiosFacultad(long idFacultad) {
 		return edificio_service.getEdificiosFacultad(idFacultad);
 	}
-
+	
 	public Reserva editarReservaSimple(ReservaDTO reservaActualizada) {
 		Reserva reserva = new Reserva();
 		reserva.setComienzo(reservaActualizada.getStart());
@@ -177,8 +190,6 @@ public class ReservaService {
 			Long idR = Long.valueOf(w[0]);
 			reservaActualizada.setId(idR);
 		}
-		
-		
 		
 		Long idEspacio = reservaActualizada.getIdEspacio();
 		DateTime start = reservaActualizada.getStart();
@@ -203,6 +214,9 @@ public class ReservaService {
 		if(reservaActualizada.getEstado() != null){
 		  r.setEstadoReserva(EstadoReserva.fromEstadoReserva(reservaActualizada.getEstado()));
 		}
+		if(reservaActualizada.getIdUsuario() != null){
+			r.setUser(user_service.getUser(reservaActualizada.getIdUsuario()));
+		}
 		
 		return reserva_repository.save(r);
 	}
@@ -211,11 +225,11 @@ public class ReservaService {
 		reserva_repository.delete(idReserva);
 	}
 	
-	public Page<Reserva> getReservasUsuario(Long idUsuario, PageRequest pageRequest) {
+	public Page<Reserva> getReservasUsuario(Long idUsuario, Pageable pageRequest) {
 		return reserva_repository.findByUserId(idUsuario, pageRequest);
 	}
 	
-	public Page<Reserva> getReservasEspacio(Long espacio, PageRequest pageRequest) {
+	public Page<Reserva> getReservasEspacio(Long espacio, Pageable pageRequest) {
 		return reserva_repository.findByEspacioId(espacio, pageRequest);
 	}
 
@@ -232,6 +246,14 @@ public class ReservaService {
 	
 	public Page<Edificio> getEdificiosPaginados(PageRequest pageRequest) {
 		return edificio_service.getEdificiosPaginados(pageRequest);
+	}
+	
+	public Page<Reserva> getReservasUsuarioFacultad(String idUsuario, Long idFacultad, Pageable pageRequest) {
+		return reserva_repository.findByUserIdAndFacultadId(idUsuario, idFacultad, pageRequest);
+	}
+	
+	public Page<Reserva> getReservasEspacioFacultad(String espacio, Long idFacultad, Pageable pageRequest) {
+		return reserva_repository.findByEspacioIdAndFacultadId(espacio, idFacultad, pageRequest);
 	}
 	
 	public Edificio editarEdificio(EdificioDTO edificio){
@@ -253,16 +275,29 @@ public class ReservaService {
 	public Page<Facultad> getFacultadesPaginadas(PageRequest pageRequest) {
 		return facultad_service.getFacultadesPaginadas(pageRequest);
 	}
+
 	
 	public Page<Reserva> getTodasReservasPaginadas(PageRequest pageRequest) {
 		return reserva_repository.findAll(pageRequest);
 	}
 	
 	public Facultad eliminarFacultad(FacultadDTO facultad) {
-	Facultad f = getFacultad(facultad.getId());
-	f.setDeleted(true);
+		Facultad f = getFacultad(facultad.getId());
+		f.setDeleted(true);
+		
+		return facultad_service.save(f);		
+	}
+
+	public Page<Reserva> getReservasPaginadasUser(PageRequest pageRequest, Long idUsuario) {
+		List<Reserva> lista = reserva_repository.findByUserId(idUsuario);
+		Page<Reserva> pagina = new PageImpl<Reserva>(lista,pageRequest, 5);
+		return pagina;
+	}
 	
-	return facultad_service.save(f);	
+	public Page<Reserva> getReservasPaginadas(PageRequest pageRequest, Long sala) {
+		List<Reserva> lista = reserva_repository.findByEspacioId(sala);
+		Page<Reserva> pagina = new PageImpl<Reserva>(lista,pageRequest, 5);
+		return pagina;
 	}
 	
 	public Facultad editarFacultad(FacultadDTO facultad){
@@ -287,6 +322,18 @@ public class ReservaService {
 		espacio_service.eliminarEspacio(idEspacio);
 	}
 	
+	public Edificio editarEdificio(Edificio edificio){
+		Edificio e = edificio_service.findEdificio(edificio.getId());
+		e.setNombreEdificio(edificio.getNombreEdificio());
+		e.setFacultad(edificio.getFacultad());
+		return edificio_service.save(e);
+	}
+	
+	public void eliminarFacultad(long idFacultad) {
+		facultad_service.eliminarFacultad(idFacultad);
+		
+	}
+	
 	public Page<Espacio> getEspaciosPaginados(PageRequest pageRequest) {
 		return espacio_service.getEspaciosPaginados(pageRequest);
 	}
@@ -297,6 +344,13 @@ public class ReservaService {
 		return espacio_service.save(e);
 	}
 	
+	
+	public Facultad editarFacultad(Facultad facultad){
+		Facultad f = facultad_service.getFacultadPorId(facultad.getId());
+		f.setNombreFacultad(facultad.getNombreFacultad());
+		return facultad_service.save(f);
+	}
+
 	public Espacio editarEspacio(EspacioDTO espacio){
 		Espacio e = getEspacio(espacio.getId());
 		e.setNombreEspacio(espacio.getNombreEspacio());
@@ -312,6 +366,8 @@ public class ReservaService {
 	public List<Facultad> getFacultadesPorTagName(String tagName) {
 		return facultad_service.getFacultadesPorTagName(tagName);
 	}
+
+
 	
 	public Facultad addNewFacultad(Facultad facultad){
 		Facultad newFacultad = new Facultad(facultad.getNombreFacultad(), facultad.getWebFacultad());
@@ -417,13 +473,16 @@ public class ReservaService {
 			r.setEndRecurrencia(null);
 			reserva_repository.save(r);
 		}
-		
 	}
 
 	public List<Reserva> getReservasGrupo(long idGrupo, long idUsuario) {
 		return reserva_repository.reservasGrupoUsuario(idGrupo, idUsuario);
 	}
 
+//	public List<Espacio> getEspaciosPorFacultad(String nombreFacultad) {
+//		return espacio_repository.getEspacioPorFacultad(nombreFacultad);
+//		//return null;
+//	}
 
 	public List<Reserva> reservasPendientesUsuario(Long idUsuario, EstadoReserva estado) {
 		return reserva_repository.reservasPendientesUsuario(idUsuario, estado);
@@ -452,6 +511,12 @@ public class ReservaService {
 		
 	}
 
+	public void addAttachment(Attachment attachment) {
+		attachment_repository.save(attachment);
+		
+	}
+
+
 	public List<Reserva> misReservasCalendario(Long idUsuario) {
 		return reserva_repository.misReservasCalendario(idUsuario);
 	}
@@ -463,10 +528,24 @@ public class ReservaService {
 	public User getCurrentUser() {
 		return user_service.getCurrentUser();
 	}
-
-
-
+	////////////////JAVIER////////////////////////////
+	public Page<Reserva> findByFacultadId(long facultadid, Pageable pageable)
+	{
+		return reserva_repository.findByFacultadId(facultadid, pageable);
+	}
 	
-
+	public Page<Reserva> findByUserIdAndFacultadId(String userid, long facultadid, Pageable pageable)
+	{
+		return reserva_repository.findByUserIdAndFacultadId(userid, facultadid, pageable);
+	}
 	
+	public Page<Reserva> findByEspacioIdAndFacultadId(String espacioid, long facultadid, Pageable pageable)
+	{
+		return reserva_repository.findByEspacioIdAndFacultadId(espacioid, facultadid, pageable);
+	}
+	
+	public Page<Reserva> findByEstadoReservaAndFacultadId(EstadoReserva estado, long facultadid, Pageable pageable)
+	{
+		return reserva_repository.findByEstadoReservaAndFacultadId(estado, facultadid, pageable);
+	}
 }

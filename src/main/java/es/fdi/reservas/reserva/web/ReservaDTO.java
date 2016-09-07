@@ -5,7 +5,6 @@ import java.util.Random;
 
 import org.joda.time.DateTime;
 
-import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.reserva.business.entity.Reserva;
 
 public class ReservaDTO {
@@ -22,6 +21,7 @@ public class ReservaDTO {
 	private Long idGrupo;
 	private boolean editable;
 	private String estado;
+	private Long idUsuario;
 
 
 	public ReservaDTO(){ }
@@ -144,6 +144,14 @@ public class ReservaDTO {
 		this.idGrupo = idGrupo;
 	}
 
+	public Long getIdUsuario() {
+		return idUsuario;
+	}
+
+
+	public void setIdUsuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
+	}
 
 	public boolean esRecurrente(){
 		return this.recurrenteId != null;

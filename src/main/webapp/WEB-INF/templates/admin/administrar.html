@@ -2,24 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet"
-        href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
-        th:href="@{/webjars/bootstrap/3.3.5/css/bootstrap.min.css}"/>
-    <link rel="stylesheet"
-        href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0-3/css/font-awesome.min.css"
-        th:href="@{/webjars/font-awesome/4.3.0-3/css/font-awesome.min.css}"/>
-    <link rel="stylesheet" type="text/css" media="all" href="../../css/estilo.css" th:href="@{/css/estilo.css}"/>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'/>
-	<title>UCM RESERVAS</title>
-     <!-- JS -->
-    <script 
-        src="//code.jquery.com/jquery-2.1.4.min.js"
-        th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
-    <script
-        src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"
-        th:src="@{/webjars/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+    
+	<title>UCM RESERVAS - Administrar</title>
+    
 </head>
 <body>
 <div class="container-fluid" th:fragment="contenido">
@@ -35,7 +20,7 @@
 <div class="row">
 
 	<div class="col-md-4 text-center">
-		<a th:href="@{/admin/administrar/usuarios/1}">
+		<a th:href="@{/admin/administrar/usuarios}">
 			<div class="panel-admin media">
 			  <div class="media-left">		    
 			      <i class="zmdi zmdi-accounts-alt zmdi-hc-3x"></i>		   
@@ -49,7 +34,7 @@
 	</div>
 	
 	<div class="col-md-4">
-		<a th:href="@{/admin/administrar/espacios/1}">
+		<a th:href="@{/admin/administrar/espacios}">
 			<div class="panel-admin media">
 			  <div class="media-left">
 			      <i class="zmdi zmdi-crop-square zmdi-hc-3x"></i>
@@ -63,7 +48,7 @@
 	</div>
 	
 	<div class="col-md-4">
-	  <a th:href="@{/admin/administrar/edificios/1}">
+	  <a th:href="@{/admin/administrar/edificios}">
 		<div class="panel-admin media">
 		  <div class="media-left">
 		      <i class="fa fa-building fa-3x"></i>
@@ -77,7 +62,7 @@
 	</div>
 	
 	<div class="col-md-4">
-	  <a th:href="@{/admin/administrar/facultad/1}">
+	  <a th:href="@{/admin/administrar/facultad}">
 		<div class="panel-admin media">
 		  <div class="media-left">
 		      <i class="zmdi zmdi-balance zmdi-hc-3x"></i>
@@ -102,7 +87,7 @@
 		<span class="icon-warning"></span>Administrar facultades
 	</a>
  
-	<a href="administrar/administrar_edificios" th:href="@{/administrar/administrar_edificios}" class="button medium green">
+	<a href="administrar/edificios" th:href="@{/admin/administrar/edificios/1}" class="button medium green">
 		<i class="fa fa-fort-awesome"></i>
 		<span class="icon-code"></span>Administrar edificios
 	</a>

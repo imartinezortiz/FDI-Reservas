@@ -5,13 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
 import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.users.business.boundary.UserService;
 import es.fdi.reservas.users.business.entity.User;
@@ -38,32 +38,28 @@ public class UserController {
 		return "login";
   }
 	
-	@RequestMapping(value ="/administrar/usuarios")
+	@RequestMapping(value ="/admin/administrar/usuarios")
     public String usuarios() {
-        return "redirect:/administrar/usuarios/page/1";
+        return "redirect:/admin/administrar/usuarios/page/1";
     }
 	
 	@RequestMapping(value="/admin/nuevoUsuario", method=RequestMethod.GET)
-	public ModelAndView nuevoUsuario(){
-		ModelAndView model = new ModelAndView("admin/nuevoUsuario", "User", new User());
+	public String nuevoUsuario(Model model){
+		
 		User u = user_service.getCurrentUser();
-		model.addObject("User", u);
-		model.addObject("view", "index");
-	   return model;
+		model.addAttribute("User", u);
+		model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("us", new User());
+		model.addAttribute("view", "admin/nuevoUsuario");
+	   return "index";
 	}
 	
-	@RequestMapping(value="/nuevoUsuario", method=RequestMethod.GET)
-	public ModelAndView nuevoUser(){
-	   return new ModelAndView("nuevoUsuario", "User", new User());
-	}
-	
-	@RequestMapping(value="/admin/nuevoUsuario", method=RequestMethod.POST)
-	public String crearUsuario(User u){
-		user_service.addNewUser(u);
-	   return "redirect:/admin/administrar";
-		//return "nuevoUsuario";
-	}
-	
+	@RequestMapping(value="/nuevoUser", method=RequestMethod.GET)
+	public String nuevoUser(Model model){
+		model.addAttribute("us", new User());
+		model.addAttribute("view", "registro");
+		return "registro";
+	}	
 	
 	@RequestMapping(value = "usuario/tag/{tagName}", method = RequestMethod.GET)
 	public List<UserDTO> usuariosFiltro(@PathVariable("tagName") String tagName) {
@@ -83,8 +79,8 @@ public class UserController {
 
 	}
 	
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping({"/admin/administrar"})
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@RequestMapping(value="/admin/administrar",method=RequestMethod.GET)
 	public ModelAndView administrar(){
 		ModelAndView model = new ModelAndView("index");
 		User u = user_service.getCurrentUser();
@@ -107,16 +103,176 @@ public class UserController {
         Page<User> currentResults = user_service.getUsuariosPaginados(pageRequest);
         
         model.addAttribute("currentResults", currentResults);
+
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current);
+        model.addAttribute("totalPages", currentResults.getTotalPages());
+		model.addAttribute("User", u);
+		model.addAttribute("view", "admin/administrar_usuarios");
+		
+        return "index";
+    }
+	
+	/*
+	 * Filtro por nombre
+	 */
+	
+	@RequestMapping(value="/admin/administrar/usuarios/nombre/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+    public String misUsuariosPaginadosPorNombre(@PathVariable Integer pageNumber, Model model, @PathVariable String nombre) {
+		User u = user_service.getCurrentUser();
+
+		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
+		Page<User> currentResults = user_service.getUsuariosPorNombre(nombre,pageRequest);
+        
+        
+        model.addAttribute("currentResults", currentResults);
         
         int current = currentResults.getNumber() + 1;
         int begin = Math.max(1, current - 5);
         int end = Math.min(begin + 10, currentResults.getTotalPages()); 
 
+        model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+        
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current);
+		model.addAttribute("User", u);
+		model.addAttribute("view", "admin/filtrar_usuarios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/admin/administrar/usuarios/restaurar/nombre/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+    public String misUsuariosPaginadosPorNombreRest(@PathVariable Integer pageNumber, Model model, @PathVariable String nombre) {
+		User u = user_service.getCurrentUser();
+
+		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
+		Page<User> currentResults = user_service.getUsuariosEliminadosPorNombre(nombre,pageRequest);
+        
+        
+        model.addAttribute("currentResults", currentResults);
+        
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+        
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current);
+		model.addAttribute("User", u);
+		model.addAttribute("view", "admin/papelera_usuarios");
+		
+        return "index";
+    }
+	
+	/*
+	 * Filtrar por email
+	 */
+	
+	@RequestMapping(value="/admin/administrar/usuarios/email/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+    public String misUsuariosPaginadosPorEmail(@PathVariable Integer pageNumber, Model model, @PathVariable String nombre) {
+		User u = user_service.getCurrentUser();
+
+	
+		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
+		Page<User> currentResults = user_service.getUsuariosPorEmail(nombre, pageRequest);
+        
+        model.addAttribute("currentResults", currentResults);
+        
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
         model.addAttribute("beginIndex", begin);
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current); 
 		model.addAttribute("User", u);
-		model.addAttribute("view", "admin/administrar_usuarios");
+		model.addAttribute("view", "admin/filtrar_usuarios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/admin/administrar/usuarios/restaurar/email/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+    public String misUsuariosPaginadosPorEmailRest(@PathVariable Integer pageNumber, Model model, @PathVariable String nombre) {
+		User u = user_service.getCurrentUser();
+
+	
+		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
+		Page<User> currentResults = user_service.getUsuariosEliminadosPorEmail(nombre, pageRequest);
+        
+        model.addAttribute("currentResults", currentResults);
+        
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("view", "admin/papelera_usuarios");
+		
+        return "index";
+    }
+	
+	/*
+	 * Filtrar por facultad
+	 */
+	@RequestMapping(value="/admin/administrar/usuarios/facultad/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+    public String misUsuariosPaginadosPorFacultad(@PathVariable Integer pageNumber, Model model, @PathVariable String nombre) {
+		User u = user_service.getCurrentUser();
+
+	
+		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
+		Page<User> currentResults = user_service.getUsuariosPorFacultad(nombre, pageRequest);
+        
+        model.addAttribute("currentResults", currentResults);
+        
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("view", "admin/filtrar_usuarios");
+		
+        return "index";
+    }
+	
+	@RequestMapping(value="/admin/administrar/usuarios/restaurar/facultad/{nombre}/page/{pageNumber}", method=RequestMethod.GET)
+    public String misUsuariosPaginadosPorFacultadRest(@PathVariable Integer pageNumber, Model model, @PathVariable String nombre) {
+		User u = user_service.getCurrentUser();
+
+	
+		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
+		Page<User> currentResults = user_service.getUsuariosEliminadosPorFacultad(nombre, pageRequest);
+        
+        model.addAttribute("currentResults", currentResults);
+        
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+
+        model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("User", u);
+		model.addAttribute("view", "admin/papelera_usuarios");
 		
         return "index";
     }
@@ -129,21 +285,34 @@ public class UserController {
 		model.addAttribute("User", u);
 		model.addAttribute("usuario", user_service.getUser(idUser));
 		//System.out.println(user_service.getUser(idUser).getUsername());
+		model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
 		model.addAttribute("view", "admin/editarUsuario");
 		return "index";
 	}
 	
-	@RequestMapping({"/administrar/administrar_espacios"})
-	public ModelAndView administrarEspacios(){
-		ModelAndView model = new ModelAndView("index");
+	@RequestMapping(value = "/admin/administrar/usuarios/restaurar/page/{numPag}",method=RequestMethod.GET)
+	public String restaurarUsuarios(@PathVariable("numPag") Integer numPag, Model model){
+		
 		User u = user_service.getCurrentUser();
-		model.addObject("User", u);
-		model.addObject("espacios", user_service.getEspacios());
-		model.addObject("view", "administrar_espacios");
-		return model;
-	}
 
-	
+		PageRequest pageRequest = new PageRequest(numPag - 1, 5);
+		Page<User> currentResults = user_service.getUsuariosEliminadosPaginados(pageRequest);
+        
+        model.addAttribute("currentResults", currentResults);
+        
+        int current = currentResults.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, currentResults.getTotalPages()); 
+		
+		model.addAttribute("User", u);
+		model.addAttribute("reservasPendientes", user_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("pagina", numPag);
+		model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current); 
+		model.addAttribute("view", "admin/papelera_usuarios");
+		return "index";
+	}	
 
 	@RequestMapping(value="/perfil", method=RequestMethod.GET)
 	public ModelAndView verPerfil(){

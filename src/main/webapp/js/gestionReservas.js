@@ -86,119 +86,13 @@ $(document).ready(function(){
 	 			}
 	 		});
 	 	});
-	 
- 
- 
-
-
-
- $("#texto-busqueda").autocomplete({
-		source:function(request, response){
-			var tag = request.term;
-			var info;
-			if ($("#selec-busqueda").val()=="user")
-			{
-				console.log($("#selec-busqueda").val())
-				response=autocompletarUser(tag, response);
-			}
-			else
-			{	
-				$("#selec-busqueda").val()
-				response=autocompletarEspacio(tag, response);
-			}
-				
-		},
-		minLength: 2
-	}).autocomplete("instance")._renderItem = function(ul,item){	
-	 	var direccion;
-	 	console.log("selector busqueda:" + $('#selec_busqueda').val());
-		if ($('#selec-busqueda').val()=="user")
-			direccion="user";
-		else
-			direccion="espacio";
-		console.log("id:" + item.label);
-		console.log("titulo:" + item.value);
-		console.log("subtitulo:" + item.info);
-		/*
-			var inner_html =  '<a href="/reservas/gestor/gestion-reservas/'+direccion+'/'+item.label+'/page/1">'+
-							  '<div class="col-md-2" style="padding-top:3px;">' +
-			                  '<img class="media-object" src="http://placehold.it/50x50"/>' + 
-			                  '</div>' + 
-			                  '<div class="col-md-10">' + 
-			                  '<p>'+ item.value +'</p>' + 
-			                  '<p class="small text-muted">'+ item.info +'</p>'
-			                  '</div></a>';
-			                  */
-		var inner_html = '<a href="/reservas/gestor/gestion-reservas/'+direccion+'/'+item.label+'/page/1">'+
-						'<div class="media"><div class="media-left">' + 
-				        '<img class="img-circle" src="http://placehold.it/50x50"/>' + 
-				        '</div>' + 
-				        '<div class="media-body">' + 
-				        '<h5 class="media-heading">'+ item.value +'</h5>' + 
-				        '<p class="small text-muted">'+ item.info +'</p>' + 
-				        '</div></div></a>';
-        
-	            return $("<li></li>")
-	                    .data("item.autocomplete", item)
-	                    .append(inner_html)
-	                    .appendTo(ul);
 		
-	};
-	
+		$("#boton-busqueda").click(function(){
+			var id_busqueda = $("#texto-busqueda").val();
+			var direccion = $('#selec-busqueda').val();
+			window.location = '/reservas/gestor/administrar/reservas/'+direccion+'/'+id_busqueda;
+		});
 });
-		
-	function autocompletarUser(tag, respuesta)
-	{
-		$.ajax({
-			url: '/reservas/gestor/usuarios/tag/' + tag,
-			type: 'GET',
-			async: false,
-			contentType: 'application/json',
-			success : function(datos) {				
-				respuesta($.map(datos,function(item){
-				
-					var obj = new Object();
-					obj.label = item.id; 
-					obj.value = item.username;
-					obj.info = item.email;
-					return obj;
-				
-				}))
-							
-			},    
-			error : function(xhr, status) {
-				alert('Disculpe, existió un problema');
-			}
-		});
-		return item;
-	}
-	
-	function autocompletarEspacio(tag, respuesta)
-	{
-		$.ajax({
-			url: '/reservas/espacios/tag/' + tag,
-			type: 'GET',
-			async: false,
-			contentType: 'application/json',
-			success : function(datos) {				
-				respuesta($.map(datos,function(item){
-					
-						var obj = new Object();
-						obj.label = item.id; 
-						obj.value = item.nombreEspacio;
-						obj.info = item.edificio;
-						return obj;
-	
-				}))
-				
-			},    
-		    error : function(xhr, status) {
-		        alert('Disculpe, existió un problema');
-		    }
-		});
-		return item;
-	}
-		
 	function modalEliminarReservaSimple(){
 		$('#modalEditarReserva').modal('hide');
 		$('[role="tooltip"]').popover('hide');

@@ -11,16 +11,16 @@
 <!-- Page Heading -->
 <div class="row">  
 	<div class="col-md-12">
-        <h1 class="page-header text-center">
-            <small>Editar</small>
-        </h1>
+        <h2 class="page-header text-center">
+            Editar Espacio
+        </h2>
     </div>                  
 </div>
 <!-- /.row -->
 
 <div class="row">
 	<div class="col-md-12">
-	   <form role="form" action="#" method="put">
+	   <form role="form" action="#" method="put" enctype="multipart/form-data">
 	   		<div class="col-md-6">
 	   		
 	   		<!-- Asunto --> 
@@ -39,51 +39,62 @@
                  
                  <div class="form-group">
                      <label>Micrófono:</label>
-                     <select id = "idMicro" title="Activado" th:value="${espacio.microfono}">
-                    		<option value="true">Si</option>
-			          		<option value="false">No</option>
+                     <select id = "idMicro" class="form-control">
+                    		<option value="true" th:selected="${espacio.microfono}">Si</option>
+			          		<option value="false" th:selected="${!espacio.microfono}">No</option>
+                    	</select>                  
+		                                 
+                 </div>
+                 
+                 <div class="form-group">
+                     <label>Proyector:</label>
+                     <select id = "idProy" class="form-control">
+                    		<option value="true" th:selected="${espacio.proyector}">Si</option>
+			          		<option value="false" th:selected="${!espacio.proyector}">No</option>
                     	</select>                  
 		                                 
                  </div>
              </div>   
-             <div class="col-md-6"> 
-                 <div class="form-group">
-                     <label>Proyector:</label>
-                     <select id = "idProy" title="Activado" th:value="${espacio.proyector}">
-                    		<option value="true">Si</option>
-			          		<option value="false">No</option>
-                    	</select>                  
-		                                 
-                 </div>
-                 
-                 <div class="form-group">
+             <div class="col-md-6">   
+                 <div class="form-group"> 
                      <label>Tipo Espacio:</label>
-                     <select id = "idProy" title="Activado">
-                    		<option th:if="${espacio.tipoEspacio.tipo} == 'Sala'" value="1" selected="selected">Sala</option>
-                    		<option value="1">Sala</option>
-                    		<option th:if="${espacio.tipoEspacio.tipo} == 'Aula'" value="1" selected="selected">Aula</option>
-			          		<option value="2">Aula</option>
-			          		<option th:if="${espacio.tipoEspacio.tipo} == 'Laboratorio'" value="1" selected="selected">Laboratorio</option>
-		          			<option value="3">Laboratorio</option>
-			          	
+                     <select id = "idTipo" class="form-control">
+                     		<option th:each="tipo : ${TiposEspacio}" 
+					        		th:text="${tipo}"
+					        		th:value="${tipo}"
+					        		th:selected="${tipo} == ${espacio.tipoEspacio}">
+			 				</option>
+<!-- 	                     <option value="aula" th:selected="${espacio.tipoEspacio.tipo} == 'Aula'">Aula</option> -->
+<!-- 	                     <option value="sala" th:selected="${espacio.tipoEspacio.tipo} == 'Sala'">Sala</option> -->
+<!-- 	          			 <option value="laboratorio" th:selected="${espacio.tipoEspacio.tipo} == 'Laboratorio'">Laboratorio</option>			          	 -->
                    	</select>                  
 		                                 
                  </div>
                  
-<!--                  <div class="form-group"> -->
-<!-- 			 		<label>Eliminado:</label> -->
-<!-- 			 		<br/> -->
-<!-- 			 		<select id = "idActivado" title="Activado"> -->
-<!--                     		<option value="true">Si</option> -->
-<!-- 			          	<option value="false">No</option> -->
-			          	
-<!--                     	</select> -->
-<!-- 			 	</div> -->
-                        
-          	</div>              
+                 <!-- Facultad -->                  
+                 <div class="form-group">
+                     <label>Edificio:</label>                  
+		                <input id="idEdificio" th:value="${espacio.edificio.nombreEdificio}" type="text" class="form-control" placeholder="Elige un edificio"/>                 
+                 	</div>				
+				 
+                 
+                 <!-- Imagen -->
+	 	         <div class="media">
+                         <span class="pull-left">
+                             <img class="img-circle" th:title="${espacio.imagen.description}" th:alt="${espacio.imagen.description}" th:src="@{${espacio.imagen.attachmentUrl}}" height="75" width="75"></img>
+                         </span>
+                         <div class="media-body">
+                            <div class="form-group">
+								<label>Selecciona una imágen: </label>
+								<input type="file" id="idAttachment" th:src="${espacio.imagen.attachmentUrl}"/>
+								
+							</div>
+                         </div>
+                </div>                        
+          	      </div>      
                    <div class="row">              	
 					    <div class="col-md-12 text-center">
-					         <button id="enlaceGuardar" type="button" class="btn-rec blue">GUARDAR</button>
+					         <button id="enlaceGuardar" type="button" class="btn-normal">GUARDAR</button>
 					    </div>                   
 				   </div>
 				   <!-- /.row -->
@@ -100,7 +111,7 @@
 	var idEspacio = /*[[${espacio.id}]]*/ '1';
 	
 </script>
-<script src="../../js/editarEspacio.js" th:src="@{/js/editarEspacio.js}"></script>
+<script src="../../js/admin/espacio/editarEspacio.js" th:src="@{/js/admin/espacio/editarEspacio.js}"></script>
 </div>
 
             <!-- /.container-fluid -->

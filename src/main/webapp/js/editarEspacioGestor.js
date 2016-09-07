@@ -1,33 +1,44 @@
 $(document).ready(function(){
-		var user = {};
+		var espacio = {};
 		var token = $("meta[name='_csrf']").attr("content");
 	 	var header = $("meta[name='_csrf_header']").attr("content");
 	 	var reqHeaders = [];
 	 	reqHeaders[header] = token;
-	 	
 		
+	 	$("#idRestr").change(function(){
+	 		if ($("#idRestr").val()!="Por horas")
+	 		{
+	 			$("#idHoras").hide();
+	 			$("#idHoras").val("0");
+	 		}
+	 		else
+	 		{
+	 			$("#idHoras").show();
+	 		}
+	 			
+	 	});
 		
 		
 		$("#enlaceGuardar").click(function(){
-			user.id = idUsuario;
-			alert("1");
-			user.username = $("#idNombre").val();
-			alert("1");
-			user.email = $("#idEmail").val();
-			user.facultad = $("#autoFacultades").val();
-			alert("2");
-	    	editarUsuario(user,reqHeaders);
-  	
+			espacio.id = idEspacio;
+			espacio.nombreEspacio = $("#idNombre").val();
+			espacio.idEdificio = $("#edificioHidden").val();
+			espacio.capacidad = $("#idCapa").val();
+			espacio.microfono = $("#idMicro").val();
+			espacio.proyector = $("#idProy").val();
+			espacio.tipoEspacio = $("#idTipo").val();
+			espacio.imagen = $("#idAttachment").val();
+			espacio.tipoAutorizacion=$("#idRestr").val();
+			espacio.horasAutorizacion=$("#idHoras").val();
+	    	editarEspacio(espacio,reqHeaders);
 		});
 		
-		
-		$("#autoFacultades").autocomplete({
+		$("#idEdificio").autocomplete({
 			source:function(request, response){
 					var tag = request.term;
 					
 					$.ajax({
-						url: '/facultades/tag/' + tag,
-						
+						url: '/reservas/gestor/edificio/tag/' + tag,
 						type: 'GET',
 						contentType: 'application/json',
 						success : function(datos) {
@@ -36,9 +47,8 @@ $(document).ready(function(){
 							response($.map(datos,function(item){
 								
 									var obj = new Object();
-									obj.label = item.id; 
-									obj.value = item.nombreFacultad;
-									obj.webFacultad = item.webFacultad;
+									obj.label = item.id;
+									obj.value = item.nombreEdificio; 
 									return obj;
 				
 							}))
@@ -50,21 +60,16 @@ $(document).ready(function(){
 					});
 			},
 			select: function(event, ui){
-				var img = '<img class="img-circle" src="http://placehold.it/30x30" data-toggle="tooltip" data-placement="bottom" title="' + ui.item.value + '" />' ;
-				$("#facultad").append(img);
-				$('[data-toggle="tooltip"]').tooltip();
-				
+				$("#edificioHidden").val(ui.item.label);
 			},
 			minLength: 3
 
 		}).autocomplete("instance")._renderItem = function(ul,item){
 			
 				var inner_html = '<div class="media"><div class="media-left">' + 
-				                  '<img class="img-circle" src="http://placehold.it/50x50"/>' + 
 				                  '</div>' + 
 				                  '<div class="media-body">' + 
 				                  '<h5 class="media-heading">'+ item.value +'</h5>' + 
-				                  '<p class="small text-muted">'+ item.webFacultad +'</p>' + 
 				                  '</div></div>';
 				                  
 				        
@@ -78,20 +83,20 @@ $(document).ready(function(){
 		
 });	
 
-function editarUsuario(user, reqHeaders){
-	
+function editarEspacio(espacio, reqHeaders){
+
+	console.log(espacio);
 	$.ajax({
-			url: baseURL + 'admin/administrar/usuarios/editar/' + idUsuario + '/' + usuario + '/' + admin + '/' + gestor,
+			url: baseURL + 'gestor/administrar/espacio/editar/' + idEspacio,
 			type: 'PUT',
 			headers : reqHeaders,
-			data: JSON.stringify(user),
+			data: JSON.stringify(espacio),
 			contentType: 'application/json',
 			
 			success : function(datos) {   
-				 window.location = "/reservas/admin/administrar/usuarios";
+				 window.location = "/reservas/gestor/administrar/espacios";
 			},    
 			error : function(xhr, status) {
-				alert(baseURL),
  			alert('Disculpe, existió un problema');
  			
 			}

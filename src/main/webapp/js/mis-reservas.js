@@ -226,10 +226,7 @@ function loadCalendar(){
 	});
 }	
 
-
-
 });
-
 
 function editarReservaSimple(reserva, reqHeaders, idReserva, revertFunc){
 	$.ajax({
@@ -352,4 +349,5 @@ function borrarEXDATE(reserva, reqHeaders){
 function closePopover(){
 	$('[role="tooltip"]').popover('hide');
 }
+
 

@@ -47,11 +47,12 @@ public class Reserva{
 	@Enumerated(EnumType.ORDINAL)
 	private EstadoReserva estadoReserva;
 	
-	
+	@NotNull
 	@ManyToOne(optional=true)
 	@JoinColumn(name="UserId")
 	private User user;
 	
+	@NotNull
 	@ManyToOne(optional=true)
 	@JoinColumn(name="EspacioId")
 	private Espacio espacio;
