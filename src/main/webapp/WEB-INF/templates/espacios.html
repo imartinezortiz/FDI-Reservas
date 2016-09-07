@@ -6,7 +6,8 @@
 </head>
 <body>
 
-            <div class="container-fluid" th:fragment="contenido">
+<div class="container-fluid" th:fragment="contenido">
+
 <!-- Page Heading -->
 <div class="row">  
 	<div class="col-md-12">
@@ -31,6 +32,12 @@
   <li class="active">FDI</li>
 </ol>-->
 
+<div class="jumbotron text-center" th:if="${#lists.isEmpty(Espacios)}">
+     <i class="fa fa-ban fa-5x"></i>
+     <h4>Este edificio todavía no tiene espacios asignados.</h4>
+</div> 
+
+<div th:unless="${#lists.isEmpty(Espacios)}">
 <!-- Tipo de Espacio -->
 <div class="row">
 	 <div class="col-md-3">
@@ -122,6 +129,9 @@
     </div>                   
 </div>
 <!-- /.row -->
+</div>
+
+
 
 <script th:inline="javascript">
 var baseURL = /*[[@{/}]]*/ '/';

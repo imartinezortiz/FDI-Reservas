@@ -26,6 +26,13 @@
 </div>
 <!-- /.row -->
 
+<div class="jumbotron text-center" th:if="${#lists.isEmpty(Edificios)}">
+     <i class="fa fa-ban fa-5x"></i>
+     <h4>Esta facultad todavía no tiene edificios asignados.</h4>
+</div> 
+
+
+<div th:unless="${#lists.isEmpty(Edificios)}">
 <div class="row">
 	<div class="col-md-4 col-md-offset-4">
 	    <h3 class="text-center" style="margin-top:10px;margin-bottom:20px;">Selecciona un edificio</h3>
@@ -58,7 +65,7 @@
 	    </div>                   
 	</div>
 	<!-- /.row -->
-
+</div>
 
 <script src="../../js/edificios.js" th:src="@{/js/edificios.js}"></script>
  </div>
