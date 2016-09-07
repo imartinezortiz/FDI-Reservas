@@ -174,12 +174,12 @@ public class EspacioController {
 	public String editarEspacio(@PathVariable("idEspacio") long idEspacio, Model model){
 		
 		User u = espacio_service.getCurrentUser();
+		Espacio e = espacio_service.getEspacio(idEspacio);
 		
 		model.addAttribute("User", u);
 		model.addAttribute("reservasPendientes", espacio_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
-		model.addAttribute("espacio", espacio_service.getEspacio(idEspacio));
-		model.addAttribute("User", espacio_service.getCurrentUser());
-		model.addAttribute("espacio", espacio_service.getEspacio(idEspacio));
+		model.addAttribute("espacio", e);
+		model.addAttribute("TiposEspacio", espacio_service.tiposDeEspacios(e.getEdificio().getId()));
 		model.addAttribute("view", "admin/editarEspacio");
 		
 		return "index";

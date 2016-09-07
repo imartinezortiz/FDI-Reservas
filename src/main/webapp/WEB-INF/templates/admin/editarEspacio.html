@@ -39,36 +39,34 @@
                  
                  <div class="form-group">
                      <label>Micrófono:</label>
-                     <select id = "idMicro" title="Activado" th:value="${espacio.microfono}">
-                    		<option value="true" th:selected="${espacio.microfono} == true">Si</option>
-			          		<option value="false" th:selected="${espacio.microfono} == false">No</option>
-                    	</select>                  
-		                                 
-                 </div>
-             </div>   
-             <div class="col-md-6"> 
-                 <div class="form-group">
-                     <label>Proyector:</label>
-                     <select id = "idProy" title="Activado" th:value="${espacio.proyector}">
-                    		<option value="true" th:selected="${espacio.proyector} == true">Si</option>
-			          		<option value="false" th:selected="${espacio.proyector} == false">No</option>
+                     <select id = "idMicro" class="form-control">
+                    		<option value="true" th:selected="${espacio.microfono}">Si</option>
+			          		<option value="false" th:selected="${!espacio.microfono}">No</option>
                     	</select>                  
 		                                 
                  </div>
                  
+                 <div class="form-group">
+                     <label>Proyector:</label>
+                     <select id = "idProy" class="form-control">
+                    		<option value="true" th:selected="${espacio.proyector}">Si</option>
+			          		<option value="false" th:selected="${!espacio.proyector}">No</option>
+                    	</select>                  
+		                                 
+                 </div>
+             </div>   
+             <div class="col-md-6">   
                  <div class="form-group"> 
                      <label>Tipo Espacio:</label>
-                     <select id = "idTipo" >
-                     <option value="aula" th:selected="${espacio.tipoEspacio.tipo} == 'Aula'">Aula</option>
-                     <option value="sala" th:selected="${espacio.tipoEspacio.tipo} == 'Sala'">Sala</option>
-          			 <option value="laboratorio" th:selected="${espacio.tipoEspacio.tipo} == 'Laboratorio'">Laboratorio</option>
-<!--                     		<option th:if="${espacio.tipoEspacio.tipo} == 'Sala'" value="sala" selected="selected">Sala</option> -->
-<!--                     		<option th:if="${espacio.tipoEspacio.tipo} != 'Sala'" value="sala">Sala</option> -->
-<!--                     		<option th:if="${espacio.tipoEspacio.tipo} == 'Aula'" value="aula" selected="selected">Aula</option> -->
-<!-- 			          		<option th:if="${espacio.tipoEspacio.tipo} != 'Aula'" value="aula">Aula</option> -->
-<!-- 			          		<option th:if="${espacio.tipoEspacio.tipo} == 'Laboratorio'" value="laboratorio" selected="selected">Laboratorio</option> -->
-<!-- 		          			<option th:if="${espacio.tipoEspacio.tipo} != 'Laboratorio'" value="laboratorio">Laboratorio</option> -->
-			          	
+                     <select id = "idTipo" class="form-control">
+                     		<option th:each="tipo : ${TiposEspacio}" 
+					        		th:text="${tipo}"
+					        		th:value="${tipo}"
+					        		th:selected="${tipo} == ${espacio.tipoEspacio}">
+			 				</option>
+<!-- 	                     <option value="aula" th:selected="${espacio.tipoEspacio.tipo} == 'Aula'">Aula</option> -->
+<!-- 	                     <option value="sala" th:selected="${espacio.tipoEspacio.tipo} == 'Sala'">Sala</option> -->
+<!-- 	          			 <option value="laboratorio" th:selected="${espacio.tipoEspacio.tipo} == 'Laboratorio'">Laboratorio</option>			          	 -->
                    	</select>                  
 		                                 
                  </div>
@@ -76,7 +74,7 @@
                  <!-- Facultad -->                  
                  <div class="form-group">
                      <label>Edificio:</label>                  
-		                <input id="idEdificio" name="email" type="text" class="form-control" placeholder="Elige un edificio"/>                 
+		                <input id="idEdificio" th:value="${espacio.edificio.nombreEdificio}" type="text" class="form-control" placeholder="Elige un edificio"/>                 
                  	</div>				
 				 
                  

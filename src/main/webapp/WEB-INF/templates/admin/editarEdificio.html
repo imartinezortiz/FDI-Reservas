@@ -11,9 +11,9 @@
 <!-- Page Heading -->
 <div class="row">  
 	<div class="col-md-12">
-        <h1 class="page-header text-center">
-            <small>Editar</small>
-        </h1>
+        <h2 class="page-header text-center">
+            Editar Edificio
+        </h2>
     </div>                  
 </div>
 <!-- /.row -->
@@ -41,22 +41,36 @@
               	<div class="form-group">
                      <label>Facultad:</label>                
 	                <input id="idFacultad" name="email" type="text" class="form-control" th:value="${edificio.facultad.nombreFacultad}" placeholder="Elige una facultad"/>                 
-                 	</div>				
-				 </div>
+                </div>				
+			</div>
+			<div class="col-md-6">
                  <!-- Imagen -->
-                 <div class="media">
-					<span class="pull-left">
-						<img class="img-circle" th:title="${edificio.imagen.description}" th:alt="${edificio.imagen.description}" th:src="@{${edificio.imagen.attachmentUrl}}" height="75" width="75"></img>
-					</span>
-					<div class="media-body">
-						<div class="form-group">
-							<label>Selecciona la imagen: 
-							<input type="file" id="idAttachment" th:value="${edificio.imagen.attachmentUrl}"/></label>
-						</div>
-					</div>
+                 <div class="col-md-12 text-center">
+                 	<img class="img-circle" 
+                 		 th:title="${edificio.imagen.description}" 
+                 		 th:alt="${edificio.imagen.description}" 
+                 		 th:src="@{${edificio.imagen.attachmentUrl}}" height="75" width="75" />
+                 </div>
+                 <div class="col-md-12 text-center">
+	                 <div class="form-group">
+		                 <label>Selecciona la imagen:
+		                 	<input type="file" id="idAttachment" th:value="${edificio.imagen.attachmentUrl}"/>
+		                 </label>
+	                 </div>
+                 </div>
+<!--                  <div class="media"> -->
+<!-- 					<span class="pull-left"> -->
+<!-- 						<img class="img-circle" th:title="${edificio.imagen.description}" th:alt="${edificio.imagen.description}" th:src="@{${edificio.imagen.attachmentUrl}}" height="75" width="75"></img> -->
+<!-- 					</span> -->
+<!-- 					<div class="media-body"> -->
+<!-- 						<div class="form-group"> -->
+<!-- 							<label>Selecciona la imagen:  -->
+<!-- 							<input type="file" id="idAttachment" th:value="${edificio.imagen.attachmentUrl}"/></label> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
                  
-				</div>
-				
+<!-- 				</div> -->
+			</div>
        	      </form>      
               <div class="row">              	
 			    <div class="col-md-12 text-center">

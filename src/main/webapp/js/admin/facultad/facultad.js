@@ -31,7 +31,7 @@ $(document).ready(function(){
 	 		
 	 		if (accion == 'Ver'){
 	 			$('#modalEditarFacultad').modal('show');
-	 		}else{
+	 		}else if(accion == 'Eliminar'){
 	 			modalEliminarFacultad(facultad, reqHeaders);
 	 		}
 	 	});
