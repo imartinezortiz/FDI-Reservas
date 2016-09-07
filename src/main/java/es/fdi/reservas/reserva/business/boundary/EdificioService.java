@@ -17,9 +17,6 @@ import es.fdi.reservas.reserva.web.EdificioDTO;
 import es.fdi.reservas.users.business.boundary.UserService;
 import es.fdi.reservas.users.business.entity.User;
 
-
-
-
 @Service
 public class EdificioService {
 	
@@ -30,15 +27,14 @@ public class EdificioService {
 
 	@Autowired
 	public EdificioService(FacultadService fs, UserService us,
-			EdificioRepository edificio_repository, AttachmentRepository ar) {
-		super();
+			EdificioRepository er, AttachmentRepository ar) {
+	
 		this.facultad_service = fs;
 		this.user_service = us;
-		this.edificio_repository = edificio_repository;
-		attachment_repository = ar;
+		this.edificio_repository = er;
+		this.attachment_repository = ar;
 	}
 
-	
 	
 	public Page<Edificio> getEdificiosEliminadosFacultad(long idFacultad, Pageable pageable) {
 		return edificio_repository.findDeletedByFacultadId(idFacultad, pageable);

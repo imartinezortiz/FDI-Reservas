@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import es.fdi.reservas.fileupload.business.control.AttachmentRepository;
 import es.fdi.reservas.fileupload.business.entity.Attachment;
-import es.fdi.reservas.reserva.business.boundary.FacultadService;
 import es.fdi.reservas.reserva.business.entity.Facultad;
 import es.fdi.reservas.reserva.business.boundary.ReservaService;
 import es.fdi.reservas.reserva.business.entity.Espacio;
@@ -35,14 +34,12 @@ public class UserService implements UserDetailsService{
 	private UserRepository user_ropository;
 	private PasswordEncoder password_encoder;
 	private ReservaService reserva_service;	
-	private FacultadService facultad_service;
 	private AttachmentRepository attachment_repository;
 	
 	@Autowired
-	public UserService(UserRepository usuarios, PasswordEncoder passwordEncoder, FacultadService fr, AttachmentRepository ar){
+	public UserService(UserRepository usuarios, PasswordEncoder passwordEncoder, AttachmentRepository ar){
 		user_ropository = usuarios;
 		password_encoder = passwordEncoder;
-		facultad_service = fr;
 		attachment_repository = ar;
 	}
 
@@ -79,7 +76,7 @@ public class UserService implements UserDetailsService{
 	
 	public User addNewUser(UserDTO user){
 		User newUser = new User(user.getUsername(), user.getEmail());
-		newUser.setFacultad(facultad_service.getFacultad(user.getFacultad()));
+		newUser.setFacultad(reserva_service.getFacultad(user.getFacultad()));
 		newUser.setImagen(attachment_repository.findOne((long) 2));
 		newUser.setEnabled(true);
 		newUser.addRole(new UserRole("ROLE_USER"));
@@ -109,7 +106,7 @@ public class UserService implements UserDetailsService{
 		User u = getUser(userActualizado.getId());
 		u.setUsername(userActualizado.getUsername());
 		u.setEmail(userActualizado.getEmail());
-		Facultad fac = facultad_service.getFacultadPorId(userActualizado.getFacultad());
+		Facultad fac = reserva_service.getFacultad(userActualizado.getFacultad());
 		u.setFacultad(fac);
 		u.setImagen(imagen);
 		attachment_repository.save(imagen);
@@ -279,7 +276,7 @@ public class UserService implements UserDetailsService{
 		newUser.setUsername(user.getUsername());
 		newUser.setEmail(user.getEmail()); 
 		newUser.setImagen(attachment_repository.findOne((long) 10));
-		newUser.setFacultad(facultad_service.getFacultadPorId((long) 27));
+		newUser.setFacultad(reserva_service.getFacultad((long) 27));
 		newUser.addRole(new UserRole("ROLE_USER"));
 		newUser.setEnabled(true);
 		newUser.setPassword(password_encoder.encode(user.getPassword()));
