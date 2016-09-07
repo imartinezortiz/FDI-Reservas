@@ -728,4 +728,16 @@ public class GestorController {
 		model.addAttribute("view", "gestor/editarUsuario");
 		return "index";
 	}
+	
+	@RequestMapping(value="/gestor/nuevoUsuario", method=RequestMethod.GET)
+	public String nuevoUsuario(Model model){
+		User u = gestor_service.getUsuarioActual();
+		model.addAttribute("User", u);
+		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
+		model.addAttribute("user", new User());
+		model.addAttribute("facul", u.getFacultad().getId());
+		//System.out.println(user_service.getUser(idUser).getUsername());
+		model.addAttribute("view", "gestor/nuevoUsuario");
+		return "index";
+	}
 }

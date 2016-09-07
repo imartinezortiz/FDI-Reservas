@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import es.fdi.reservas.fileupload.business.control.AttachmentRepository;
 import es.fdi.reservas.fileupload.business.entity.Attachment;
+import es.fdi.reservas.reserva.business.boundary.FacultadService;
 import es.fdi.reservas.reserva.business.control.FacultadRepository;
 import es.fdi.reservas.reserva.business.entity.Facultad;
 import es.fdi.reservas.users.business.control.UserRepository;
@@ -35,15 +36,15 @@ public class UserService implements UserDetailsService{
 	
 	private PasswordEncoder password_encoder;
 	
-	private FacultadRepository facultad_repository;
+	private FacultadService facultad_service;
 	
 	private AttachmentRepository attachment_repository;
 	
 	@Autowired
-	public UserService(UserRepository usuarios, PasswordEncoder passwordEncoder, FacultadRepository fr, AttachmentRepository ar){
+	public UserService(UserRepository usuarios, PasswordEncoder passwordEncoder, FacultadService fr, AttachmentRepository ar){
 		user_ropository = usuarios;
 		password_encoder = passwordEncoder;
-		facultad_repository = fr;
+		facultad_service = fr;
 		attachment_repository = ar;
 	}
 	
@@ -85,6 +86,18 @@ public class UserService implements UserDetailsService{
 		return newUser;
 	}
 	
+	public User addNewUser(UserDTO user){
+		User newUser = new User(user.getUsername(), user.getEmail());
+		newUser.setFacultad(facultad_service.getFacultad(user.getFacultad()));
+		newUser.setImagen(attachment_repository.findOne((long) 2));
+		newUser.setEnabled(true);
+		newUser.addRole(new UserRole("ROLE_USER"));
+		newUser.setPassword(password_encoder.encode(user.getPassword()));
+		newUser = user_ropository.save(newUser);
+		
+		return newUser;
+	}
+	
 	public Iterable<User> getUsuarios() {
 		return user_ropository.findAll();
 	}
@@ -104,7 +117,7 @@ public class UserService implements UserDetailsService{
 		User u = user_ropository.findOne(userActualizado.getId());
 		u.setUsername(userActualizado.getUsername());
 		u.setEmail(userActualizado.getEmail());
-		Facultad fac = facultad_repository.findOne(userActualizado.getFacultad());
+		Facultad fac = facultad_service.getFacultadPorId(userActualizado.getFacultad());
 		u.setFacultad(fac);
 		u.setImagen(imagen);
 		attachment_repository.save(imagen);
@@ -246,7 +259,5 @@ public class UserService implements UserDetailsService{
 	public Page<User> getUsuariosBorradosPorEmailYFacultad(String email, Long id, Pageable pageable) {
 		return user_ropository.getUsuariosBorradosPorNombreYFacultad(email, id, pageable);
 	}
-
-	
 
 }

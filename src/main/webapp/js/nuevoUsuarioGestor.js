@@ -1,5 +1,5 @@
 $(document).ready(function(){
-		var edificio = {};
+		var user = {};
 		var token = $("meta[name='_csrf']").attr("content");
 	 	var header = $("meta[name='_csrf_header']").attr("content");
 	 	var reqHeaders = [];
@@ -7,17 +7,17 @@ $(document).ready(function(){
 		
 		
 		$("#enviar").click(function(){
-			user.nombreEdificio = $("#idnombre").val();
+			user.username = $("#idnombre").val();
 			user.email = $("#email").val();
 			user.password = $("#pass").val();
-			user.idFacultad = $("#idFacul").val();
-			
+			user.facultad = $("#idFacul").val();
+			user.imagen = $("#imagen").val();
 	    	editarUser(user,reqHeaders);
 		});
 });
 		
-function editarUser(edificio, reqHeaders){
-	
+function editarUser(user, reqHeaders){
+	console.log(user);
 	$.ajax({
 			url: baseURL + 'gestor/nuevoUsuario',
 			type: 'POST',

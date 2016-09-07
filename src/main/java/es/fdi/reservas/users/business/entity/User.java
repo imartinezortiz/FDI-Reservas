@@ -85,6 +85,13 @@ public class User implements UserDetails{
 		this.imagen = img;		
 	}
 	
+	public User(String username, String email) {
+		this.username = username;
+		this.email = email;
+		this.enabled = true;
+		this.roles = new ArrayList<UserRole>();	
+	}
+	
 	public String getPassword() {
 		return password;
 	}

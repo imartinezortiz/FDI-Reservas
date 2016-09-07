@@ -28,7 +28,7 @@
 			                <div class="input-group">
                                   <span class="input-group-addon"><i class="zmdi zmdi-account-o zmdi-hc-lg"></i></span>
                                   <input id="idnombre" name="username" type="text" class="form-control" placeholder="Nombre de usuario"/>
-                            	<input id="idFacul" type="hidden" class="form-control" th:value="{facul}"/>
+                            	<input id="idFacul" type="hidden" class="form-control" th:value="${facul}"/>
                             </div>
 			            </div>
 			            
@@ -50,7 +50,7 @@
 			                <label>Contraseña</label>
 			                  <div class="input-group">
                                   <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                  <input id="pass"name="password" type="password" class="form-control" placeholder="Contraseña"/>
+                                  <input id="pass" name="password" type="password" class="form-control" placeholder="Contrasena"/>
                                 </div> 
 			            </div>
 			            <!-- Imagen usuario -->
@@ -65,7 +65,7 @@
 			            
 			            
 			            <div class="row text-center">
-			            <button type="submit" class="btn-normal"> CREAR </button>
+			            <button id="enviar" type="button" class="btn-normal"> CREAR </button>
 			            </div>
 			        </form>
 			    </div>

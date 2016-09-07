@@ -50,6 +50,15 @@ public class UserDTO {
 		this.imagen = imagen;
 	}
 	
+	public UserDTO(String username, String password, String email, Long facultad, String imagen) {
+		this.username = username;
+		this.email = email;
+		this.password=password;
+		this.roles = new ArrayList<UserRole>();
+		this.facultad = facultad;
+		this.imagen = imagen;
+	}
+	
 	public String getPassword() {
 		return password;
 	}

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import es.fdi.reservas.fileupload.business.boundary.AttachmentManager;
 import es.fdi.reservas.fileupload.business.boundary.NewFileCommand;
 import es.fdi.reservas.fileupload.business.entity.Attachment;
+import es.fdi.reservas.reserva.web.EdificioDTO;
 import es.fdi.reservas.users.business.boundary.UserService;
 import es.fdi.reservas.users.business.entity.User;
 
@@ -37,6 +38,12 @@ public class UserRestController {
 	public String eliminarUsuario(@PathVariable("idUsuario") long idUser) {
 		user_service.editarUserDeleted(idUser);
 		return "redirect:/admin/administrar/usuarios/1";
+	}
+	
+	@RequestMapping(value="/gestor/nuevoUsuario", method=RequestMethod.POST)
+	public String crearEdificioGestor(@RequestBody UserDTO f){
+		user_service.addNewUser(f);
+	    return "redirect:/gestor/administrar/edificios/page/1";
 	}
 	
 	@RequestMapping(value = "/admin/administrar/usuarios/{numPag}/restaurar/{idUsuario}", method = RequestMethod.DELETE)
