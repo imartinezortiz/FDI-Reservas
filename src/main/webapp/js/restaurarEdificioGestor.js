@@ -60,7 +60,6 @@ function modalRestaurarEdificio(edificio, reqHeaders){
 			type: 'DELETE',
 			headers : reqHeaders,
 			success : function(datos) {
-				alert("Edificio eliminado");
 				$('#modalEditarEdificio').modal('hide');
 				$("#" + edificio.id).remove();
 			

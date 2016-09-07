@@ -30,7 +30,7 @@ function editarFacultad(facultad, reqHeaders){
 			contentType: 'application/json',
 			
 			success : function(datos) {   
-				 window.location = "/reservas/admin/administrar/facultad/1";
+				 window.location = "/reservas/admin/administrar/facultad/page/1";
 			},    
 			error : function(xhr, status) {
 				alert(baseURL),

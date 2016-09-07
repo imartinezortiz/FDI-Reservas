@@ -46,7 +46,7 @@ public class FacultadController {
 	
 	@RequestMapping(value="/admin/administrar/facultad/page/{pageNumber}", method=RequestMethod.GET)
     public String misFacultadesPaginadas(@PathVariable Integer pageNumber, Model model) {
-		User u = facultad_service.getCurrentUser();
+		User u = user_service.getCurrentUser();
 		
 		PageRequest pageRequest = new PageRequest(pageNumber - 1, 5);
         Page<Facultad> currentResults = facultad_service.getFacultadesPaginadas(pageRequest);

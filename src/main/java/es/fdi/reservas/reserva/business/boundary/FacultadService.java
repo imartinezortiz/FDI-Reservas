@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import es.fdi.reservas.reserva.business.control.FacultadRepository;
@@ -18,12 +19,10 @@ import es.fdi.reservas.users.business.entity.User;
 public class FacultadService {
 	
 	private FacultadRepository facultad_repository;
-	private UserService user_service;
 	
 	@Autowired
-	public FacultadService(FacultadRepository fr, UserService us){
+	public FacultadService(FacultadRepository fr){
 		facultad_repository = fr;
-		user_service = us;
 	}
 	
 	public Facultad editarFacultad(FacultadDTO facultad){
@@ -48,7 +47,11 @@ public class FacultadService {
 	}
 	
 	public User getCurrentUser(){
-		return user_service.getCurrentUser();
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if ( principal instanceof User) {
+			return (User) principal;
+		}
+		return null;
 	}
 	
 	public Facultad getFacultad(long idFacultad){
