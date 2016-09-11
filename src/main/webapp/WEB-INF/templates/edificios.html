@@ -42,7 +42,7 @@
 		   <div class="edificio" th:attr="data-id=${e.id}">
 			<div class="media">
 			  <div class="media-left media-middle">			    
-			      <img class="media-object" src="http://placehold.it/50x50"/>		   
+			      <img class="media-object" th:src="@{${e.imagen.attachmentUrl}}" width="50" height="45"/>		   
 			  </div>
 			  <div class="media-body">
 			    <h4 class="media-heading" th:text="${e.nombreEdificio}"></h4>
