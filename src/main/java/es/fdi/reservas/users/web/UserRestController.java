@@ -2,18 +2,13 @@ package es.fdi.reservas.users.web;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 import es.fdi.reservas.fileupload.business.entity.Attachment;
-import es.fdi.reservas.reserva.web.EdificioDTO;
 import es.fdi.reservas.users.business.boundary.UserService;
 import es.fdi.reservas.users.business.entity.User;
 
@@ -145,12 +140,6 @@ public class UserRestController {
 		//return "nuevoUsuario";
 	}
 	
-	@RequestMapping(value="/nuevoUser", method=RequestMethod.POST)
-	public String crearUsuarioLogin(@RequestBody UserDTO us){
-		user_service.addNewUserLogin(us);
-	   return "redirect:/login";
-		//return "nuevoUsuario";
-	}
 
 	@RequestMapping(value = "/usuarios/tag/{tagName}", method = RequestMethod.GET)
 	public List<UserDTO> usuariosFiltro(@PathVariable("tagName") String tagName) {

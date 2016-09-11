@@ -7,11 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
 import es.fdi.reservas.reserva.business.entity.EstadoReserva;
 import es.fdi.reservas.users.business.boundary.UserService;
 import es.fdi.reservas.users.business.entity.User;
@@ -36,7 +36,30 @@ public class UserController {
     public String loginError(Model model) {
 		model.addAttribute("loginError", true);
 		return "login";
-  }
+    }
+	
+	@RequestMapping(value="/registro", method=RequestMethod.GET)
+	public String registro(){
+		return "registro";
+	}
+	
+	@RequestMapping(value="/registro-error", method=RequestMethod.GET)
+    public String registroError(Model model) {
+		model.addAttribute("registroError", true);
+		return "registro";
+    }
+	
+	@RequestMapping(value="/registroUser", method=RequestMethod.POST)
+	public String crearUsuarioLogin(@ModelAttribute User user){
+		
+		User newUser = user_service.addNewUserLogin(user);
+		
+		if(newUser == null){
+			return "redirect:/registro-error";
+		}
+		
+	    return "redirect:/login";	
+	}
 	
 	@RequestMapping(value ="/admin/administrar/usuarios")
     public String usuarios() {
@@ -54,12 +77,6 @@ public class UserController {
 	   return "index";
 	}
 	
-	@RequestMapping(value="/nuevoUser", method=RequestMethod.GET)
-	public String nuevoUser(Model model){
-		model.addAttribute("us", new User());
-		model.addAttribute("view", "registro");
-		return "registro";
-	}	
 	
 	@RequestMapping(value = "usuario/tag/{tagName}", method = RequestMethod.GET)
 	public List<UserDTO> usuariosFiltro(@PathVariable("tagName") String tagName) {

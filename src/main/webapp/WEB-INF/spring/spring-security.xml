@@ -24,19 +24,14 @@
 		<intercept-url pattern="/login" access="permitAll" />
 		<intercept-url pattern="/login-error" access="permitAll" />
 		<intercept-url pattern="/welcome" access="permitAll" />
-		<intercept-url pattern="/nuevoUsuario" access="permitAll" />
-		<intercept-url pattern="/nuevoUser" access="permitAll" />
-		<intercept-url pattern="/logout" access="isAuthenticated()" />
-		
-		<intercept-url pattern="/gestor/**" access="hasRole('ROLE_GESTOR')" />
-		
+		<intercept-url pattern="/registro" access="permitAll" />
+		<intercept-url pattern="/registro-error" access="permitAll" />
+		<intercept-url pattern="/registroUser" access="permitAll" method="POST" />
+		<intercept-url pattern="/logout" access="isAuthenticated()" />		
+		<intercept-url pattern="/gestor/**" access="hasRole('ROLE_GESTOR')" />	
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
 		
-		
-		<!-- <intercept-url pattern="/**" access="hasRole('ROLE_USER')" />-->
-		<!-- para administracion usar las rutas /admin/** 
-			 para secretaria usar las rutas /accept/** -->
 		
 		<form-login login-page="/login" authentication-failure-url="/login-error" 
 		username-parameter="username" password-parameter="password"

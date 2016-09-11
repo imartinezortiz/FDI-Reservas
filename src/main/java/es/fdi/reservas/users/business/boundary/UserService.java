@@ -271,20 +271,29 @@ public class UserService implements UserDetailsService{
 		return user_ropository.recycleBin(pageRequest);
 	}
 	
-	public User addNewUserLogin(UserDTO user) {
-		User newUser = new User();
-		newUser.setUsername(user.getUsername());
-		newUser.setEmail(user.getEmail()); 
-		newUser.setImagen(attachment_repository.findOne((long) 10));
-		newUser.setFacultad(reserva_service.getFacultad((long) 27));
-		newUser.addRole(new UserRole("ROLE_USER"));
-		newUser.setEnabled(true);
-		newUser.setPassword(password_encoder.encode(user.getPassword()));
-		newUser = user_ropository.save(newUser);
+	public User addNewUserLogin(User user) {
+		User userByName = user_ropository.findByUsername(user.getUsername());
 		
-		return newUser;
+		if(userByName == null){
+			userByName = user_ropository.findByEmail(user.getEmail());
+		}
 		
+		if(userByName != null){
+			return null;
+		}
+			
+		// Imagen por defecto
+		user.setImagen(attachment_repository.findOne((long) 10));
+		// Facultad por defecto
+		user.setFacultad(reserva_service.getFacultad((long) 1));
+		user.addRole(new UserRole("ROLE_USER"));
+		user.setEnabled(true);
+		user.setPassword(password_encoder.encode(user.getPassword()));
+		user = user_ropository.save(user);
+		
+		return user;	
 	}
+	
 	public Page<User> getUsuariosPorEmailYFacultad(String nombre, Long id, Pageable pageable) {
 		return user_ropository.getUsuariosPorEmailYFacultad(nombre,id, pageable);
 	}

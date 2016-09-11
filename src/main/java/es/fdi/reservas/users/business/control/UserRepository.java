@@ -1,15 +1,12 @@
 package es.fdi.reservas.users.business.control;
 
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
-
 import es.fdi.reservas.users.business.entity.User;
 
 
@@ -19,13 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	@Query("select e from #{#entityName} e where e.enabled=true")
 	List<User> findAll();
 	
-	public UserDetails findByEmail(String username);
+	public User findByEmail(String username); 
 	
-	//public Page<User> findByUserName(long userName, Pageable pageable);
-	
-	//public Page<User> findByUserId(long idUsuario, Pageable pageable); 
-	
-	public UserDetails findByUsername(String username);
+	public User findByUsername(String username);
 
 	@Query("select e from #{#entityName} e where e.enabled=false")
 	public Page<User> recycleBin(Pageable pagerequest);
