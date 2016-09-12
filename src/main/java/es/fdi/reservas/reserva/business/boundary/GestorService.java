@@ -199,6 +199,10 @@ public class GestorService {
 		return espacio_service.tiposDeEspacios(idEdificio);
 	}
 
+	public List<Edificio> getEdificiosFacultad(Long idFacultad) {
+		return edificio_service.getEdificiosFacultad(idFacultad);
+	}
+
 	
 
 	

@@ -29,9 +29,8 @@ public class UserRestController {
 	}
 	
 	@RequestMapping(value="/gestor/nuevoUsuario", method=RequestMethod.POST)
-	public String crearEdificioGestor(@RequestBody UserDTO f){
-		user_service.addNewUser(f);
-	    return "redirect:/gestor/administrar/edificios/page/1";
+	public void crearEdificioGestor(@RequestBody UserDTO u){
+		user_service.addNewUser(u);
 	}
 	
 	@RequestMapping(value = "/admin/administrar/usuarios/{numPag}/restaurar/{idUsuario}", method = RequestMethod.DELETE)

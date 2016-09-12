@@ -435,7 +435,7 @@ public class GestorController {
 		model.addAttribute("Edificio", new Edificio());
 		model.addAttribute("view", "gestor/nuevoEdificio");
 		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
-		model.addAttribute("facul", u.getFacultad());
+		
 		return "index";
 	}
 	
@@ -572,8 +572,7 @@ public class GestorController {
 		User u = gestor_service.getUsuarioActual();
 		model.addAttribute("User", u);
 		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
-		model.addAttribute("espacio", new Espacio());
-		//System.out.println(user_service.getUser(idUser).getUsername());
+		model.addAttribute("edificiosFacultad", gestor_service.getEdificiosFacultad(u.getFacultad().getId()));
 		model.addAttribute("view", "gestor/nuevoEspacio");
 		return "index";
 	}
@@ -722,8 +721,6 @@ public class GestorController {
 		User u = gestor_service.getUsuarioActual();
 
 		model.addAttribute("User", u);
-		model.addAttribute("usuario", gestor_service.getUsuario(idUser));
-		//System.out.println(user_service.getUser(idUser).getUsername());
 		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
 		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
 		model.addAttribute("view", "gestor/editarUsuario");
@@ -735,9 +732,7 @@ public class GestorController {
 		User u = gestor_service.getUsuarioActual();
 		model.addAttribute("User", u);
 		model.addAttribute("reservasPendientes", gestor_service.reservasPendientesUsuario(u.getId(), EstadoReserva.PENDIENTE).size());
-		model.addAttribute("user", new User());
-		model.addAttribute("facul", u.getFacultad().getId());
-		//System.out.println(user_service.getUser(idUser).getUsername());
+		model.addAttribute("GruposReservas", gestor_service.getGrupoReservaByUserId(u.getId()));
 		model.addAttribute("view", "gestor/nuevoUsuario");
 		return "index";
 	}

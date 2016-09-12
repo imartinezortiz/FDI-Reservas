@@ -66,15 +66,13 @@ public class EdificioRestController {
 	}
 	
 	@RequestMapping(value="/admin/nuevoEdificio", method=RequestMethod.POST)
-	public String crearEdificio(@RequestBody EdificioDTO f){
+	public void crearEdificio(@RequestBody EdificioDTO f){
 		edificio_service.addNewEdificio(f);
-	    return "redirect:/admin/administrar/edificios/1";
 	}
 	
 	@RequestMapping(value="/gestor/nuevoEdificio", method=RequestMethod.POST)
-	public String crearEdificioGestor(@RequestBody EdificioDTO f){
+	public void crearEdificioGestor(@RequestBody EdificioDTO f){
 		edificio_service.addNewEdificio(f);
-	    return "redirect:/gestor/administrar/edificios/page/1";
 	}
 	
 	@RequestMapping(value = "/admin/edificio/usuarios/tag/{tagName}", method = RequestMethod.GET)

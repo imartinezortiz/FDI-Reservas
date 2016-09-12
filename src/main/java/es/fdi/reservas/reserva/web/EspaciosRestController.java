@@ -106,14 +106,13 @@ public class EspaciosRestController {
 	}
 	
 	@RequestMapping(value="/admin/nuevoEspacio", method=RequestMethod.POST)
-	public void crearEspacio(@RequestBody EspacioDTO f){
-		 espacio_service.addNewEspacio(f);
+	public void crearEspacio(@RequestBody EspacioDTO e){
+		 espacio_service.addNewEspacio(e);
 	}
 	
 	@RequestMapping(value="/gestor/nuevoEspacio", method=RequestMethod.POST)
-	public String crearEdificioGestor(@RequestBody EspacioDTO f){
-		espacio_service.addNewEspacio(f);
-	    return "redirect:/gestor/administrar/edificios/page/1";
+	public void crearEspacioGestor(@RequestBody EspacioDTO e){
+		espacio_service.addNewEspacio(e);
 	}
 	
 	@RequestMapping(value = "/admin/edificio/tag/{tagName}", method = RequestMethod.GET)
