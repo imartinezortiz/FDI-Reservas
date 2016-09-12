@@ -84,6 +84,27 @@ public class EspacioService {
 		if (espacioDTO.getImagen().equals("")){
 			attachment = espacio_repository.findOne(espacioDTO.getId()).getImagen();
 		}
+		else if(espacioDTO.getImagen().contains("fakepath")){
+			String img = espacioDTO.getImagen();
+			String[] barras = img.split("fakepath");
+			String fin = barras[1];
+			fin = fin.substring(1);
+			
+			if (attachment_repository.getAttachmentByName(fin).isEmpty()){
+				int pos = fin.lastIndexOf(".");
+				String punto = fin.substring(0, pos);
+				String end = fin.substring(pos+1, fin.length());
+				String nom = punto + "-" + espacioDTO.getId() + "." + end;
+				nom = nom.replace(nom, "/img/" + nom);
+				
+				
+				attachment.setAttachmentUrl("/img/" + fin);
+				attachment.setStorageKey(nom);
+				attachment_repository.save(attachment);
+			}else{
+				attachment = attachment_repository.getAttachmentByName(fin).get(0);
+			}
+		}
 		else {
 
 			

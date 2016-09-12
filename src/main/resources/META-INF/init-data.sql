@@ -28,7 +28,7 @@ INSERT INTO Facultad(FacultadId, nombreFacultad, webFacultad, deleted) VALUES(27
 
 INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(1, 'Facultad de informatica', '/img/FDI.jpg', '/img/FDI-1.jpg');
 INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(2, 'Edificio Basico', '/img/casa.jpg', '/img/casa-2.jpg');
-INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(3, 'Facultad de Ciencias Biológicas', '/img/biologicas.jpg', '/img/biologicas*3.jpg');
+INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(3, 'Facultad de Ciencias Biológicas', '/img/biologicas.jpg', '/img/biologicas-3.jpg');
 INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(4, 'Facultad de Bellas Artes', '/img/bellas artes.jpg', '/img/bellas artes-4.jpg');
 INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(5, 'Facultad de Ciencias de la Documentación', '/img/documentacion.jpg', '/img/documentacion-5.jpg');
 INSERT INTO Attachment(ImagenId, description, attachmentUrl, storageKey) VALUES(6, 'Edificio multiusos', '/img/multiusos.jpg', '/img/multiusos-6.jpg');

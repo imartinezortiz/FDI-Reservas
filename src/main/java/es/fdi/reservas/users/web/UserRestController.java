@@ -75,6 +75,27 @@ public class UserRestController {
 			if (userActualizado.getImagen().equals("")){
 				attachment = user_service.getUser(userActualizado.getId()).getImagen();
 			}
+			else if(userActualizado.getImagen().contains("fakepath")){
+				String img = userActualizado.getImagen();
+				String[] barras = img.split("fakepath");
+				String fin = barras[1];
+				fin = fin.substring(1);
+				
+				if (user_service.getAttachmentByName(fin).isEmpty()){
+					int pos = fin.lastIndexOf(".");
+					String punto = fin.substring(0, pos);
+					String end = fin.substring(pos+1, fin.length());
+					String nom = punto + "-" + userActualizado.getId() + "." + end;
+					nom = nom.replace(nom, "/img/" + nom);
+					
+					
+					attachment.setAttachmentUrl("/img/" + fin);
+					attachment.setStorageKey(nom);
+					user_service.addImagen(attachment);
+				}else{
+					attachment = user_service.getAttachmentByName(fin).get(0);
+				}
+			}
 			else {
 
 				if (user_service.getAttachmentByName(userActualizado.getImagen()).isEmpty()){
@@ -114,6 +135,27 @@ public class UserRestController {
 			}
 			if (userActualizado.getImagen().equals("")){
 				attachment = user_service.getUser(userActualizado.getId()).getImagen();
+			}
+			else if(userActualizado.getImagen().contains("fakepath")){
+				String img = userActualizado.getImagen();
+				String[] barras = img.split("fakepath");
+				String fin = barras[1];
+				fin = fin.substring(1);
+				
+				if (user_service.getAttachmentByName(fin).isEmpty()){
+					int pos = fin.lastIndexOf(".");
+					String punto = fin.substring(0, pos);
+					String end = fin.substring(pos+1, fin.length());
+					String nom = punto + "-" + userActualizado.getId() + "." + end;
+					nom = nom.replace(nom, "/img/" + nom);
+					
+					
+					attachment.setAttachmentUrl("/img/" + fin);
+					attachment.setStorageKey(nom);
+					user_service.addImagen(attachment);
+				}else{
+					attachment = user_service.getAttachmentByName(fin).get(0);
+				}
 			}
 			else {
 //				String img = "/img/users/" + user_service.getUser(idUser).getUsername();

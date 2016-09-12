@@ -186,6 +186,27 @@ public class UserService implements UserDetailsService{
 		if (userDTO.getImagen().equals("")){
 			attachment = user_ropository.findOne(userDTO.getId()).getImagen();
 		}
+		else if(userDTO.getImagen().contains("fakepath")){
+			String img = userDTO.getImagen();
+			String[] barras = img.split("fakepath");
+			String fin = barras[1];
+			fin = fin.substring(1);
+			
+			if (attachment_repository.getAttachmentByName(fin).isEmpty()){
+				int pos = fin.lastIndexOf(".");
+				String punto = fin.substring(0, pos);
+				String end = fin.substring(pos+1, fin.length());
+				String nom = punto + "-" + userDTO.getId() + "." + end;
+				nom = nom.replace(nom, "/img/" + nom);
+				
+				
+				attachment.setAttachmentUrl("/img/" + fin);
+				attachment.setStorageKey(nom);
+				attachment_repository.save(attachment);
+			}else{
+				attachment = attachment_repository.getAttachmentByName(fin).get(0);
+			}
+		}
 		else {
 			if (attachment_repository.getAttachmentByName(userDTO.getImagen()).isEmpty()){
 		
@@ -320,6 +341,12 @@ public class UserService implements UserDetailsService{
 
 	public Page<User> getUsuariosBorradosPorEmailYFacultad(String email, Long id, Pageable pageable) {
 		return user_ropository.getUsuariosBorradosPorNombreYFacultad(email, id, pageable);
+	}
+
+
+	public void addImagen(Attachment attachment) {
+		attachment_repository.save(attachment);
+		
 	}
 
 }

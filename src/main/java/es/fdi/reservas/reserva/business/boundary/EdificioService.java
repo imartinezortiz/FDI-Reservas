@@ -69,7 +69,27 @@ public class EdificioService {
 		}
 		
 		Attachment attachment = new Attachment("");
-		if ((edificioDTO.getImagen() != null) && attachment_repository.getAttachmentByName(edificioDTO.getImagen()).isEmpty()){
+		if(edificioDTO.getImagen().contains("fakepath")){
+			String img = edificioDTO.getImagen();
+			String[] barras = img.split("fakepath");
+			String fin = barras[1];
+			fin = fin.substring(1);
+			
+			if (attachment_repository.getAttachmentByName(fin).isEmpty()){
+				int pos = fin.lastIndexOf(".");
+				String punto = fin.substring(0, pos);
+				String end = fin.substring(pos+1, fin.length());
+				String nom = punto + "-" + edificioDTO.getId() + "." + end;
+				nom = nom.replace(nom, "/img/" + nom);
+				
+				
+				attachment.setAttachmentUrl("/img/" + fin);
+				attachment.setStorageKey(nom);
+				attachment_repository.save(attachment);
+			}else{
+				attachment = attachment_repository.getAttachmentByName(fin).get(0);
+			}
+		}else if ((edificioDTO.getImagen() != null) && attachment_repository.getAttachmentByName(edificioDTO.getImagen()).isEmpty()){
 			//si no esta, lo añado
 			String img = edificioDTO.getImagen();
 			int pos = img.lastIndexOf(".");
