@@ -177,9 +177,7 @@ public class UserService implements UserDetailsService{
 			}
 		}
 		
-		// Actualiza el usuario actual sin cerrar sesión
-		Authentication request = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());		
-		SecurityContextHolder.getContext().setAuthentication(request);		
+				
 		
 		//actualiza la imagen
 		Attachment attachment = new Attachment("");
@@ -203,7 +201,8 @@ public class UserService implements UserDetailsService{
 				attachment.setAttachmentUrl("/img/" + fin);
 				attachment.setStorageKey(nom);
 				attachment_repository.save(attachment);
-			}else{
+			}
+			else{
 				attachment = attachment_repository.getAttachmentByName(fin).get(0);
 			}
 		}
@@ -226,8 +225,15 @@ public class UserService implements UserDetailsService{
 			}else{
 				attachment = attachment_repository.getAttachmentByName(userDTO.getImagen()).get(0);
 			}
-			user.setImagen(attachment);
+			
 		}
+		
+		user.setImagen(attachment);
+		
+		// Actualiza el usuario actual sin cerrar sesión
+		Authentication request = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());		
+		SecurityContextHolder.getContext().setAuthentication(request);
+		
 		// Guarda los cambios en la base de datos
 		user_ropository.save(user);
 	}
